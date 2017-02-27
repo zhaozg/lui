@@ -1,13 +1,15 @@
 static int l_uiNewGrid(lua_State *L)
 {
-  CREATE_OBJECT(Tab, uiNewGrid());
+  CREATE_OBJECT(Grid, uiNewGrid());
   return 1;
 }
 
 static int l_uiGridAppend(lua_State *L)
 {
-  int n = lua_gettop(L);
   int i;
+  int n = lua_gettop(L);
+  uiGrid *grid = CAST_ARG(1, Grid);
+
   for (i = 2; i <= n; i += 9)
   {
     int left = luaL_checkint(L, i+1);
@@ -18,7 +20,7 @@ static int l_uiGridAppend(lua_State *L)
     uiAlign halign = luaL_checkint(L, i+6);
     int vexpand = luaL_checkboolean(L, i+7);
     uiAlign valign = luaL_checkint(L, i+8);
-    uiGridAppend(CAST_ARG(1, Grid), CAST_ARG(i, Control), left, top, xspan, yspan, hexpand, halign, vexpand, valign);
+    uiGridAppend(grid, CAST_ARG(i, Control), left, top, xspan, yspan, hexpand, halign, vexpand, valign);
     
     //copy ltab.c, need check
     lua_getmetatable(L, 1);

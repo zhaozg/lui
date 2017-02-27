@@ -2,6 +2,7 @@
 #include <lualib.h>
 #include <lauxlib.h>
 #include <assert.h>
+#include <stdlib.h>
 
 #include "ui.h"
 
@@ -259,10 +260,61 @@ static int l_uiQueueMain(lua_State *L)
   return 0;
 }
 
+static int on_ShouldQuit(void *data)
+{
+  int ret = 0;
+  int err = 0;
+  lua_State *L = data;
+
+  /* Get the traceback function in case of error */
+  lua_pushcfunction(L, traceback);
+  err = lua_gettop(L);
+  /* Find table with callback data in registry */
+  lua_pushlightuserdata(L, on_ShouldQuit);
+  lua_gettable(L, LUA_REGISTRYINDEX);
+
+  /* Get function, control userdata and callback data */
+  luaL_checktype(L, -1, LUA_TTABLE);
+  lua_getfield(L, -1, "fn");
+  luaL_checktype(L, -1, LUA_TFUNCTION);
+  lua_getfield(L, -2, "data");
+
+  /* Call function */
+  if (lua_pcall(L, 1, 1, err))
+  {
+    luaL_error(L, lua_tostring(L, -1));
+    lua_pop(L, 1);
+  }
+  else
+  {
+    if (lua_isboolean(L, -1))
+      ret = lua_toboolean(L, -1);
+    else if (!lua_isnoneornil(L, -1))
+      ret = luaL_checkint(L, -1);
+    lua_pop(L, 1);
+  }
+
+  /* Remove table with callback data in registry */
+  lua_pop(L, 1);
+  /* Remove the traceback function */
+  lua_pop(L, 1);
+  return ret;
+}
+
 static int l_uiOnShouldQuit(lua_State *L)
 {
-  luaL_error(L, "NYI");
-  //uiOnShouldQuit();
+  uiOnShouldQuit(on_ShouldQuit, L);
+
+  /* Push registery key: userdata pointer to control */
+  lua_pushlightuserdata(L, on_ShouldQuit);
+  lua_newtable(L);
+  lua_pushvalue(L, 1);
+  lua_setfield(L, -2, "fn");
+  lua_pushvalue(L, 2);
+  lua_setfield(L, -2, "data");
+
+  /* Store in registry */
+  lua_settable(L, LUA_REGISTRYINDEX);
   return 0;
 }
 
@@ -275,7 +327,7 @@ static struct luaL_Reg lui_table[] = {
   { "MainSteps",              l_uiMainSteps },
   { "Quit",                   l_uiQuit },
   { "QueueMain",              l_uiQueueMain },
-  { "ShouldQuit",             l_uiOnShouldQuit },
+  { "OnShouldQuit",           l_uiOnShouldQuit },
 
   { "OpenFile",               l_uiOpenFile },
   { "SaveFile",               l_uiSaveFile },
@@ -334,6 +386,8 @@ LUA_API int luaopen_lui(lua_State *L)
   CREATE_META(Combobox)
   CREATE_META(ColorButton)
   CREATE_META(DateTimePicker)
+  CREATE_META(EditableCombobox)  
+  CREATE_META(Entry)
   CREATE_META(FontButton)
   CREATE_META(Form)
   CREATE_META(Grid)

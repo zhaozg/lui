@@ -12,21 +12,24 @@ static int l_uiNewVerticalBox(lua_State *L)
 
 static int l_uiBoxAppend(lua_State *L)
 {
-  int n = lua_gettop(L);
+  int i;
   int stretchy = 0;
+  int n = lua_gettop(L);
+  uiBox *box = CAST_ARG(1, Box);
+  uiControl *child = NULL;
 
   if (lua_isboolean(L, n))
   {
     stretchy = lua_toboolean(L, n);
+    n = n - 1;
   }
-
-  int i;
 
   for (i = 2; i <= n; i++)
   {
     if (lua_isuserdata(L, i))
     {
-      uiBoxAppend(CAST_ARG(1, Box), CAST_ARG(i, Control), stretchy);
+      child = CAST_ARG(i, Control);
+      uiBoxAppend(box, child, stretchy);
       lua_getmetatable(L, 1);
       lua_pushvalue(L, i);
       luaL_ref(L, -2);
