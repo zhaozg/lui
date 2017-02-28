@@ -1,8 +1,11 @@
 static void l_REG_UI_ENUM(lua_State *L, int idx)
 {
+  lua_pushnumber(L, uiDrawDefaultMiterLimit);
+  lua_setfield(L, -2, "DrawDefaultMiterLimit");
+  
 #define REG_UI_ENUM(x)         \
   lua_pushstring(L, #x);       \
-  lua_pushinteger(L, ui##x);  \
+  lua_pushinteger(L, ui##x);   \
   lua_rawset(L, idx)
 
   REG_UI_ENUM(WindowResizeEdgeLeft);
@@ -55,7 +58,7 @@ static void l_REG_UI_ENUM(lua_State *L, int idx)
   REG_UI_ENUM(DrawTextStretchExpanded);
   REG_UI_ENUM(DrawTextStretchExtraExpanded);
   REG_UI_ENUM(DrawTextStretchUltraExpanded);
-
+  
   REG_UI_ENUM(ModifierCtrl);
   REG_UI_ENUM(ModifierAlt);
   REG_UI_ENUM(ModifierShift);

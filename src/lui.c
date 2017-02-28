@@ -3,6 +3,7 @@
 #include <lauxlib.h>
 #include <assert.h>
 #include <stdlib.h>
+#include <memory.h>
 
 #include "ui.h"
 
@@ -50,6 +51,27 @@ struct wrap {
 	lua_setfield(L, -2, "__gc");                              \
 	lua_setmetatable(L, -2);
 
+#define CREATE_OBJECT_REF(t, c)                             \
+	struct wrap *w = lua_newuserdata(L, sizeof(struct wrap)); \
+	w->control = uiControl(c);                                \
+	lua_newtable(L);                                          \
+	luaL_getmetatable(L, "libui." #t);                        \
+	lua_setfield(L, -2, "__index");                           \
+	lua_setmetatable(L, -2);
+
+/* draw releated macro */
+#define CREATE_DRAW_META(n)                \
+	luaL_newmetatable(L, "libui.draw." #n);  \
+	luaL_setfuncs(L, meta_ ## n, 0);
+
+#define CREATE_DRAW_OBJECT(t, c)                              \
+	*(ui ## t**)lua_newuserdata(L, sizeof(ui ## t*)) = c;       \
+	lua_newtable(L);                                            \
+	luaL_getmetatable(L, "libui.draw." #t);                     \
+	lua_setfield(L, -2, "__index");                             \
+	lua_setmetatable(L, -2);
+
+#define CAST_DRAW_ARG(n, type) *((ui ## type**)lua_touserdata(L, n))
 
 /* general libui callback  mechanism to lua */
 
@@ -143,9 +165,13 @@ static int callback(lua_State *L, void *control)
 /* garbage collection for libui object */
 static int l_uigc(lua_State *L)
 {
+  struct wrap *w = lua_touserdata(L, 1);
+  lua_pushnil(L);
+  lua_pushlightuserdata(L, w->control);
+  lua_settable(L, LUA_REGISTRYINDEX);
   return 0;
 
-  struct wrap *w = lua_touserdata(L, 1);
+
   uint32_t s = w->control->TypeSignature;
   printf("gc %p %c%c%c%c\n", w->control, s >> 24, s >> 16, s >> 8, s >> 0);
 
@@ -367,12 +393,14 @@ static struct luaL_Reg lui_table[] = {
   { "NewWindow",              l_uiNewWindow },
 
   /* draw, not finished */
+  { "DrawNewAreaHandler",     l_uiDrawNewAreaHandler },
+  { "DrawNewBrush",           l_uiDrawNewBrush }, 
   { "DrawNewPath",            l_uiDrawNewPath },
   { "DrawNewMatrix",          l_uiDrawNewMatrix },
+  { "DrawNewStrokeParams",    l_uiDrawNewStrokeParams },
   { "DrawListFontFamilies",   l_uiDrawListFontFamilies },
   { "DrawLoadClosestFont",    l_uiDrawLoadClosestFont },
   { "DrawNewTextLayout",      l_uiDrawNewTextLayout },
-  
 
   { NULL }
 };

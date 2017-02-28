@@ -1,7 +1,11 @@
 static int l_uiNewArea(lua_State *L)
 {
-  static struct uiAreaHandler ah;
-  CREATE_OBJECT(Area, uiNewArea(&ah));
+  uiAreaHandler *ah = CAST_DRAW_ARG(1, AreaHandler);
+  uiArea *a = uiNewArea(ah);
+  CREATE_OBJECT(Area, a);
+  lua_pushlightuserdata(L, a);
+  lua_pushvalue(L, 1);
+  lua_settable(L, LUA_REGISTRYINDEX);
   return 1;
 }
 
