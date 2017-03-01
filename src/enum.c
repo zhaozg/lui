@@ -2,7 +2,7 @@ static void l_REG_UI_ENUM(lua_State *L, int idx)
 {
   lua_pushnumber(L, uiDrawDefaultMiterLimit);
   lua_setfield(L, -2, "DrawDefaultMiterLimit");
-  
+
 #define REG_UI_ENUM(x)         \
   lua_pushstring(L, #x);       \
   lua_pushinteger(L, ui##x);   \
@@ -58,14 +58,14 @@ static void l_REG_UI_ENUM(lua_State *L, int idx)
   REG_UI_ENUM(DrawTextStretchExpanded);
   REG_UI_ENUM(DrawTextStretchExtraExpanded);
   REG_UI_ENUM(DrawTextStretchUltraExpanded);
-  
+
   REG_UI_ENUM(ModifierCtrl);
   REG_UI_ENUM(ModifierAlt);
   REG_UI_ENUM(ModifierShift);
   REG_UI_ENUM(ModifierSuper);
 
   REG_UI_ENUM(ExtKeyEscape);
-  REG_UI_ENUM(ExtKeyInsert);			// eqREG_UI_ENUM(valent to "Help" on Apple keyboards
+  REG_UI_ENUM(ExtKeyInsert);      // eqREG_UI_ENUM(valent to "Help" on Apple keyboards
   REG_UI_ENUM(ExtKeyDelete);
   REG_UI_ENUM(ExtKeyHome);
   REG_UI_ENUM(ExtKeyEnd);
@@ -75,7 +75,7 @@ static void l_REG_UI_ENUM(lua_State *L, int idx)
   REG_UI_ENUM(ExtKeyDown);
   REG_UI_ENUM(ExtKeyLeft);
   REG_UI_ENUM(ExtKeyRight);
-  REG_UI_ENUM(ExtKeyF1);			// F1..F12 are guaranteed to be consecutive
+  REG_UI_ENUM(ExtKeyF1);      // F1..F12 are guaranteed to be consecutive
   REG_UI_ENUM(ExtKeyF2);
   REG_UI_ENUM(ExtKeyF3);
   REG_UI_ENUM(ExtKeyF4);
@@ -87,8 +87,8 @@ static void l_REG_UI_ENUM(lua_State *L, int idx)
   REG_UI_ENUM(ExtKeyF10);
   REG_UI_ENUM(ExtKeyF11);
   REG_UI_ENUM(ExtKeyF12);
-  REG_UI_ENUM(ExtKeyN0);			// numpad keys; independent of Num Lock state
-  REG_UI_ENUM(ExtKeyN1);			// N0..N9 are guaranteed to be consecutive
+  REG_UI_ENUM(ExtKeyN0);      // numpad keys; independent of Num Lock state
+  REG_UI_ENUM(ExtKeyN1);      // N0..N9 are guaranteed to be consecutive
   REG_UI_ENUM(ExtKeyN2);
   REG_UI_ENUM(ExtKeyN3);
   REG_UI_ENUM(ExtKeyN4);

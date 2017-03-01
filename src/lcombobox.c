@@ -45,7 +45,7 @@ static struct luaL_Reg meta_Combobox[] =
   { "Selected",             l_uiComboboxSelected },
   { "OnSelected",           l_uiComboboxOnSelected },
 
-   CONTROL_COMMON_METAFIELD
+  CONTROL_COMMON_METAFIELD
   { NULL }
 };
 

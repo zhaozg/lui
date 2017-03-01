@@ -25,7 +25,7 @@ static int l_uiImageValid(lua_State* L)
 static int l_uiImageSize(lua_State* L)
 {
   int width = -1, height = -1;
- 
+
   uiImageSize(CAST_ARG(1, Image), &width, &height);
   lua_pushinteger(L, width);
   lua_pushinteger(L, height);
@@ -53,7 +53,7 @@ static luaL_Reg meta_image[] =
   { "Size",     l_uiImageSize },
   { "Resize",   l_uiImageResize },
   { "Destory",  l_uiImageDestroy },
-  
+
   CONTROL_COMMON_METAFIELD
   { NULL }
 };

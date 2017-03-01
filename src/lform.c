@@ -10,7 +10,7 @@ static int l_uiFormAppend(lua_State *L)
   int i;
   for (i = 2; i <= n; i += 3)
   {
-    uiFormAppend(CAST_ARG(1, Form), luaL_checkstring(L, i + 0), CAST_ARG(i + 1, Control), luaL_checkboolean(L, i+2));
+    uiFormAppend(CAST_ARG(1, Form), luaL_checkstring(L, i + 0), CAST_ARG(i + 1, Control), luaL_checkboolean(L, i + 2));
     //copy from ltab.c, need check
     lua_getmetatable(L, 1);
     lua_pushvalue(L, i + 1);

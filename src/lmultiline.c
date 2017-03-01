@@ -3,7 +3,7 @@ static l_uiNewMultilineEntry(lua_State *L)
   uiMultilineEntry *ml = uiNewMultilineEntry();
   if (!lua_isnoneornil(L, 1))
     uiMultilineEntrySetText(ml, luaL_checkstring(L, 1));
-  CREATE_OBJECT(MultilineEntry, ml);
+  CREATE_OBJECT(MulitlineEntry, ml);
   return 1;
 }
 
@@ -12,7 +12,7 @@ static l_uiNewNonWrappingMultilineEntry(lua_State *L)
   uiMultilineEntry *ml = uiNewNonWrappingMultilineEntry();
   if (!lua_isnoneornil(L, 1))
     uiMultilineEntrySetText(ml, luaL_checkstring(L, 1));
-  CREATE_OBJECT(MultilineEntry, ml);
+  CREATE_OBJECT(MulitlineEntry, ml);
   return 1;
 }
 

@@ -49,7 +49,7 @@ static int L_uiTabMargined(lua_State *L)
 
 static struct luaL_Reg meta_Tab[] =
 {
-  { "Append",               l_uiTabAppend }, 
+  { "Append",               l_uiTabAppend },
   { "InsertAt",             l_uiTabInsertAt },
   { "Delete",               l_uiTabDelete },
   { "NumPages",             l_uiTabNumPages },

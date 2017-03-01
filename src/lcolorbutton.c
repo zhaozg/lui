@@ -17,10 +17,10 @@ static int l_uiColorButtonColor(lua_State *L)
     return 4;
   }
   uiColorButtonSetColor(CAST_ARG(1, ColorButton),
-    luaL_checknumber(L, 2),
-    luaL_checknumber(L, 3),
-    luaL_checknumber(L, 4),
-    luaL_checknumber(L, 5));
+                        luaL_checknumber(L, 2),
+                        luaL_checknumber(L, 3),
+                        luaL_checknumber(L, 4),
+                        luaL_checknumber(L, 5));
   RETURN_SELF;
 }
 

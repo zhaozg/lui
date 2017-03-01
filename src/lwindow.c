@@ -7,11 +7,11 @@ static int onClosing(uiWindow *w, void *data)
 static int l_uiNewWindow(lua_State *L)
 {
   uiWindow *win = uiNewWindow(
-    luaL_checkstring(L, 1),
-    luaL_checkint(L, 2),
-    luaL_checkint(L, 3),
-    luaL_checkboolean(L, 4)
-  );
+                    luaL_checkstring(L, 1),
+                    luaL_checkint(L, 2),
+                    luaL_checkint(L, 3),
+                    luaL_checkboolean(L, 4)
+                  );
   uiWindowOnClosing(win, onClosing, NULL);
   CREATE_OBJECT(Window, win);
   return 1;
@@ -158,7 +158,7 @@ static struct luaL_Reg meta_Window[] =
   { "Title",               l_uiWindowTitle },
   { "ContentSize",         l_uiWindowContentSize },
   { "Fullscreen",          l_uiWindowFullscreen },
-  { "OnContentSizeChanged",l_uiWindowOnContentSizeChanged },
+  { "OnContentSizeChanged", l_uiWindowOnContentSizeChanged },
   { "OnClosing",           l_uiWindowOnClosing },
   { "Borderless",          l_uiWindowBorderless },
   { "SetChild",            l_uiWindowSetChild },

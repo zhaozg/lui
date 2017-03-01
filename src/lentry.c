@@ -50,12 +50,12 @@ static int l_uiEntryOnChanged(lua_State *L)
 
 static l_uiEntryReadOnly(lua_State *L)
 {
-  if (lua_isnone(L, 2)) 
+  if (lua_isnone(L, 2))
   {
     lua_pushboolean(L, uiEntryReadOnly(CAST_ARG(1, Entry)));
     return 1;
   }
-  uiEntrySetReadOnly(CAST_ARG(1, Entry),luaL_checkboolean(L, 2));
+  uiEntrySetReadOnly(CAST_ARG(1, Entry), luaL_checkboolean(L, 2));
   RETURN_SELF;
 }
 

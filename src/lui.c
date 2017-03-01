@@ -7,7 +7,6 @@
 
 #include "ui.h"
 
-
 /* make lua version compat */
 
 #if LUA_VERSION_NUM < 502
@@ -29,7 +28,8 @@ inline static int luaL_checkboolean(lua_State *L, int n)
 
 /* make libui object felixble */
 
-struct wrap {
+struct wrap
+{
   uiControl *control;
 };
 
@@ -38,38 +38,38 @@ struct wrap {
 #define RETURN_SELF lua_pushvalue(L, 1); return 1;
 
 #define CREATE_META(n)                \
-	luaL_newmetatable(L, "libui." #n);  \
-	luaL_setfuncs(L, meta_ ## n, 0);
+  luaL_newmetatable(L, "libui." #n);  \
+  luaL_setfuncs(L, meta_ ## n, 0);
 
 #define CREATE_OBJECT(t, c)                                 \
-	struct wrap *w = lua_newuserdata(L, sizeof(struct wrap)); \
-	w->control = uiControl(c);                                \
-	lua_newtable(L);                                          \
-	luaL_getmetatable(L, "libui." #t);                        \
-	lua_setfield(L, -2, "__index");                           \
-	lua_pushcfunction(L, l_uigc);                             \
-	lua_setfield(L, -2, "__gc");                              \
-	lua_setmetatable(L, -2);
+  struct wrap *w = lua_newuserdata(L, sizeof(struct wrap)); \
+  w->control = uiControl(c);                                \
+  lua_newtable(L);                                          \
+  luaL_getmetatable(L, "libui." #t);                        \
+  lua_setfield(L, -2, "__index");                           \
+  lua_pushcfunction(L, l_uigc);                             \
+  lua_setfield(L, -2, "__gc");                              \
+  lua_setmetatable(L, -2);
 
 #define CREATE_OBJECT_REF(t, c)                             \
-	struct wrap *w = lua_newuserdata(L, sizeof(struct wrap)); \
-	w->control = uiControl(c);                                \
-	lua_newtable(L);                                          \
-	luaL_getmetatable(L, "libui." #t);                        \
-	lua_setfield(L, -2, "__index");                           \
-	lua_setmetatable(L, -2);
+  struct wrap *w = lua_newuserdata(L, sizeof(struct wrap)); \
+  w->control = uiControl(c);                                \
+  lua_newtable(L);                                          \
+  luaL_getmetatable(L, "libui." #t);                        \
+  lua_setfield(L, -2, "__index");                           \
+  lua_setmetatable(L, -2);
 
 /* draw releated macro */
 #define CREATE_DRAW_META(n)                \
-	luaL_newmetatable(L, "libui.draw." #n);  \
-	luaL_setfuncs(L, meta_ ## n, 0);
+  luaL_newmetatable(L, "libui.draw." #n);  \
+  luaL_setfuncs(L, meta_ ## n, 0);
 
 #define CREATE_DRAW_OBJECT(t, c)                              \
-	*(ui ## t**)lua_newuserdata(L, sizeof(ui ## t*)) = c;       \
-	lua_newtable(L);                                            \
-	luaL_getmetatable(L, "libui.draw." #t);                     \
-	lua_setfield(L, -2, "__index");                             \
-	lua_setmetatable(L, -2);
+  *(ui ## t**)lua_newuserdata(L, sizeof(ui ## t*)) = c;       \
+  lua_newtable(L);                                            \
+  luaL_getmetatable(L, "libui.draw." #t);                     \
+  lua_setfield(L, -2, "__index");                             \
+  lua_setmetatable(L, -2);
 
 #define CAST_DRAW_ARG(n, type) *((ui ## type**)lua_touserdata(L, n))
 
@@ -96,18 +96,21 @@ static void create_callback_data(lua_State *L, int n)
   lua_settable(L, LUA_REGISTRYINDEX);
 }
 
-static int traceback(lua_State *L) {
+static int traceback(lua_State *L)
+{
   if (!lua_isstring(L, 1))  /* 'message' not a string? */
     return 1;  /* keep it intact */
   lua_pushglobaltable(L);
   lua_getfield(L, -1, "debug");
   lua_remove(L, -2);
-  if (!lua_istable(L, -1)) {
+  if (!lua_istable(L, -1))
+  {
     lua_pop(L, 1);
     return 1;
   }
   lua_getfield(L, -1, "traceback");
-  if (!lua_isfunction(L, -1)) {
+  if (!lua_isfunction(L, -1))
+  {
     lua_pop(L, 2);
     return 1;
   }
@@ -178,11 +181,14 @@ static int l_uigc(lua_State *L)
   uiControl *control = CAST_ARG(1, Control);
   uiControl *parent = uiControlParent(control);
 
-  if (parent) {
-    if (parent->TypeSignature == 0x57696E64) {
+  if (parent)
+  {
+    if (parent->TypeSignature == 0x57696E64)
+    {
       //uiWindowSetChild(uiWindow(parent), NULL);
     }
-    if (parent->TypeSignature == 0x47727062) {
+    if (parent->TypeSignature == 0x47727062)
+    {
       //uiGroupSetChild(uiWindow(parent), NULL);
     }
   }
@@ -232,7 +238,8 @@ static int l_uiInit(lua_State *L)
   memset(&o, 0, sizeof(uiInitOptions));
 
   const char *err = uiInit(&o);
-  if (err) {
+  if (err)
+  {
     lua_pushnil(L);
     lua_pushstring(L, err);
     uiFreeInitError(err);
@@ -257,7 +264,7 @@ static int l_uiMain(lua_State *L)
 
 static int l_uiMainStep(lua_State *L)
 {
-  lua_pushboolean(L,uiMainStep(luaL_checkboolean(L, 1)));
+  lua_pushboolean(L, uiMainStep(luaL_checkboolean(L, 1)));
   return 1;
 }
 
@@ -279,10 +286,44 @@ static int l_uiUserBugCannotSetParentOnToplevel(lua_State *L)
   return 0;
 }
 
+static void l_QueueMain(void *data)
+{
+  int err = 0;
+  lua_State *L = data;
+
+  lua_pushcfunction(L, traceback);
+  err = lua_gettop(L);
+
+  lua_pushlightuserdata(L, l_QueueMain);
+  lua_gettable(L, LUA_REGISTRYINDEX);
+  luaL_checktype(L, -1, LUA_TTABLE);
+  lua_getfield(L, -1, "fn");
+  luaL_checktype(L, -1, LUA_TFUNCTION);
+  lua_getfield(L, -2, "data");
+
+  if (lua_pcall(L, 1, 0, err))
+  {
+    luaL_error(L, lua_tostring(L, -1));
+    lua_pop(L, 1);
+  }
+  /* remove ref table*/
+  lua_pop(L, 1);
+  /* remove traceback function*/
+  lua_pop(L, 1);
+  assert(err - 1 == lua_gettop(L));
+}
+
 static int l_uiQueueMain(lua_State *L)
 {
-  luaL_error(L, "NYI");
-  //uiQueueMain();
+  luaL_checktype(L, 1, LUA_TFUNCTION);
+  lua_pushlightuserdata(L, l_QueueMain);
+  lua_newtable(L);
+  lua_pushvalue(L, 1);
+  lua_setfield(L, -2, "fn");
+  lua_pushvalue(L, 2);
+  lua_setfield(L, -2, "data");
+  lua_settable(L, LUA_REGISTRYINDEX);
+  uiQueueMain(l_QueueMain, L);
   return 0;
 }
 
@@ -344,7 +385,8 @@ static int l_uiOnShouldQuit(lua_State *L)
   return 0;
 }
 
-static struct luaL_Reg lui_table[] = {
+static struct luaL_Reg lui_table[] =
+{
 
   { "Init",                   l_uiInit },
   { "Uninit",                 l_uiUninit },
@@ -378,8 +420,10 @@ static struct luaL_Reg lui_table[] = {
   { "NewLabel",               l_uiNewLabel },
   { "NewMenu",                l_uiNewMenu },
   { "NewMultilineEntry",      l_uiNewMultilineEntry },
-  { "NewNonWrappingMultilineEntry",
-                              l_uiNewNonWrappingMultilineEntry },
+  {
+    "NewNonWrappingMultilineEntry",
+    l_uiNewNonWrappingMultilineEntry
+  },
   { "NewPasswordEntry",       l_uiNewPasswordEntry },
   { "NewProgressBar",         l_uiNewProgressBar },
   { "NewRadioButtons",        l_uiNewRadioButtons },
@@ -394,7 +438,7 @@ static struct luaL_Reg lui_table[] = {
 
   /* draw, not finished */
   { "DrawNewAreaHandler",     l_uiDrawNewAreaHandler },
-  { "DrawNewBrush",           l_uiDrawNewBrush }, 
+  { "DrawNewBrush",           l_uiDrawNewBrush },
   { "DrawNewPath",            l_uiDrawNewPath },
   { "DrawNewMatrix",          l_uiDrawNewMatrix },
   { "DrawNewStrokeParams",    l_uiDrawNewStrokeParams },
@@ -414,7 +458,7 @@ LUA_API int luaopen_lui(lua_State *L)
   CREATE_META(Combobox)
   CREATE_META(ColorButton)
   CREATE_META(DateTimePicker)
-  CREATE_META(EditableCombobox)  
+  CREATE_META(EditableCombobox)
   CREATE_META(Entry)
   CREATE_META(FontButton)
   CREATE_META(Form)
@@ -431,7 +475,7 @@ LUA_API int luaopen_lui(lua_State *L)
   CREATE_META(Spinbox)
   CREATE_META(Tab)
   CREATE_META(Window)
-  
+
   /* draw, not finished */
   CREATE_DRAWMETA
 
