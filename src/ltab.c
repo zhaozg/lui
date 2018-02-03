@@ -54,7 +54,6 @@ static struct luaL_Reg meta_Tab[] =
   { "Delete",               l_uiTabDelete },
   { "NumPages",             l_uiTabNumPages },
   { "Margined",             L_uiTabMargined },
-  { "__len",                l_uiTabNumPages },
 
   CONTROL_COMMON_METAFIELD
   { NULL }
