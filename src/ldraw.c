@@ -242,7 +242,7 @@ static int l_HandlerKeyEvent_cb(uiAreaHandler *handler, uiArea *area, uiAreaKeyE
 
   /* Get function, control userdata and callback data */
   luaL_checktype(L, -1, LUA_TTABLE);
-  lua_getfield(L, -1, "HandlerKeyEvent");
+  lua_getfield(L, -1, "KeyEvent");
   luaL_checktype(L, -1, LUA_TFUNCTION);
   lua_getfield(L, -2, "SELF");
   luaL_checktype(L, -1, LUA_TUSERDATA);
@@ -330,6 +330,7 @@ static int l_uiDrawFreeAreaHandler(lua_State *L)
 
 static struct luaL_Reg meta_AreaHandler[] =
 {
+  { "Free",           l_uiDrawFreeAreaHandler },
   { "__gc",           l_uiDrawFreeAreaHandler },
 
   { NULL }
@@ -548,6 +549,7 @@ static struct luaL_Reg meta_DrawMatrix[] =
   { "Invert",         l_uiDrawMatrixInvert },
   { "TransformPoint", l_uiDrawMatrixTransformPoint },
   { "TransformSize",  l_uiDrawMatrixTransformSize },
+  { "Free",           l_uiDrawFreeMatrix },
   { "__gc",           l_uiDrawFreeMatrix },
 
   { NULL }
@@ -784,47 +786,76 @@ static struct luaL_Reg meta_DrawContext[] =
   { "Stroke",       l_uiDrawStroke },
   { "Fill",         l_uiDrawFill },
 
-
   { NULL }
 };
 
+/* uiDrawFontFamilies */
 static int l_uiDrawListFontFamilies(lua_State *L)
 {
-  CREATE_DRAW_OBJECT(DrawFontFamilies, uiDrawListFontFamilies());
+  uiDrawFontFamilies *families = uiDrawListFontFamilies();
+  if (families) {
+    int i;
+    int n = uiDrawFontFamiliesNumFamilies(families);
+
+    lua_newtable(L);
+    for (i = 0; i < n; i++)
+    {
+      char *family = uiDrawFontFamiliesFamily(families, i);
+      lua_pushstring(L, family);
+      lua_rawseti(L, -2, i + 1);
+      uiFreeText(family);
+    }
+    uiDrawFreeFontFamilies(families);
+  }
+  else
+      lua_pushnil(L);
   return 1;
 }
 
-static int l_uiDrawFontFamiliesNumFamilies(lua_State *L)
+/* uiDrawTextFontDescriptor */
+static int l_uiDrawTextFontDescriptor2table(lua_State *L,
+                                            uiDrawTextFontDescriptor *desc)
 {
-  lua_pushinteger(L, uiDrawFontFamiliesNumFamilies(CAST_DRAW_ARG(1, DrawFontFamilies)));
+  lua_newtable(L);
+  lua_pushnumber(L, desc->Size);
+  lua_setfield(L, -2, "size");
+  lua_pushinteger(L, desc->Weight);
+  lua_setfield(L, -2, "weight");
+  lua_pushinteger(L, desc->Stretch);
+  lua_setfield(L, -2, "stretch");
+  lua_pushinteger(L, desc->Italic);
+  lua_setfield(L, -2, "italic");
+  lua_pushstring(L, desc->Family);
+  lua_setfield(L, -2, "family");
   return 1;
 }
 
-static int l_uiDrawFontFamiliesFamily(lua_State *L)
-{
-  lua_pushstring(L, uiDrawFontFamiliesFamily(CAST_DRAW_ARG(1, DrawFontFamilies), luaL_checkint(L, 2)));
-  return 1;
+/* uiDrawTextFont */
+static int lui_getoptfield(lua_State*L, int idx, const char*name, int def) {
+  lua_getfield(L, idx, name);
+  def = luaL_optint(L, -1, def);
+  lua_pop(L, 1);
+  return def;
 }
 
-static int l_uiDrawFreeFontFamilies(lua_State *L)
+static int l_uiDrawLoadClosestFont(lua_State* L)
 {
-  uiDrawFreeFontFamilies(CAST_DRAW_ARG(1, DrawFontFamilies));
-  return 0;
-}
+  uiDrawTextFont* font = NULL;
+  uiDrawTextFontDescriptor descriptor = { 0 };
 
-static struct luaL_Reg meta_DrawFontFamilies[] =
-{
-  { "NumFamilies",    l_uiDrawFontFamiliesNumFamilies },
-  { "Family",         l_uiDrawFontFamiliesFamily },
-  { "__gc",           l_uiDrawFreeFontFamilies },
-  { "__len",          l_uiDrawFontFamiliesNumFamilies },
+  luaL_argcheck(L, lua_type(L, 1) == LUA_TTABLE, 1, "Invalid");
+  descriptor.Size = lui_getoptfield(L, 1, "size", 10);
+  descriptor.Weight = lui_getoptfield(L, 1, "weight", uiDrawTextWeightNormal);
+  descriptor.Italic = lui_getoptfield(L, 1, "style", uiDrawTextItalicNormal);
+  descriptor.Stretch = lui_getoptfield(L, 1, "stretch", uiDrawTextStretchNormal);
 
-  { NULL }
-};
+  lua_getfield(L, 1, "family");
+  descriptor.Family = luaL_optstring(L, -1, "Tahoma");
 
-static int l_uiDrawLoadClosestFont(lua_State *L)
-{
-  CREATE_DRAW_OBJECT(DrawTextFont, uiDrawLoadClosestFont(CAST_DRAW_ARG(1, DrawTextFontDescriptor)));
+  font = uiDrawLoadClosestFont(&descriptor);
+  lua_pop(L, 1);  // font family name is now invalid
+
+  CREATE_DRAW_OBJECT(DrawTextFont, font);
   return 1;
 }
 
@@ -864,6 +895,7 @@ static struct luaL_Reg meta_DrawTextFont[] =
   { "Handle",     l_uiDrawTextFontHandle },
   { "Describe",   l_uiDrawTextFontDescribe },
   { "Metrics",    l_uiDrawTextFontMetrics },
+  { "Free",       l_uiDrawFreeTextFont },
   { "__gc",       l_uiDrawFreeTextFont },
 
   { NULL }
@@ -930,16 +962,12 @@ static int l_uiDrawTextLayoutColor(lua_State *L)
 
 static struct luaL_Reg meta_DrawTextLayout[] =
 {
-  { "Handle",     l_uiDrawTextLayoutWidth },
-  { "Describe",   l_uiDrawTextLayoutExtents },
-  { "Metrics",    l_uiDrawTextLayoutColor },
+  {  "Width",     l_uiDrawTextLayoutWidth },
+  {  "Extents",   l_uiDrawTextLayoutExtents },
+  {  "Color",     l_uiDrawTextLayoutColor },
+  {  "Free",      l_uiDrawFreeTextLayout },
   { "__gc",       l_uiDrawFreeTextLayout },
 
-  { NULL }
-};
-
-static struct luaL_Reg meta_DrawTextFontDescriptor[] =
-{
   { NULL }
 };
 
@@ -947,12 +975,10 @@ static struct luaL_Reg meta_DrawTextFontDescriptor[] =
   CREATE_DRAW_META(AreaHandler)             \
   CREATE_DRAW_META(DrawBrush)               \
   CREATE_DRAW_META(DrawPath)                \
-  CREATE_DRAW_META(DrawFontFamilies)        \
   CREATE_DRAW_META(DrawStrokeParams)        \
   CREATE_DRAW_META(DrawTextFont)            \
   CREATE_DRAW_META(DrawTextLayout)          \
   CREATE_DRAW_META(DrawContext)             \
   CREATE_DRAW_META(DrawMatrix)              \
-  CREATE_DRAW_META(DrawTextFontDescriptor)  \
   CREATE_DRAW_META(DrawBrush)               \
   CREATE_DRAW_META(DrawStrokeParams)
