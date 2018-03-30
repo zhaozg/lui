@@ -1,6 +1,6 @@
 static int l_uiNewCombobox(lua_State *L)
 {
-  CREATE_OBJECT(Combobox, uiNewCombobox());
+  UI_CREATE_OBJECT(Combobox, uiNewCombobox());
   return 1;
 }
 
@@ -11,20 +11,20 @@ static int l_uiComboboxAppend(lua_State *L)
   for (i = 2; i <= n; i++)
   {
     const char *text = luaL_checkstring(L, n);
-    uiComboboxAppend(CAST_ARG(1, Combobox), text);
+    uiComboboxAppend(UI_CHECK_OBJECT(1, Combobox), text);
   }
-  RETURN_SELF;
+  UI_RETURN_SELF;
 }
 
 static int l_uiComboboxSelected(lua_State *L)
 {
   if (lua_isnone(L, 2))
   {
-    lua_pushinteger(L, uiComboboxSelected(CAST_ARG(1, Combobox)));
+    lua_pushinteger(L, uiComboboxSelected(UI_CHECK_OBJECT(1, Combobox)));
     return 1;
   }
-  uiComboboxSetSelected(CAST_ARG(1, Combobox), luaL_checkint(L, 2));
-  RETURN_SELF;
+  uiComboboxSetSelected(UI_CHECK_OBJECT(1, Combobox), luaL_checkint(L, 2));
+  UI_RETURN_SELF;
 }
 
 static void on_combobox_selected(uiCombobox *c, void *data)
@@ -34,9 +34,9 @@ static void on_combobox_selected(uiCombobox *c, void *data)
 
 static int l_uiComboboxOnSelected(lua_State *L)
 {
-  uiComboboxOnSelected(CAST_ARG(1, Combobox), on_combobox_selected, L);
+  uiComboboxOnSelected(UI_CHECK_OBJECT(1, Combobox), on_combobox_selected, L);
   create_callback_data(L, 1);
-  RETURN_SELF;
+  UI_RETURN_SELF;
 }
 
 static struct luaL_Reg meta_Combobox[] =
@@ -51,7 +51,7 @@ static struct luaL_Reg meta_Combobox[] =
 
 static int l_uiNewEditableCombobox(lua_State *L)
 {
-  CREATE_OBJECT(EditableCombobox, uiNewEditableCombobox());
+  UI_CREATE_OBJECT(EditableCombobox, uiNewEditableCombobox());
   return 1;
 }
 
@@ -62,20 +62,20 @@ static int l_uiEditableComboboxAppend(lua_State *L)
   for (i = 2; i <= n; i++)
   {
     const char *text = luaL_checkstring(L, n);
-    uiEditableComboboxAppend(CAST_ARG(1, EditableCombobox), text);
+    uiEditableComboboxAppend(UI_CHECK_OBJECT(1, EditableCombobox), text);
   }
-  RETURN_SELF;
+  UI_RETURN_SELF;
 }
 
 static int l_uiEditableComboboxText(lua_State *L)
 {
   if (lua_isnone(L, 2))
   {
-    lua_pushstring(L, uiEditableComboboxText(CAST_ARG(1, EditableCombobox)));
+    lua_pushstring(L, uiEditableComboboxText(UI_CHECK_OBJECT(1, EditableCombobox)));
     return 1;
   }
-  uiEditableComboboxSetText(CAST_ARG(1, EditableCombobox), luaL_checkstring(L, 2));
-  RETURN_SELF;
+  uiEditableComboboxSetText(UI_CHECK_OBJECT(1, EditableCombobox), luaL_checkstring(L, 2));
+  UI_RETURN_SELF;
 }
 
 static void on_EditableCombobox_Changed(uiEditableCombobox *c, void *data)
@@ -85,9 +85,9 @@ static void on_EditableCombobox_Changed(uiEditableCombobox *c, void *data)
 
 static int l_uiEditableComboboxOnChanged(lua_State *L)
 {
-  uiEditableComboboxOnChanged(CAST_ARG(1, EditableCombobox), on_EditableCombobox_Changed, L);
+  uiEditableComboboxOnChanged(UI_CHECK_OBJECT(1, EditableCombobox), on_EditableCombobox_Changed, L);
   create_callback_data(L, 1);
-  RETURN_SELF;
+  UI_RETURN_SELF;
 }
 
 static struct luaL_Reg meta_EditableCombobox[] =

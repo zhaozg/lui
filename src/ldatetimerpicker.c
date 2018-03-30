@@ -1,18 +1,18 @@
 static int l_uiNewDateTimePicker(lua_State *L)
 {
-  CREATE_OBJECT(DateTimePicker, uiNewDateTimePicker());
+  UI_CREATE_OBJECT(DateTimePicker, uiNewDateTimePicker());
   return 1;
 }
 
 static int l_uiNewDatePicker(lua_State *L)
 {
-  CREATE_OBJECT(DateTimePicker, uiNewDatePicker());
+  UI_CREATE_OBJECT(DateTimePicker, uiNewDatePicker());
   return 1;
 }
 
 static int l_uiNewTimePicker(lua_State *L)
 {
-  CREATE_OBJECT(DateTimePicker, uiNewTimePicker());
+  UI_CREATE_OBJECT(DateTimePicker, uiNewTimePicker());
   return 1;
 }
 

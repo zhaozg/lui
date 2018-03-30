@@ -1,12 +1,12 @@
 static int l_uiNewHorizontalSeparator(lua_State *L)
 {
-  CREATE_OBJECT(Separator, uiNewHorizontalSeparator());
+  UI_CREATE_OBJECT(Separator, uiNewHorizontalSeparator());
   return 1;
 }
 
 static int l_uiNewVerticalSeparator(lua_State *L)
 {
-  CREATE_OBJECT(Separator, uiNewVerticalSeparator());
+  UI_CREATE_OBJECT(Separator, uiNewVerticalSeparator());
   return 1;
 }
 

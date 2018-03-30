@@ -13,7 +13,7 @@ static int l_uiNewWindow(lua_State *L)
                     luaL_checkboolean(L, 4)
                   );
   uiWindowOnClosing(win, onClosing, NULL);
-  CREATE_OBJECT(Window, win);
+  UI_CREATE_OBJECT(Window, win);
   return 1;
 }
 
@@ -21,11 +21,11 @@ static int l_uiWindowTitle(lua_State *L)
 {
   if (lua_isnone(L, 2))
   {
-    lua_pushstring(L, uiWindowTitle(CAST_ARG(1, Window)));
+    lua_pushstring(L, uiWindowTitle(UI_CHECK_OBJECT(1, Window)));
     return 1;
   }
-  uiWindowSetTitle(CAST_ARG(1, Window), luaL_checkstring(L, 2));
-  RETURN_SELF;
+  uiWindowSetTitle(UI_CHECK_OBJECT(1, Window), luaL_checkstring(L, 2));
+  UI_RETURN_SELF;
 }
 
 static int l_uiWindowContentSize(lua_State *L)
@@ -33,26 +33,26 @@ static int l_uiWindowContentSize(lua_State *L)
   int width, height;
   if (lua_isnone(L, 2))
   {
-    uiWindowContentSize(CAST_ARG(1, Window), &width, &height);
+    uiWindowContentSize(UI_CHECK_OBJECT(1, Window), &width, &height);
     lua_pushinteger(L, width);
     lua_pushinteger(L, height);
     return 2;
   }
   width = luaL_checkint(L, 2);
   height = luaL_checkint(L, 3);
-  uiWindowSetContentSize(CAST_ARG(1, Window), width, height);
-  RETURN_SELF;
+  uiWindowSetContentSize(UI_CHECK_OBJECT(1, Window), width, height);
+  UI_RETURN_SELF;
 }
 
 static int l_uiWindowFullscreen(lua_State *L)
 {
   if (lua_isnone(L, 2))
   {
-    lua_pushboolean(L, uiWindowFullscreen(CAST_ARG(1, Window)));
+    lua_pushboolean(L, uiWindowFullscreen(UI_CHECK_OBJECT(1, Window)));
     return 1;
   }
-  uiWindowSetFullscreen(CAST_ARG(1, Window), luaL_checkboolean(L, 2));
-  RETURN_SELF;
+  uiWindowSetFullscreen(UI_CHECK_OBJECT(1, Window), luaL_checkboolean(L, 2));
+  UI_RETURN_SELF;
 }
 
 static void Window_On_ContentSizeChanged(uiWindow *b, void *data)
@@ -62,9 +62,9 @@ static void Window_On_ContentSizeChanged(uiWindow *b, void *data)
 
 static int l_uiWindowOnContentSizeChanged(lua_State *L)
 {
-  uiWindowOnContentSizeChanged(CAST_ARG(1, Window), Window_On_ContentSizeChanged, L);
+  uiWindowOnContentSizeChanged(UI_CHECK_OBJECT(1, Window), Window_On_ContentSizeChanged, L);
   create_callback_data(L, 1);
-  RETURN_SELF;
+  UI_RETURN_SELF;
 }
 
 static int Window_On_Closing(uiWindow *b, void *data)
@@ -74,46 +74,46 @@ static int Window_On_Closing(uiWindow *b, void *data)
 
 static int l_uiWindowOnClosing(lua_State *L)
 {
-  uiWindowOnClosing(CAST_ARG(1, Window), Window_On_Closing, L);
+  uiWindowOnClosing(UI_CHECK_OBJECT(1, Window), Window_On_Closing, L);
   create_callback_data(L, 1);
-  RETURN_SELF;
+  UI_RETURN_SELF;
 }
 
 static int l_uiWindowBorderless(lua_State *L)
 {
   if (lua_isnone(L, 2))
   {
-    lua_pushboolean(L, uiWindowBorderless(CAST_ARG(1, Window)));
+    lua_pushboolean(L, uiWindowBorderless(UI_CHECK_OBJECT(1, Window)));
     return 1;
   }
-  uiWindowSetBorderless(CAST_ARG(1, Window), luaL_checkboolean(L, 2));
-  RETURN_SELF;
+  uiWindowSetBorderless(UI_CHECK_OBJECT(1, Window), luaL_checkboolean(L, 2));
+  UI_RETURN_SELF;
 }
 
 static int l_uiWindowSetChild(lua_State *L)
 {
-  uiWindowSetChild(CAST_ARG(1, Window), CAST_ARG(2, Control));
+  uiWindowSetChild(UI_CHECK_OBJECT(1, Window), UI_CHECK_OBJECT(2, Control));
   lua_getmetatable(L, 1);
   lua_pushvalue(L, 2);
   lua_pushboolean(L, 1);
   lua_settable(L, -3);
-  RETURN_SELF;
+  UI_RETURN_SELF;
 }
 
 static int l_uiWindowMargined(lua_State *L)
 {
   if (lua_isnone(L, 2))
   {
-    lua_pushboolean(L, uiWindowMargined(CAST_ARG(1, Window)));
+    lua_pushboolean(L, uiWindowMargined(UI_CHECK_OBJECT(1, Window)));
     return 1;
   }
-  uiWindowSetMargined(CAST_ARG(1, Window), luaL_checkboolean(L, 2));
-  RETURN_SELF;
+  uiWindowSetMargined(UI_CHECK_OBJECT(1, Window), luaL_checkboolean(L, 2));
+  UI_RETURN_SELF;
 }
 
 static int l_uiOpenFile(lua_State* L)
 {
-  char* f = uiOpenFile(CAST_ARG(1, Window));
+  char* f = uiOpenFile(UI_CHECK_OBJECT(1, Window));
   if (f)
   {
     lua_pushstring(L, f);
@@ -128,7 +128,7 @@ static int l_uiOpenFile(lua_State* L)
 
 static int l_uiSaveFile(lua_State* L)
 {
-  char* f = uiSaveFile(CAST_ARG(1, Window));
+  char* f = uiSaveFile(UI_CHECK_OBJECT(1, Window));
   if (f)
   {
     lua_pushstring(L, f);
@@ -143,13 +143,13 @@ static int l_uiSaveFile(lua_State* L)
 
 static int l_uiMsgBox(lua_State* L)
 {
-  uiMsgBox(CAST_ARG(1, Window), luaL_checkstring(L, 2), luaL_checkstring(L, 3));
+  uiMsgBox(UI_CHECK_OBJECT(1, Window), luaL_checkstring(L, 2), luaL_checkstring(L, 3));
   return 0;
 }
 
 static int l_uiMsgBoxError(lua_State* L)
 {
-  uiMsgBoxError(CAST_ARG(1, Window), luaL_checkstring(L, 2), luaL_checkstring(L, 3));
+  uiMsgBoxError(UI_CHECK_OBJECT(1, Window), luaL_checkstring(L, 2), luaL_checkstring(L, 3));
   return 0;
 }
 

@@ -2,7 +2,7 @@
 static int l_uiAreaDrawParams_2_table(lua_State *L, uiAreaDrawParams *params)
 {
   lua_newtable(L);
-  CREATE_DRAW_OBJECT(DrawContext, params->Context);
+  CREATE_USER_OBJECT(DrawContext, params->Context);
   lua_setfield(L, -2, "Context");
 
 #define PARAMS_SET_NUMBER(val, name)  \
@@ -99,7 +99,7 @@ static void l_HandlerDraw_cb(uiAreaHandler *handler, uiArea *area, uiAreaDrawPar
   luaL_checktype(L, -1, LUA_TFUNCTION);
   lua_getfield(L, -2, "SELF");
   luaL_checktype(L, -1, LUA_TUSERDATA);
-  CREATE_OBJECT_REF(Area, area);
+  UI_CREATE_OBJECT_REF(Area, area);
   l_uiAreaDrawParams_2_table(L, params);
 
   /* Call function */
@@ -136,7 +136,7 @@ static void l_HandlerMouseEvent_cb(uiAreaHandler *handler, uiArea *area, uiAreaM
   luaL_checktype(L, -1, LUA_TFUNCTION);
   lua_getfield(L, -2, "SELF");
   luaL_checktype(L, -1, LUA_TUSERDATA);
-  CREATE_OBJECT_REF(Area, area);
+  UI_CREATE_OBJECT_REF(Area, area);
   l_uiAreaMouseEvent_2_table(L, evt);
 
   /* Call function */
@@ -173,7 +173,7 @@ static void l_HandlerMouseCrossed_cb(uiAreaHandler *handler, uiArea *area, int l
   luaL_checktype(L, -1, LUA_TFUNCTION);
   lua_getfield(L, -2, "SELF");
   luaL_checktype(L, -1, LUA_TUSERDATA);
-  CREATE_OBJECT_REF(Area, area);
+  UI_CREATE_OBJECT_REF(Area, area);
   lua_pushinteger(L, left);
 
   /* Call function */
@@ -210,7 +210,7 @@ static void l_HandlerDragBroken_cb(uiAreaHandler *handler, uiArea *area)
   luaL_checktype(L, -1, LUA_TFUNCTION);
   lua_getfield(L, -2, "SELF");
   luaL_checktype(L, -1, LUA_TUSERDATA);
-  CREATE_OBJECT_REF(Area, area);
+  UI_CREATE_OBJECT_REF(Area, area);
 
   /* Call function */
   if (lua_pcall(L, 2, 0, err))
@@ -246,7 +246,7 @@ static int l_HandlerKeyEvent_cb(uiAreaHandler *handler, uiArea *area, uiAreaKeyE
   luaL_checktype(L, -1, LUA_TFUNCTION);
   lua_getfield(L, -2, "SELF");
   luaL_checktype(L, -1, LUA_TUSERDATA);
-  CREATE_OBJECT_REF(Area, area);
+  UI_CREATE_OBJECT_REF(Area, area);
   l_uiAreaKeyEvent_2_table(L, evt);
 
   /* Call function */
@@ -286,7 +286,7 @@ static int l_uiDrawNewAreaHandler(lua_State *L)
   handler = &lh->handler;
   lh->L = L;
 
-  CREATE_DRAW_OBJECT(AreaHandler, handler);
+  CREATE_USER_OBJECT(AreaHandler, handler);
 
   /* Push registery key: userdata pointer to control */
   lua_pushlightuserdata(L, handler);
@@ -319,7 +319,7 @@ static int l_uiDrawNewAreaHandler(lua_State *L)
 
 static int l_uiDrawFreeAreaHandler(lua_State *L)
 {
-  uiAreaHandler *handler = CAST_DRAW_ARG(1, AreaHandler);
+  uiAreaHandler *handler = CHECK_USER_OBJECT(1, AreaHandler);
   luiAreaHandler *lh = (luiAreaHandler *)handler;
   lua_pushlightuserdata(L, handler);
   lua_pushnil(L);
@@ -340,7 +340,7 @@ static struct luaL_Reg meta_AreaHandler[] =
 static int l_uiDrawNewPath(lua_State *L)
 {
   uiDrawPath *dp = uiDrawNewPath(luaL_checkint(L, 1));
-  CREATE_DRAW_OBJECT(DrawPath, dp);
+  CREATE_USER_OBJECT(DrawPath, dp);
   return 1;
 }
 
@@ -357,72 +357,72 @@ static int l_uiDrawFreePath(lua_State *L)
 
 static int l_uiDrawPathNewFigure(lua_State *L)
 {
-  uiDrawPathNewFigure(CAST_DRAW_ARG(1, DrawPath), luaL_checknumber(L, 2), luaL_checknumber(L, 3));
-  RETURN_SELF;
+  uiDrawPathNewFigure(CHECK_USER_OBJECT(1, DrawPath), luaL_checknumber(L, 2), luaL_checknumber(L, 3));
+  UI_RETURN_SELF;
 }
 
 static int l_uiDrawPathNewFigureWithArc(lua_State *L)
 {
-  uiDrawPathNewFigureWithArc(CAST_DRAW_ARG(1, DrawPath),
+  uiDrawPathNewFigureWithArc(CHECK_USER_OBJECT(1, DrawPath),
                              luaL_checknumber(L, 2),
                              luaL_checknumber(L, 3),
                              luaL_checknumber(L, 4),
                              luaL_checknumber(L, 5),
                              luaL_checknumber(L, 6),
                              luaL_checkboolean(L, 7));
-  RETURN_SELF;
+  UI_RETURN_SELF;
 }
 
 static int l_uiDrawPathLineTo(lua_State *L)
 {
-  uiDrawPathLineTo(CAST_DRAW_ARG(1, DrawPath), luaL_checknumber(L, 2), luaL_checknumber(L, 3));
-  RETURN_SELF;
+  uiDrawPathLineTo(CHECK_USER_OBJECT(1, DrawPath), luaL_checknumber(L, 2), luaL_checknumber(L, 3));
+  UI_RETURN_SELF;
 }
 
 static int l_uiDrawPathArcTo(lua_State *L)
 {
-  uiDrawPathArcTo(CAST_DRAW_ARG(1, DrawPath),
+  uiDrawPathArcTo(CHECK_USER_OBJECT(1, DrawPath),
                   luaL_checknumber(L, 2),
                   luaL_checknumber(L, 3),
                   luaL_checknumber(L, 4),
                   luaL_checknumber(L, 5),
                   luaL_checknumber(L, 6),
                   luaL_checkboolean(L, 7));
-  RETURN_SELF;
+  UI_RETURN_SELF;
 }
 
 static int l_uiDrawPathBezierTo(lua_State *L)
 {
-  uiDrawPathBezierTo(CAST_DRAW_ARG(1, DrawPath),
+  uiDrawPathBezierTo(CHECK_USER_OBJECT(1, DrawPath),
                      luaL_checknumber(L, 2),
                      luaL_checknumber(L, 3),
                      luaL_checknumber(L, 4),
                      luaL_checknumber(L, 5),
                      luaL_checknumber(L, 6),
                      luaL_checknumber(L, 7));
-  RETURN_SELF;
+  UI_RETURN_SELF;
 }
 
 static int l_uiDrawPathCloseFigure(lua_State *L)
 {
-  uiDrawPathCloseFigure(CAST_DRAW_ARG(1, DrawPath));
-  RETURN_SELF;
+  uiDrawPathCloseFigure(CHECK_USER_OBJECT(1, DrawPath));
+  UI_RETURN_SELF;
 }
 
 static int l_uiDrawPathAddRectangle(lua_State *L)
 {
-  uiDrawPathAddRectangle(CAST_DRAW_ARG(1, DrawPath),
+  uiDrawPathAddRectangle(CHECK_USER_OBJECT(1, DrawPath),
                          luaL_checknumber(L, 2),
                          luaL_checknumber(L, 3),
                          luaL_checknumber(L, 4),
                          luaL_checknumber(L, 5));
-  RETURN_SELF;
+  UI_RETURN_SELF;
 }
 
 static int l_uiDrawPathEnd(lua_State *L)
 {
-  uiDrawPathEnd(CAST_DRAW_ARG(1, DrawPath));
-  RETURN_SELF;
+  uiDrawPathEnd(CHECK_USER_OBJECT(1, DrawPath));
+  UI_RETURN_SELF;
 }
 
 static struct luaL_Reg meta_DrawPath[] =
@@ -455,74 +455,74 @@ static int l_uiDrawNewMatrix(lua_State *L)
   matrix->M31 = luaL_optnumber(L, 5, 0);
   matrix->M32 = luaL_optnumber(L, 6, 0);
 
-  CREATE_DRAW_OBJECT(DrawMatrix, matrix);
+  CREATE_USER_OBJECT(DrawMatrix, matrix);
   return 1;
 }
 
 static int l_uiDrawFreeMatrix(lua_State *L)
 {
-  free(CAST_DRAW_ARG(1, DrawMatrix));
+  free(CHECK_USER_OBJECT(1, DrawMatrix));
   return 0;
 }
 static int l_uiDrawMatrixSetIdentity(lua_State *L)
 {
-  uiDrawMatrixSetIdentity(CAST_DRAW_ARG(1, DrawMatrix));
-  RETURN_SELF;
+  uiDrawMatrixSetIdentity(CHECK_USER_OBJECT(1, DrawMatrix));
+  UI_RETURN_SELF;
 }
 
 static int l_uiDrawMatrixTranslate(lua_State *L)
 {
-  uiDrawMatrixTranslate(CAST_DRAW_ARG(1, DrawMatrix), luaL_checknumber(L, 2), luaL_checknumber(L, 3));
-  RETURN_SELF;
+  uiDrawMatrixTranslate(CHECK_USER_OBJECT(1, DrawMatrix), luaL_checknumber(L, 2), luaL_checknumber(L, 3));
+  UI_RETURN_SELF;
 }
 
 static int l_uiDrawMatrixScale(lua_State *L)
 {
-  uiDrawMatrixScale(CAST_DRAW_ARG(1, DrawMatrix),
+  uiDrawMatrixScale(CHECK_USER_OBJECT(1, DrawMatrix),
                     luaL_checknumber(L, 2), luaL_checknumber(L, 3),
                     luaL_checknumber(L, 4), luaL_checknumber(L, 5));
-  RETURN_SELF;
+  UI_RETURN_SELF;
 }
 
 static int l_uiDrawMatrixRotate(lua_State *L)
 {
-  uiDrawMatrixRotate(CAST_DRAW_ARG(1, DrawMatrix),
+  uiDrawMatrixRotate(CHECK_USER_OBJECT(1, DrawMatrix),
                      luaL_checknumber(L, 2),
                      luaL_checknumber(L, 3),
                      luaL_checknumber(L, 4));
-  RETURN_SELF;
+  UI_RETURN_SELF;
 }
 
 static int l_uiDrawMatrixSkew(lua_State *L)
 {
-  uiDrawMatrixSkew(CAST_DRAW_ARG(1, DrawMatrix),
+  uiDrawMatrixSkew(CHECK_USER_OBJECT(1, DrawMatrix),
                    luaL_checknumber(L, 2), luaL_checknumber(L, 3),
                    luaL_checknumber(L, 4), luaL_checknumber(L, 5));
-  RETURN_SELF;
+  UI_RETURN_SELF;
 }
 
 static int l_uiDrawMatrixMultiply(lua_State *L)
 {
-  uiDrawMatrixMultiply(CAST_DRAW_ARG(1, DrawMatrix), CAST_DRAW_ARG(2, DrawMatrix));
-  RETURN_SELF;
+  uiDrawMatrixMultiply(CHECK_USER_OBJECT(1, DrawMatrix), CHECK_USER_OBJECT(2, DrawMatrix));
+  UI_RETURN_SELF;
 }
 
 static int l_uiDrawMatrixInvertible(lua_State *L)
 {
-  lua_pushboolean(L, uiDrawMatrixInvertible(CAST_DRAW_ARG(1, DrawMatrix)));
+  lua_pushboolean(L, uiDrawMatrixInvertible(CHECK_USER_OBJECT(1, DrawMatrix)));
   return 1;
 }
 
 static int l_uiDrawMatrixInvert(lua_State *L)
 {
-  lua_pushboolean(L, uiDrawMatrixInvert(CAST_DRAW_ARG(1, DrawMatrix)));
+  lua_pushboolean(L, uiDrawMatrixInvert(CHECK_USER_OBJECT(1, DrawMatrix)));
   return 1;
 }
 
 static int l_uiDrawMatrixTransformPoint(lua_State *L)
 {
   double x, y;
-  uiDrawMatrixTransformPoint(CAST_DRAW_ARG(1, DrawMatrix), &x, &y);
+  uiDrawMatrixTransformPoint(CHECK_USER_OBJECT(1, DrawMatrix), &x, &y);
   lua_pushnumber(L, x);
   lua_pushnumber(L, y);
   return 2;
@@ -531,7 +531,7 @@ static int l_uiDrawMatrixTransformPoint(lua_State *L)
 static int l_uiDrawMatrixTransformSize(lua_State *L)
 {
   double x, y;
-  uiDrawMatrixTransformSize(CAST_DRAW_ARG(1, DrawMatrix), &x, &y);
+  uiDrawMatrixTransformSize(CHECK_USER_OBJECT(1, DrawMatrix), &x, &y);
   lua_pushnumber(L, x);
   lua_pushnumber(L, y);
   return 2;
@@ -560,25 +560,25 @@ static int l_uiDrawNewBrush(lua_State *L)
 {
   uiDrawBrush *brush = malloc(sizeof(uiDrawBrush));
   memset(brush, 0, sizeof(uiDrawBrush));
-  CREATE_DRAW_OBJECT(DrawBrush, brush);
+  CREATE_USER_OBJECT(DrawBrush, brush);
   return 1;
 }
 
 static int lui_uiDrawBrushType(lua_State *L)
 {
-  uiDrawBrush *brush = CAST_DRAW_ARG(1, DrawBrush);
+  uiDrawBrush *brush = CHECK_USER_OBJECT(1, DrawBrush);
   if (lua_isnone(L, 2))
   {
     lua_pushinteger(L, brush->Type);
     return 1;
   }
   brush->Type = luaL_checkint(L, 2);
-  RETURN_SELF;
+  UI_RETURN_SELF;
 }
 
 static int lui_uiDrawBrushSolid(lua_State *L)
 {
-  uiDrawBrush *brush = CAST_DRAW_ARG(1, DrawBrush);
+  uiDrawBrush *brush = CHECK_USER_OBJECT(1, DrawBrush);
   if (lua_isnone(L, 2))
   {
     lua_pushnumber(L, brush->R);
@@ -591,13 +591,13 @@ static int lui_uiDrawBrushSolid(lua_State *L)
   brush->G = luaL_checknumber(L, 3);
   brush->B = luaL_checknumber(L, 4);
   brush->A = luaL_checknumber(L, 5);
-  RETURN_SELF;
+  UI_RETURN_SELF;
 }
 
 
 static int lui_uiDrawBrushGradient(lua_State *L)
 {
-  uiDrawBrush *brush = CAST_DRAW_ARG(1, DrawBrush);
+  uiDrawBrush *brush = CHECK_USER_OBJECT(1, DrawBrush);
   if (lua_isnone(L, 2))
   {
     lua_pushnumber(L, brush->X0);
@@ -612,7 +612,7 @@ static int lui_uiDrawBrushGradient(lua_State *L)
   brush->X1 = luaL_checknumber(L, 4);
   brush->Y1 = luaL_checknumber(L, 5);
   brush->OuterRadius = luaL_checknumber(L, 6);
-  RETURN_SELF;
+  UI_RETURN_SELF;
 }
 
 static struct luaL_Reg meta_DrawBrush[] =
@@ -654,56 +654,56 @@ static int l_uiDrawNewStrokeParams(lua_State *L)
 {
   uiDrawStrokeParams *params = malloc(sizeof(uiDrawStrokeParams));
   memset(params, 0, sizeof(uiDrawStrokeParams));
-  CREATE_DRAW_OBJECT(DrawStrokeParams, params);
+  CREATE_USER_OBJECT(DrawStrokeParams, params);
   return 1;
 }
 
 static int l_uiDrawtrokeParamsCap(lua_State *L)
 {
-  uiDrawStrokeParams *params = CAST_DRAW_ARG(1, DrawStrokeParams);
+  uiDrawStrokeParams *params = CHECK_USER_OBJECT(1, DrawStrokeParams);
   if (lua_isnone(L, 2))
   {
     lua_pushinteger(L, params->Cap);
     return 1;
   }
   params->Cap = luaL_checkint(L, 2);
-  RETURN_SELF;
+  UI_RETURN_SELF;
 }
 
 static int l_uiDrawtrokeParamsJoin(lua_State *L)
 {
-  uiDrawStrokeParams *params = CAST_DRAW_ARG(1, DrawStrokeParams);
+  uiDrawStrokeParams *params = CHECK_USER_OBJECT(1, DrawStrokeParams);
   if (lua_isnone(L, 2))
   {
     lua_pushinteger(L, params->Join);
     return 1;
   }
   params->Join = luaL_checkint(L, 2);
-  RETURN_SELF;
+  UI_RETURN_SELF;
 }
 
 static int l_uiDrawtrokeParamsThickness(lua_State *L)
 {
-  uiDrawStrokeParams *params = CAST_DRAW_ARG(1, DrawStrokeParams);
+  uiDrawStrokeParams *params = CHECK_USER_OBJECT(1, DrawStrokeParams);
   if (lua_isnone(L, 2))
   {
     lua_pushnumber(L, params->Thickness);
     return 1;
   }
   params->Thickness = luaL_checknumber(L, 2);
-  RETURN_SELF;
+  UI_RETURN_SELF;
 }
 
 static int l_uiDrawtrokeParamsMiterLimit(lua_State *L)
 {
-  uiDrawStrokeParams *params = CAST_DRAW_ARG(1, DrawStrokeParams);
+  uiDrawStrokeParams *params = CHECK_USER_OBJECT(1, DrawStrokeParams);
   if (lua_isnone(L, 2))
   {
     lua_pushnumber(L, params->MiterLimit);
     return 1;
   }
   params->MiterLimit = luaL_checknumber(L, 2);
-  RETURN_SELF;
+  UI_RETURN_SELF;
 }
 
 static int l_uiDrawtrokeParamsDashes(lua_State *L)
@@ -732,48 +732,49 @@ static struct luaL_Reg meta_DrawStrokeParams[] =
 
 static int l_uiDrawTransform(lua_State *L)
 {
-  uiDrawTransform(CAST_DRAW_ARG(1, DrawContext), CAST_DRAW_ARG(2, DrawMatrix));
-  RETURN_SELF;
+  uiDrawTransform(CHECK_USER_OBJECT(1, DrawContext), CHECK_USER_OBJECT(2, DrawMatrix));
+  UI_RETURN_SELF;
 }
 
 static int l_uiDrawClip(lua_State *L)
 {
-  uiDrawClip(CAST_DRAW_ARG(1, DrawContext), CAST_DRAW_ARG(2, DrawPath));
-  RETURN_SELF;
+  uiDrawClip(CHECK_USER_OBJECT(1, DrawContext), CHECK_USER_OBJECT(2, DrawPath));
+  UI_RETURN_SELF;
 }
 
 static int l_uiDrawSave(lua_State *L)
 {
-  uiDrawSave(CAST_DRAW_ARG(1, DrawContext));
-  RETURN_SELF;
+  uiDrawSave(CHECK_USER_OBJECT(1, DrawContext));
+  UI_RETURN_SELF;
 }
 
 static int l_uiDrawRestore(lua_State *L)
 {
-  uiDrawRestore(CAST_DRAW_ARG(1, DrawContext));
-  RETURN_SELF;
+  uiDrawRestore(CHECK_USER_OBJECT(1, DrawContext));
+  UI_RETURN_SELF;
 }
 
 static int l_uiDrawText(lua_State *L)
 {
   uiDrawText(
-    CAST_DRAW_ARG(1, DrawContext),
-    luaL_checknumber(L, 2),
+    CHECK_USER_OBJECT(1, DrawContext),
+    CHECK_USER_OBJECT(2, DrawTextLayout),
     luaL_checknumber(L, 3),
-    CAST_DRAW_ARG(4, DrawTextLayout));
-  RETURN_SELF;
+    luaL_checknumber(L, 4)
+    );
+  UI_RETURN_SELF;
 }
 
 static int l_uiDrawStroke(lua_State *L)
 {
-  uiDrawStroke(CAST_DRAW_ARG(1, DrawContext), CAST_DRAW_ARG(2, DrawPath), CAST_DRAW_ARG(3, DrawBrush), CAST_DRAW_ARG(4, DrawStrokeParams));
-  RETURN_SELF;
+  uiDrawStroke(CHECK_USER_OBJECT(1, DrawContext), CHECK_USER_OBJECT(2, DrawPath), CHECK_USER_OBJECT(3, DrawBrush), CHECK_USER_OBJECT(4, DrawStrokeParams));
+  UI_RETURN_SELF;
 }
 
 static int l_uiDrawFill(lua_State *L)
 {
-  uiDrawFill(CAST_DRAW_ARG(1, DrawContext), CAST_DRAW_ARG(2, DrawPath), CAST_DRAW_ARG(3, DrawBrush));
-  RETURN_SELF;
+  uiDrawFill(CHECK_USER_OBJECT(1, DrawContext), CHECK_USER_OBJECT(2, DrawPath), CHECK_USER_OBJECT(3, DrawBrush));
+  UI_RETURN_SELF;
 }
 
 static struct luaL_Reg meta_DrawContext[] =
@@ -789,48 +790,7 @@ static struct luaL_Reg meta_DrawContext[] =
   { NULL }
 };
 
-/* uiDrawFontFamilies */
-static int l_uiDrawListFontFamilies(lua_State *L)
-{
-  uiDrawFontFamilies *families = uiDrawListFontFamilies();
-  if (families) {
-    int i;
-    int n = uiDrawFontFamiliesNumFamilies(families);
-
-    lua_newtable(L);
-    for (i = 0; i < n; i++)
-    {
-      char *family = uiDrawFontFamiliesFamily(families, i);
-      lua_pushstring(L, family);
-      lua_rawseti(L, -2, i + 1);
-      uiFreeText(family);
-    }
-    uiDrawFreeFontFamilies(families);
-  }
-  else
-      lua_pushnil(L);
-  return 1;
-}
-
-/* uiDrawTextFontDescriptor */
-static int l_uiDrawTextFontDescriptor2table(lua_State *L,
-                                            uiDrawTextFontDescriptor *desc)
-{
-  lua_newtable(L);
-  lua_pushnumber(L, desc->Size);
-  lua_setfield(L, -2, "size");
-  lua_pushinteger(L, desc->Weight);
-  lua_setfield(L, -2, "weight");
-  lua_pushinteger(L, desc->Stretch);
-  lua_setfield(L, -2, "stretch");
-  lua_pushinteger(L, desc->Italic);
-  lua_setfield(L, -2, "italic");
-  lua_pushstring(L, desc->Family);
-  lua_setfield(L, -2, "family");
-  return 1;
-}
-
-/* uiDrawTextFont */
+/* uiFontButton */
 static int lui_getoptfield(lua_State*L, int idx, const char*name, int def) {
   lua_getfield(L, idx, name);
   def = luaL_optint(L, -1, def);
@@ -838,94 +798,10 @@ static int lui_getoptfield(lua_State*L, int idx, const char*name, int def) {
   return def;
 }
 
-static int l_uiDrawLoadClosestFont(lua_State* L)
-{
-  uiDrawTextFont* font = NULL;
-  uiDrawTextFontDescriptor descriptor = { 0 };
-
-  luaL_argcheck(L, lua_type(L, 1) == LUA_TTABLE, 1, "Invalid");
-  descriptor.Size = lui_getoptfield(L, 1, "size", 10);
-  descriptor.Weight = lui_getoptfield(L, 1, "weight", uiDrawTextWeightNormal);
-  descriptor.Italic = lui_getoptfield(L, 1, "style", uiDrawTextItalicNormal);
-  descriptor.Stretch = lui_getoptfield(L, 1, "stretch", uiDrawTextStretchNormal);
-
-  lua_getfield(L, 1, "family");
-  descriptor.Family = luaL_optstring(L, -1, "Tahoma");
-
-  font = uiDrawLoadClosestFont(&descriptor);
-  lua_pop(L, 1);  // font family name is now invalid
-
-  CREATE_DRAW_OBJECT(DrawTextFont, font);
-  return 1;
-}
-
-static int l_uiDrawFreeTextFont(lua_State *L)
-{
-  uiDrawFreeTextFont(CAST_DRAW_ARG(1, DrawTextFont));
-  return 0;
-}
-
-static int l_uiDrawTextFontHandle(lua_State *L)
-{
-  lua_pushinteger(L, uiDrawTextFontHandle(CAST_DRAW_ARG(1, DrawTextFont)));
-  return 1;
-}
-
-static int l_uiDrawTextFontDescribe(lua_State *L)
-{
-  uiDrawTextFontDescribe(CAST_DRAW_ARG(1, DrawTextFont), CAST_DRAW_ARG(2, DrawTextFontDescriptor));
-  RETURN_SELF;
-}
-
-static int l_uiDrawTextFontMetrics(lua_State *L)
-{
-  if (lua_isnone(L, 2))
-  {
-    uiDrawTextFontMetrics metrics;
-    uiDrawTextFontGetMetrics(CAST_DRAW_ARG(1, DrawTextFont), &metrics);
-    lua_pushnil(L);
-    return 1;
-  }
-  luaL_error(L, "NYI");
-  return 0;
-}
-
-static struct luaL_Reg meta_DrawTextFont[] =
-{
-  { "Handle",     l_uiDrawTextFontHandle },
-  { "Describe",   l_uiDrawTextFontDescribe },
-  { "Metrics",    l_uiDrawTextFontMetrics },
-  { "Free",       l_uiDrawFreeTextFont },
-  { "__gc",       l_uiDrawFreeTextFont },
-
-  { NULL }
-};
-
-static int l_uiDrawNewTextLayout(lua_State *L)
-{
-  uiDrawTextLayout *layout = uiDrawNewTextLayout(
-                               luaL_checkstring(L, 1),
-                               CAST_DRAW_ARG(2, DrawTextFont),
-                               luaL_checknumber(L, 3));
-  CREATE_DRAW_OBJECT(DrawTextLayout, layout);
-  return 1;
-}
-
 static int l_uiDrawFreeTextLayout(lua_State *L)
 {
-  uiDrawFreeTextLayout(CAST_DRAW_ARG(1, DrawTextLayout));
+  uiDrawFreeTextLayout(CHECK_USER_OBJECT(1, DrawTextLayout));
   return 0;
-}
-
-static int l_uiDrawTextLayoutWidth(lua_State *L)
-{
-  if (lua_isnone(L, 2))
-  {
-    luaL_error(L, "NYI");
-    return 0;
-  }
-  uiDrawTextLayoutSetWidth(CAST_DRAW_ARG(1, DrawTextLayout), luaL_checknumber(L, 2));
-  RETURN_SELF;
 }
 
 static int l_uiDrawTextLayoutExtents(lua_State *L)
@@ -933,7 +809,8 @@ static int l_uiDrawTextLayoutExtents(lua_State *L)
   if (lua_isnone(L, 2))
   {
     double width, height;
-    uiDrawTextLayoutExtents(CAST_DRAW_ARG(1, DrawTextLayout), &width, &height);
+    uiDrawTextLayoutExtents(CHECK_USER_OBJECT(1, DrawTextLayout), &width, &height);
+
     lua_pushnumber(L, width);
     lua_pushnumber(L, height);
     return 2;
@@ -942,29 +819,10 @@ static int l_uiDrawTextLayoutExtents(lua_State *L)
   return 0;
 }
 
-static int l_uiDrawTextLayoutColor(lua_State *L)
-{
-  if (lua_isnone(L, 2))
-  {
-    luaL_error(L, "NYI");
-    return 0;
-  }
-  uiDrawTextLayoutSetColor(
-    CAST_DRAW_ARG(1, DrawTextLayout),
-    luaL_checkint(L, 2),
-    luaL_checkint(L, 3),
-    luaL_checknumber(L, 4),
-    luaL_checknumber(L, 5),
-    luaL_checknumber(L, 6),
-    luaL_checknumber(L, 7));
-  RETURN_SELF;
-}
 
 static struct luaL_Reg meta_DrawTextLayout[] =
 {
-  {  "Width",     l_uiDrawTextLayoutWidth },
   {  "Extents",   l_uiDrawTextLayoutExtents },
-  {  "Color",     l_uiDrawTextLayoutColor },
   {  "Free",      l_uiDrawFreeTextLayout },
   { "__gc",       l_uiDrawFreeTextLayout },
 
@@ -972,13 +830,12 @@ static struct luaL_Reg meta_DrawTextLayout[] =
 };
 
 #define CREATE_DRAWMETA                     \
-  CREATE_DRAW_META(AreaHandler)             \
-  CREATE_DRAW_META(DrawBrush)               \
-  CREATE_DRAW_META(DrawPath)                \
-  CREATE_DRAW_META(DrawStrokeParams)        \
-  CREATE_DRAW_META(DrawTextFont)            \
-  CREATE_DRAW_META(DrawTextLayout)          \
-  CREATE_DRAW_META(DrawContext)             \
-  CREATE_DRAW_META(DrawMatrix)              \
-  CREATE_DRAW_META(DrawBrush)               \
-  CREATE_DRAW_META(DrawStrokeParams)
+  UI_CREATE_META(AreaHandler)             \
+  UI_CREATE_META(DrawBrush)               \
+  UI_CREATE_META(DrawPath)                \
+  UI_CREATE_META(DrawStrokeParams)        \
+  UI_CREATE_META(DrawTextLayout)          \
+  UI_CREATE_META(DrawContext)             \
+  UI_CREATE_META(DrawMatrix)              \
+  UI_CREATE_META(DrawBrush)               \
+  UI_CREATE_META(DrawStrokeParams)

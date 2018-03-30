@@ -1,23 +1,23 @@
 static int l_uiMenuItemEnable(lua_State *L)
 {
-  uiMenuItemEnable(CAST_ARG(1, MenuItem));
-  RETURN_SELF;
+  uiMenuItemEnable(UI_CHECK_OBJECT(1, MenuItem));
+  UI_RETURN_SELF;
 }
 static int l_uiMenuItemDisable(lua_State *L)
 {
-  uiMenuItemDisable(CAST_ARG(1, MenuItem));
-  RETURN_SELF;
+  uiMenuItemDisable(UI_CHECK_OBJECT(1, MenuItem));
+  UI_RETURN_SELF;
 }
 
 static int l_uiMenuItemChecked(lua_State *L)
 {
   if (lua_isnone(L, 2))
   {
-    lua_pushboolean(L, uiMenuItemChecked(CAST_ARG(1, MenuItem)));
+    lua_pushboolean(L, uiMenuItemChecked(UI_CHECK_OBJECT(1, MenuItem)));
     return 1;
   }
-  uiMenuItemSetChecked(CAST_ARG(1, MenuItem), luaL_checkboolean(L, 2));
-  RETURN_SELF;
+  uiMenuItemSetChecked(UI_CHECK_OBJECT(1, MenuItem), luaL_checkboolean(L, 2));
+  UI_RETURN_SELF;
 }
 
 static void on_menuitem_clicked(uiMenuItem *b, uiWindow* w, void *data)
@@ -28,9 +28,9 @@ static void on_menuitem_clicked(uiMenuItem *b, uiWindow* w, void *data)
 static int l_uiMenuItemOnClicked(lua_State *L)
 {
   //TODO:
-  uiMenuItemOnClicked(CAST_ARG(1, MenuItem), on_menuitem_clicked, L);
+  uiMenuItemOnClicked(UI_CHECK_OBJECT(1, MenuItem), on_menuitem_clicked, L);
   create_callback_data(L, 1);
-  RETURN_SELF;
+  UI_RETURN_SELF;
 }
 
 static struct luaL_Reg meta_MenuItem[] =

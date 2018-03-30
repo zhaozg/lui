@@ -8,6 +8,9 @@ static void l_REG_UI_ENUM(lua_State *L, int idx)
   lua_pushinteger(L, ui##x);   \
   lua_rawset(L, idx)
 
+  REG_UI_ENUM(ForEachContinue);
+  REG_UI_ENUM(ForEachStop);
+
   REG_UI_ENUM(WindowResizeEdgeLeft);
   REG_UI_ENUM(WindowResizeEdgeTop);
   REG_UI_ENUM(WindowResizeEdgeRight);
@@ -33,31 +36,58 @@ static void l_REG_UI_ENUM(lua_State *L, int idx)
   REG_UI_ENUM(DrawFillModeWinding);
   REG_UI_ENUM(DrawFillModeAlternate);
 
-  REG_UI_ENUM(DrawTextWeightThin);
-  REG_UI_ENUM(DrawTextWeightUltraLight);
-  REG_UI_ENUM(DrawTextWeightLight);
-  REG_UI_ENUM(DrawTextWeightBook);
-  REG_UI_ENUM(DrawTextWeightNormal);
-  REG_UI_ENUM(DrawTextWeightMedium);
-  REG_UI_ENUM(DrawTextWeightSemiBold);
-  REG_UI_ENUM(DrawTextWeightBold);
-  REG_UI_ENUM(DrawTextWeightUltraBold);
-  REG_UI_ENUM(DrawTextWeightHeavy);
-  REG_UI_ENUM(DrawTextWeightUltraHeavy);
+  REG_UI_ENUM(AttributeTypeFamily);
+  REG_UI_ENUM(AttributeTypeSize);
+  REG_UI_ENUM(AttributeTypeWeight);
+  REG_UI_ENUM(AttributeTypeItalic);
+  REG_UI_ENUM(AttributeTypeStretch);
+  REG_UI_ENUM(AttributeTypeColor);
+  REG_UI_ENUM(AttributeTypeBackground);
+  REG_UI_ENUM(AttributeTypeUnderline);
+  REG_UI_ENUM(AttributeTypeUnderlineColor);
+  REG_UI_ENUM(AttributeTypeFeatures);
 
-  REG_UI_ENUM(DrawTextItalicNormal);
-  REG_UI_ENUM(DrawTextItalicOblique);
-  REG_UI_ENUM(DrawTextItalicItalic);
+  REG_UI_ENUM(TextWeightMinimum);
+  REG_UI_ENUM(TextWeightThin);
+  REG_UI_ENUM(TextWeightUltraLight);
+  REG_UI_ENUM(TextWeightLight);
+  REG_UI_ENUM(TextWeightBook);
+  REG_UI_ENUM(TextWeightNormal);
+  REG_UI_ENUM(TextWeightMedium);
+  REG_UI_ENUM(TextWeightSemiBold);
+  REG_UI_ENUM(TextWeightBold);
+  REG_UI_ENUM(TextWeightUltraBold);
+  REG_UI_ENUM(TextWeightHeavy);
+  REG_UI_ENUM(TextWeightUltraHeavy);
+  REG_UI_ENUM(TextWeightMaximum);
 
-  REG_UI_ENUM(DrawTextStretchUltraCondensed);
-  REG_UI_ENUM(DrawTextStretchExtraCondensed);
-  REG_UI_ENUM(DrawTextStretchCondensed);
-  REG_UI_ENUM(DrawTextStretchSemiCondensed);
-  REG_UI_ENUM(DrawTextStretchNormal);
-  REG_UI_ENUM(DrawTextStretchSemiExpanded);
-  REG_UI_ENUM(DrawTextStretchExpanded);
-  REG_UI_ENUM(DrawTextStretchExtraExpanded);
-  REG_UI_ENUM(DrawTextStretchUltraExpanded);
+  REG_UI_ENUM(TextItalicNormal);
+  REG_UI_ENUM(TextItalicOblique);
+  REG_UI_ENUM(TextItalicItalic);
+
+  REG_UI_ENUM(TextStretchUltraCondensed);
+  REG_UI_ENUM(TextStretchExtraCondensed);
+  REG_UI_ENUM(TextStretchCondensed);
+  REG_UI_ENUM(TextStretchSemiCondensed);
+  REG_UI_ENUM(TextStretchNormal);
+  REG_UI_ENUM(TextStretchSemiExpanded);
+  REG_UI_ENUM(TextStretchExpanded);
+  REG_UI_ENUM(TextStretchExtraExpanded);
+  REG_UI_ENUM(TextStretchUltraExpanded);
+
+  REG_UI_ENUM(UnderlineNone);
+  REG_UI_ENUM(UnderlineSingle);
+  REG_UI_ENUM(UnderlineDouble);
+  REG_UI_ENUM(UnderlineSuggestion);
+
+  REG_UI_ENUM(UnderlineColorCustom);
+  REG_UI_ENUM(UnderlineColorSpelling);
+  REG_UI_ENUM(UnderlineColorGrammar);
+  REG_UI_ENUM(UnderlineColorAuxiliary);		// for instance); the color used by smart replacements on macOS or in Microsoft Office
+
+  REG_UI_ENUM(DrawTextAlignLeft);
+  REG_UI_ENUM(DrawTextAlignCenter);
+  REG_UI_ENUM(DrawTextAlignRight);
 
   REG_UI_ENUM(ModifierCtrl);
   REG_UI_ENUM(ModifierAlt);

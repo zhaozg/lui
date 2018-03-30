@@ -1,6 +1,6 @@
 static int l_uiControlDestroy(lua_State *L)
 {
-  uiControl* c = CAST_ARG(1, Control);
+  uiControl* c = UI_CHECK_OBJECT(1, Control);
   uiControlDestroy(c);
 
   // destroy registry meta table
@@ -12,7 +12,7 @@ static int l_uiControlDestroy(lua_State *L)
 
 static int l_uiControlHandle(lua_State *L)
 {
-  lua_pushinteger(L, uiControlHandle(CAST_ARG(1, Control)));
+  lua_pushinteger(L, uiControlHandle(UI_CHECK_OBJECT(1, Control)));
   return 1;
 }
 
@@ -20,63 +20,63 @@ static int l_uiControlParent(lua_State *L)
 {
   if (lua_isnone(L, 2))
   {
-    CREATE_OBJECT(Control, uiControlParent(CAST_ARG(1, Control)));
+    UI_CREATE_OBJECT(Control, uiControlParent(UI_CHECK_OBJECT(1, Control)));
     return 1;
   }
-  uiControlSetParent(CAST_ARG(1, Control), CAST_ARG(2, Control));
-  RETURN_SELF;
+  uiControlSetParent(UI_CHECK_OBJECT(1, Control), UI_CHECK_OBJECT(2, Control));
+  UI_RETURN_SELF;
 }
 
 static int l_uiControlToplevel(lua_State *L)
 {
-  lua_pushinteger(L, uiControlToplevel(CAST_ARG(1, Control)));
+  lua_pushinteger(L, uiControlToplevel(UI_CHECK_OBJECT(1, Control)));
   return 1;
 }
 
 static int l_uiControlVisible(lua_State *L)
 {
-  lua_pushboolean(L, uiControlVisible(CAST_ARG(1, Control)));
+  lua_pushboolean(L, uiControlVisible(UI_CHECK_OBJECT(1, Control)));
   return 1;
 }
 
 static int l_uiControlShow(lua_State *L)
 {
-  uiControlShow(CAST_ARG(1, Control));
-  RETURN_SELF;
+  uiControlShow(UI_CHECK_OBJECT(1, Control));
+  UI_RETURN_SELF;
 }
 
 static int l_uiControlHide(lua_State *L)
 {
-  uiControlHide(CAST_ARG(1, Control));
-  RETURN_SELF;
+  uiControlHide(UI_CHECK_OBJECT(1, Control));
+  UI_RETURN_SELF;
 }
 
 static int l_uiControlEnabled(lua_State *L)
 {
-  lua_pushboolean(L, uiControlEnabled(CAST_ARG(1, Control)));
+  lua_pushboolean(L, uiControlEnabled(UI_CHECK_OBJECT(1, Control)));
   return 1;
 }
 
 static int l_uiControlEnable(lua_State *L)
 {
-  uiControlEnable(CAST_ARG(1, Control));
-  RETURN_SELF;
+  uiControlEnable(UI_CHECK_OBJECT(1, Control));
+  UI_RETURN_SELF;
 }
 static int l_uiControlDisable(lua_State *L)
 {
-  uiControlDisable(CAST_ARG(1, Control));
-  RETURN_SELF;
+  uiControlDisable(UI_CHECK_OBJECT(1, Control));
+  UI_RETURN_SELF;
 }
 
 static int l_uiControlVerifySetParent(lua_State *L)
 {
-  uiControlVerifySetParent(CAST_ARG(1, Control), CAST_ARG(2, Control));
-  RETURN_SELF;
+  uiControlVerifySetParent(UI_CHECK_OBJECT(1, Control), UI_CHECK_OBJECT(2, Control));
+  UI_RETURN_SELF;
 }
 
 static int l_uiControlEnabledToUser(lua_State *L)
 {
-  lua_pushboolean(L, uiControlEnabledToUser(CAST_ARG(1, Control)));
+  lua_pushboolean(L, uiControlEnabledToUser(UI_CHECK_OBJECT(1, Control)));
   return 1;
 }
 

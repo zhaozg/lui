@@ -3,6 +3,7 @@
 #include <lauxlib.h>
 #include <assert.h>
 #include <stdlib.h>
+#include <string.h>
 #include <memory.h>
 
 #include "ui.h"
@@ -33,15 +34,15 @@ struct wrap
   uiControl *control;
 };
 
-#define CAST_ARG(n, type) ui ## type(((struct wrap *)lua_touserdata(L, n))->control)
+#define UI_CHECK_OBJECT(n, type) ui ## type(((struct wrap *)lua_touserdata(L, n))->control)
 
-#define RETURN_SELF lua_pushvalue(L, 1); return 1;
+#define UI_RETURN_SELF lua_pushvalue(L, 1); return 1;
 
-#define CREATE_META(n)                \
-  luaL_newmetatable(L, "libui." #n);  \
+#define UI_CREATE_META(n)                 \
+  luaL_newmetatable(L, "libui." #n);      \
   luaL_setfuncs(L, meta_ ## n, 0);
 
-#define CREATE_OBJECT(t, c)                                 \
+#define UI_CREATE_OBJECT(t, c)                              \
   struct wrap *w = lua_newuserdata(L, sizeof(struct wrap)); \
   w->control = uiControl(c);                                \
   lua_newtable(L);                                          \
@@ -51,7 +52,7 @@ struct wrap
   lua_setfield(L, -2, "__gc");                              \
   lua_setmetatable(L, -2);
 
-#define CREATE_OBJECT_REF(t, c)                             \
+#define UI_CREATE_OBJECT_REF(t, c)                          \
   struct wrap *w = lua_newuserdata(L, sizeof(struct wrap)); \
   w->control = uiControl(c);                                \
   lua_newtable(L);                                          \
@@ -59,19 +60,14 @@ struct wrap
   lua_setfield(L, -2, "__index");                           \
   lua_setmetatable(L, -2);
 
-/* draw releated macro */
-#define CREATE_DRAW_META(n)                \
-  luaL_newmetatable(L, "libui.draw." #n);  \
-  luaL_setfuncs(L, meta_ ## n, 0);
-
-#define CREATE_DRAW_OBJECT(t, c)                              \
+#define CREATE_USER_OBJECT(t, c)                              \
   *(ui ## t**)lua_newuserdata(L, sizeof(ui ## t*)) = c;       \
   lua_newtable(L);                                            \
   luaL_getmetatable(L, "libui.draw." #t);                     \
   lua_setfield(L, -2, "__index");                             \
   lua_setmetatable(L, -2);
 
-#define CAST_DRAW_ARG(n, type) *((ui ## type**)lua_touserdata(L, n))
+#define CHECK_USER_OBJECT(n, type) *((ui ## type**)lua_touserdata(L, n))
 
 /* general libui callback  mechanism to lua */
 
@@ -79,7 +75,7 @@ static void create_callback_data(lua_State *L, int n)
 {
   /* Push registery key: userdata pointer to control */
 
-  lua_pushlightuserdata(L, CAST_ARG(1, Control));
+  lua_pushlightuserdata(L, UI_CHECK_OBJECT(1, Control));
 
   /* Create table with callback data */
 
@@ -138,7 +134,7 @@ static int callback(lua_State *L, void *control)
   lua_getfield(L, -1, "fn");
   luaL_checktype(L, -1, LUA_TFUNCTION);
   lua_getfield(L, -2, "udata");
-  win = CAST_ARG(-1, Window);
+  win = UI_CHECK_OBJECT(-1, Window);
   luaL_checktype(L, -1, LUA_TUSERDATA);
   lua_getfield(L, -3, "data");
 
@@ -178,7 +174,7 @@ static int l_uigc(lua_State *L)
   uint32_t s = w->control->TypeSignature;
   printf("gc %p %c%c%c%c\n", w->control, s >> 24, s >> 16, s >> 8, s >> 0);
 
-  uiControl *control = CAST_ARG(1, Control);
+  uiControl *control = UI_CHECK_OBJECT(1, Control);
   uiControl *parent = uiControlParent(control);
 
   if (parent)
@@ -203,6 +199,8 @@ static int l_uigc(lua_State *L)
 #include "lcontrol.c"
 
 #include "larea.c"
+#include "lattribute.c"
+#include "lattributedstr.c"
 #include "lbox.c"
 #include "lbutton.c"
 #include "lcheckbox.c"
@@ -403,6 +401,8 @@ static struct luaL_Reg lui_table[] =
   { "MsgBoxError",            l_uiMsgBoxError },
 
   { "NewArea",                l_uiNewArea },
+  { "NewAttribute",           l_uiNewAttribute },
+  { "NewAttributedString",    l_uiNewAttributedString },
   { "NewButton",              l_uiNewButton },
   { "NewCheckbox",            l_uiNewCheckbox },
   { "NewCombobox",            l_uiNewCombobox },
@@ -420,10 +420,9 @@ static struct luaL_Reg lui_table[] =
   { "NewLabel",               l_uiNewLabel },
   { "NewMenu",                l_uiNewMenu },
   { "NewMultilineEntry",      l_uiNewMultilineEntry },
-  {
-    "NewNonWrappingMultilineEntry",
-    l_uiNewNonWrappingMultilineEntry
-  },
+  { "NewNonWrappingMultilineEntry",
+                              l_uiNewNonWrappingMultilineEntry },
+  { "NewOpenTypeFeatures",    l_uiNewOpenTypeFeatures },
   { "NewPasswordEntry",       l_uiNewPasswordEntry },
   { "NewProgressBar",         l_uiNewProgressBar },
   { "NewRadioButtons",        l_uiNewRadioButtons },
@@ -442,39 +441,39 @@ static struct luaL_Reg lui_table[] =
   { "DrawNewPath",            l_uiDrawNewPath },
   { "DrawNewMatrix",          l_uiDrawNewMatrix },
   { "DrawNewStrokeParams",    l_uiDrawNewStrokeParams },
-  { "DrawListFontFamilies",   l_uiDrawListFontFamilies },
-  { "DrawLoadClosestFont",    l_uiDrawLoadClosestFont },
-  { "DrawNewTextLayout",      l_uiDrawNewTextLayout },
-
+  
   { NULL }
 };
 
 LUA_API int luaopen_lui(lua_State *L)
 {
-  CREATE_META(Area)
-  CREATE_META(Box)
-  CREATE_META(Button)
-  CREATE_META(Checkbox)
-  CREATE_META(Combobox)
-  CREATE_META(ColorButton)
-  CREATE_META(DateTimePicker)
-  CREATE_META(EditableCombobox)
-  CREATE_META(Entry)
-  CREATE_META(FontButton)
-  CREATE_META(Form)
-  CREATE_META(Grid)
-  CREATE_META(Group)
-  CREATE_META(Label)
-  CREATE_META(MenuItem)
-  CREATE_META(Menu)
-  CREATE_META(MulitlineEntry)
-  CREATE_META(ProgressBar)
-  CREATE_META(RadioButtons)
-  CREATE_META(Separator)
-  CREATE_META(Slider)
-  CREATE_META(Spinbox)
-  CREATE_META(Tab)
-  CREATE_META(Window)
+  UI_CREATE_META(Area)
+  UI_CREATE_META(Attribute)
+  UI_CREATE_META(AttributedString)
+  UI_CREATE_META(Box)
+  UI_CREATE_META(Button)
+  UI_CREATE_META(Checkbox)
+  UI_CREATE_META(Combobox)
+  UI_CREATE_META(ColorButton)
+  UI_CREATE_META(DateTimePicker)
+  UI_CREATE_META(EditableCombobox)
+  UI_CREATE_META(Entry)
+  UI_CREATE_META(FontButton)
+  UI_CREATE_META(Form)
+  UI_CREATE_META(Grid)
+  UI_CREATE_META(Group)
+  UI_CREATE_META(Label)
+  UI_CREATE_META(MenuItem)
+  UI_CREATE_META(Menu)
+  UI_CREATE_META(MulitlineEntry)
+  UI_CREATE_META(OpenTypeFeatures)
+  UI_CREATE_META(ProgressBar)
+  UI_CREATE_META(RadioButtons)
+  UI_CREATE_META(Separator)
+  UI_CREATE_META(Slider)
+  UI_CREATE_META(Spinbox)
+  UI_CREATE_META(Tab)
+  UI_CREATE_META(Window)
 
   /* draw, not finished */
   CREATE_DRAWMETA

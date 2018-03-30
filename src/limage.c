@@ -6,19 +6,19 @@ static int l_uiNewImage(lua_State* L)
   {
     uiImageLoad(i, lua_tostring(L, 1));
   }
-  CREATE_OBJECT(i, Image);
+  UI_CREATE_OBJECT(i, Image);
   return 1;
 }
 
 static int l_uiImageLoad(lua_State* L)
 {
-  lua_pushboolean(L, uiImageLoad(CAST_ARG(1, Image), luaL_checkstring(L, 2)));
+  lua_pushboolean(L, uiImageLoad(UI_CHECK_OBJECT(1, Image), luaL_checkstring(L, 2)));
   return 1;
 }
 
 static int l_uiImageValid(lua_State* L)
 {
-  lua_pushboolean(L, uiImageValid(CAST_ARG(1, Image)));
+  lua_pushboolean(L, uiImageValid(UI_CHECK_OBJECT(1, Image)));
   return 1;
 }
 
@@ -26,7 +26,7 @@ static int l_uiImageSize(lua_State* L)
 {
   int width = -1, height = -1;
 
-  uiImageSize(CAST_ARG(1, Image), &width, &height);
+  uiImageSize(UI_CHECK_OBJECT(1, Image), &width, &height);
   lua_pushinteger(L, width);
   lua_pushinteger(L, height);
   return 2;
@@ -34,14 +34,14 @@ static int l_uiImageSize(lua_State* L)
 
 static int l_uiImageResize(lua_State* L)
 {
-  uiImage *n = uiImageResize(CAST_ARG(1, Image), luaL_checkinteger(L, 2), luaL_checkinteger(L, 3));
-  CREATE_OBJECT(n, Image)
+  uiImage *n = uiImageResize(UI_CHECK_OBJECT(1, Image), luaL_checkinteger(L, 2), luaL_checkinteger(L, 3));
+  UI_CREATE_OBJECT(n, Image)
   return 1;
 }
 
 static int l_uiImageDestroy(lua_State* L)
 {
-  uiImageDestroy(CAST_ARG(1, Image));
+  uiImageDestroy(UI_CHECK_OBJECT(1, Image));
   return 0;
 }
 
