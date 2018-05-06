@@ -26,31 +26,31 @@ static int l_uiOpenTypeFeaturesClone(lua_State *L) {
 
 static int l_uiOpenTypeFeaturesAdd(lua_State *L) {
   uiOpenTypeFeatures *f = CHECK_USER_OBJECT(1, OpenTypeFeatures);
-  char a = (char)luaL_checkint(L, 2);
-  char b = (char)luaL_checkint(L, 3);
-  char c = (char)luaL_checkint(L, 4);
-  char d = (char)luaL_checkint(L, 5);
-  uint32_t value = luaL_checkint(L, 6);
+  char a = (char)luaL_checkinteger(L, 2);
+  char b = (char)luaL_checkinteger(L, 3);
+  char c = (char)luaL_checkinteger(L, 4);
+  char d = (char)luaL_checkinteger(L, 5);
+  uint32_t value = luaL_checkinteger(L, 6);
   uiOpenTypeFeaturesAdd(f, a, b, c, d, value);
   UI_RETURN_SELF;
 }
 
 static int l_uiOpenTypeFeaturesRemove(lua_State *L) {
   uiOpenTypeFeatures *f = CHECK_USER_OBJECT(1, OpenTypeFeatures);
-  char a = (char)luaL_checkint(L, 2);
-  char b = (char)luaL_checkint(L, 3);
-  char c = (char)luaL_checkint(L, 4);
-  char d = (char)luaL_checkint(L, 5);
+  char a = (char)luaL_checkinteger(L, 2);
+  char b = (char)luaL_checkinteger(L, 3);
+  char c = (char)luaL_checkinteger(L, 4);
+  char d = (char)luaL_checkinteger(L, 5);
   uiOpenTypeFeaturesRemove(f, a, b, c, d);
   UI_RETURN_SELF;
 }
 
 static int l_uiOpenTypeFeaturesGet(lua_State *L) {
   uiOpenTypeFeatures *f = CHECK_USER_OBJECT(1, OpenTypeFeatures);
-  char a = (char)luaL_checkint(L, 2);
-  char b = (char)luaL_checkint(L, 3);
-  char c = (char)luaL_checkint(L, 4);
-  char d = (char)luaL_checkint(L, 5);
+  char a = (char)luaL_checkinteger(L, 2);
+  char b = (char)luaL_checkinteger(L, 3);
+  char c = (char)luaL_checkinteger(L, 4);
+  char d = (char)luaL_checkinteger(L, 5);
   uint32_t value = 0;
   uiOpenTypeFeaturesGet(f, a, b, c, d, &value);
   return 0;
@@ -212,11 +212,11 @@ static int l_uiNewAttribute(lua_State *L)
   } else if (strcmp(item, "size") == 0) {
     attr = uiNewSizeAttribute(luaL_checknumber(L, 2));
   } else if (strcmp(item, "weight") == 0) {
-    attr = uiNewWeightAttribute(luaL_checkint(L, 2));
+    attr = uiNewWeightAttribute(luaL_checkinteger(L, 2));
   } else if (strcmp(item, "italic") == 0) {
-    attr = uiNewItalicAttribute(luaL_checkint(L, 2));
+    attr = uiNewItalicAttribute(luaL_checkinteger(L, 2));
   } else if (strcmp(item, "stretch") == 0) {
-    attr = uiNewStretchAttribute(luaL_checkint(L, 2));
+    attr = uiNewStretchAttribute(luaL_checkinteger(L, 2));
   } else if (strcmp(item, "color") == 0) {
     attr = uiNewColorAttribute(luaL_checknumber(L, 2),
       luaL_checknumber(L, 3),
@@ -228,9 +228,9 @@ static int l_uiNewAttribute(lua_State *L)
       luaL_checknumber(L, 4),
       luaL_checknumber(L, 5));
   } else if (strcmp(item, "underline") == 0) {
-    attr = uiNewUnderlineAttribute(luaL_checkint(L, 2));
+    attr = uiNewUnderlineAttribute(luaL_checkinteger(L, 2));
   } else if (strcmp(item, "underlinecolor") == 0) {
-    attr = uiNewUnderlineColorAttribute(luaL_checkint(L, 2),
+    attr = uiNewUnderlineColorAttribute(luaL_checkinteger(L, 2),
       luaL_checknumber(L, 3),
       luaL_checknumber(L, 4),
       luaL_checknumber(L, 5),

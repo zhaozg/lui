@@ -6,6 +6,7 @@
 #include <string.h>
 #include <memory.h>
 
+
 #include "ui.h"
 
 /* make lua version compat */
@@ -149,7 +150,7 @@ static int callback(lua_State *L, void *control)
     if (lua_isboolean(L, -1))
       ret = lua_toboolean(L, -1);
     else if (!lua_isnoneornil(L, -1))
-      ret = luaL_checkint(L, -1);
+      ret = luaL_checkinteger(L, -1);
     lua_pop(L, 1);
   }
 
@@ -355,7 +356,7 @@ static int on_ShouldQuit(void *data)
     if (lua_isboolean(L, -1))
       ret = lua_toboolean(L, -1);
     else if (!lua_isnoneornil(L, -1))
-      ret = luaL_checkint(L, -1);
+      ret = luaL_checkinteger(L, -1);
     lua_pop(L, 1);
   }
 

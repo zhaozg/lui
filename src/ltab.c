@@ -20,13 +20,13 @@ static int l_uiTabAppend(lua_State *L)
 
 static int l_uiTabInsertAt(lua_State *L)
 {
-  uiTabInsertAt(UI_CHECK_OBJECT(1, Tab), luaL_checkstring(L, 2), luaL_checkint(L, 3), UI_CHECK_OBJECT(4, Control));
+  uiTabInsertAt(UI_CHECK_OBJECT(1, Tab), luaL_checkstring(L, 2), luaL_checkinteger(L, 3), UI_CHECK_OBJECT(4, Control));
   UI_RETURN_SELF;
 }
 
 static int l_uiTabDelete(lua_State *L)
 {
-  uiTabDelete(UI_CHECK_OBJECT(1, Tab), luaL_checkint(L, 2));
+  uiTabDelete(UI_CHECK_OBJECT(1, Tab), luaL_checkinteger(L, 2));
   UI_RETURN_SELF;
 }
 
@@ -40,10 +40,10 @@ static int L_uiTabMargined(lua_State *L)
 {
   if (lua_isnone(L, 3))
   {
-    lua_pushboolean(L, uiTabMargined(UI_CHECK_OBJECT(1, Tab), luaL_checkint(L, 2)));
+    lua_pushboolean(L, uiTabMargined(UI_CHECK_OBJECT(1, Tab), luaL_checkinteger(L, 2)));
     return 1;
   }
-  uiTabSetMargined(UI_CHECK_OBJECT(1, Tab), luaL_checkint(L, 2), luaL_checkboolean(L, 3));
+  uiTabSetMargined(UI_CHECK_OBJECT(1, Tab), luaL_checkinteger(L, 2), luaL_checkboolean(L, 3));
   UI_RETURN_SELF;
 }
 

@@ -23,7 +23,7 @@ static int l_uiComboboxSelected(lua_State *L)
     lua_pushinteger(L, uiComboboxSelected(UI_CHECK_OBJECT(1, Combobox)));
     return 1;
   }
-  uiComboboxSetSelected(UI_CHECK_OBJECT(1, Combobox), luaL_checkint(L, 2));
+  uiComboboxSetSelected(UI_CHECK_OBJECT(1, Combobox), luaL_checkinteger(L, 2));
   UI_RETURN_SELF;
 }
 

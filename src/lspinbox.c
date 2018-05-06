@@ -1,6 +1,6 @@
 static int l_uiNewSpinbox(lua_State *L)
 {
-  UI_CREATE_OBJECT(Spinbox, uiNewSpinbox(luaL_checkint(L, 1), luaL_checkint(L, 2)));
+  UI_CREATE_OBJECT(Spinbox, uiNewSpinbox(luaL_checkinteger(L, 1), luaL_checkinteger(L, 2)));
   return 1;
 }
 
@@ -11,7 +11,7 @@ static int l_uiSpinboxValue(lua_State *L)
     lua_pushinteger(L, uiSpinboxValue(UI_CHECK_OBJECT(1, Spinbox)));
     return 1;
   }
-  uiSpinboxSetValue(UI_CHECK_OBJECT(1, Spinbox), luaL_checkint(L, 2));
+  uiSpinboxSetValue(UI_CHECK_OBJECT(1, Spinbox), luaL_checkinteger(L, 2));
   UI_RETURN_SELF;
 }
 

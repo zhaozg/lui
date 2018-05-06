@@ -38,14 +38,14 @@ static int l_uiAttributedStringAppendUnattributed(lua_State *L)
 static int l_uiAttributedStringInsertAtUnattributed(lua_State *L)
 {
   uiAttributedString *s = CHECK_USER_OBJECT(1, AttributedString);
-  uiAttributedStringInsertAtUnattributed(s, luaL_checkstring(L, 2), luaL_checkint(L, 3));
+  uiAttributedStringInsertAtUnattributed(s, luaL_checkstring(L, 2), luaL_checkinteger(L, 3));
   UI_RETURN_SELF;
 }
 
 static int l_uiAttributedStringDelete(lua_State *L)
 {
   uiAttributedString *s = CHECK_USER_OBJECT(1, AttributedString);
-  uiAttributedStringDelete(s, luaL_checkint(L, 2), luaL_checkint(L, 3));
+  uiAttributedStringDelete(s, luaL_checkinteger(L, 2), luaL_checkinteger(L, 3));
   UI_RETURN_SELF;
 }
 
@@ -53,7 +53,7 @@ static int l_uiAttributedStringSetAttribute(lua_State *L)
 {
   uiAttributedString *s = CHECK_USER_OBJECT(1, AttributedString);
   uiAttribute *a = CHECK_USER_OBJECT(2, Attribute);
-  uiAttributedStringSetAttribute(s, a, luaL_checkint(L, 3), luaL_checkint(L, 4));
+  uiAttributedStringSetAttribute(s, a, luaL_checkinteger(L, 3), luaL_checkinteger(L, 4));
   UI_RETURN_SELF;
 }
 
@@ -68,7 +68,7 @@ static int l_uiAttributedStringNumGraphemes(lua_State *L)
 static int l_uiAttributedStringByteIndexToGrapheme(lua_State *L)
 {
   uiAttributedString *s = CHECK_USER_OBJECT(1, AttributedString);
-  size_t sz = uiAttributedStringByteIndexToGrapheme(s, (size_t)luaL_checkint(L, 2));
+  size_t sz = uiAttributedStringByteIndexToGrapheme(s, (size_t)luaL_checkinteger(L, 2));
   lua_pushinteger(L, sz);
   return 1;
 }
@@ -76,7 +76,7 @@ static int l_uiAttributedStringByteIndexToGrapheme(lua_State *L)
 static int l_uiAttributedStringGraphemeToByteIndex(lua_State *L)
 {
   uiAttributedString *s = CHECK_USER_OBJECT(1, AttributedString);
-  size_t sz = uiAttributedStringGraphemeToByteIndex(s, (size_t)luaL_checkint(L, 2));
+  size_t sz = uiAttributedStringGraphemeToByteIndex(s, (size_t)luaL_checkinteger(L, 2));
   lua_pushinteger(L, sz);
   return 1;
 }
@@ -88,7 +88,7 @@ static int l_uiAttributedStringForEachAttribute(lua_State *L)
 {
   uiAttributedString *s = CHECK_USER_OBJECT(1, AttributedString);
   //_UI_EXTERN void uiAttributedStringForEachAttribute(const uiAttributedString *s, uiAttributedStringForEachAttributeFunc f, void *data);
-  //uiAttributedStringForEachAttribute(s, (size_t)luaL_checkint(L, 2));
+  //uiAttributedStringForEachAttribute(s, (size_t)luaL_checkinteger(L, 2));
   //lua_pushinteger(L, sz);
   return 0;
 }

@@ -4,7 +4,7 @@ static int l_uiNewArea(lua_State *L)
   uiArea *a = NULL;
   if (lua_gettop(L) > 3)
   {
-    a = uiNewScrollingArea(ah, luaL_checkint(L, 2), luaL_checkint(L, 3));
+    a = uiNewScrollingArea(ah, luaL_checkinteger(L, 2), luaL_checkinteger(L, 3));
   }
   else {
     a = uiNewArea(ah);
@@ -18,7 +18,7 @@ static int l_uiNewArea(lua_State *L)
 
 static int l_uiAreaSetSize(lua_State *L)
 {
-  uiAreaSetSize(UI_CHECK_OBJECT(1, Area), luaL_checkint(L, 2), luaL_checkint(L, 3));
+  uiAreaSetSize(UI_CHECK_OBJECT(1, Area), luaL_checkinteger(L, 2), luaL_checkinteger(L, 3));
   UI_RETURN_SELF;
 }
 
@@ -46,7 +46,7 @@ static int l_uiAreaBeginUserWindowMove(lua_State *L)
 
 static int l_uiAreaBeginUserWindowResize(lua_State *L)
 {
-  uiAreaBeginUserWindowResize(UI_CHECK_OBJECT(1, Area), luaL_checkint(L, 2));
+  uiAreaBeginUserWindowResize(UI_CHECK_OBJECT(1, Area), luaL_checkinteger(L, 2));
   UI_RETURN_SELF;
 }
 
