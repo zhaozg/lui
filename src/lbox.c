@@ -40,7 +40,7 @@ static int l_uiBoxAppend(lua_State *L)
 
 static int l_uiBoxDelete(lua_State *L)
 {
-  uiBoxDelete(UI_CHECK_OBJECT(1, Box), luaL_checkint(L, 2));
+  uiBoxDelete(UI_CHECK_OBJECT(1, Box), luaL_checkinteger(L, 2));
   UI_RETURN_SELF;
 }
 

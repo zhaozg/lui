@@ -12,14 +12,14 @@ static int l_uiGridAppend(lua_State *L)
 
   for (i = 2; i <= n; i += 9)
   {
-    int left = luaL_checkint(L, i + 1);
-    int top = luaL_checkint(L, i + 2);
-    int xspan = luaL_checkint(L, i + 3);
-    int yspan = luaL_checkint(L, i + 4);
+    int left = luaL_checkinteger(L, i + 1);
+    int top = luaL_checkinteger(L, i + 2);
+    int xspan = luaL_checkinteger(L, i + 3);
+    int yspan = luaL_checkinteger(L, i + 4);
     int hexpand = luaL_checkboolean(L, i + 5);
-    uiAlign halign = luaL_checkint(L, i + 6);
+    uiAlign halign = luaL_checkinteger(L, i + 6);
     int vexpand = luaL_checkboolean(L, i + 7);
-    uiAlign valign = luaL_checkint(L, i + 8);
+    uiAlign valign = luaL_checkinteger(L, i + 8);
     uiGridAppend(grid, UI_CHECK_OBJECT(i, Control), left, top, xspan, yspan, hexpand, halign, vexpand, valign);
 
     //copy ltab.c, need check
@@ -36,13 +36,13 @@ static int l_uiGridInsertAt(lua_State *L)
   int i;
   for (i = 2; i <= n; i += 10)
   {
-    uiAt at = luaL_checkint(L, i + 3);
-    int xspan = luaL_checkint(L, i + 4);
-    int yspan = luaL_checkint(L, i + 5);
+    uiAt at = luaL_checkinteger(L, i + 3);
+    int xspan = luaL_checkinteger(L, i + 4);
+    int yspan = luaL_checkinteger(L, i + 5);
     int hexpand = luaL_checkboolean(L, i + 6);
-    uiAlign halign = luaL_checkint(L, i + 7);
+    uiAlign halign = luaL_checkinteger(L, i + 7);
     int vexpand = luaL_checkboolean(L, i + 8);
-    uiAlign valign = luaL_checkint(L, i + 9);
+    uiAlign valign = luaL_checkinteger(L, i + 9);
     uiGridInsertAt(UI_CHECK_OBJECT(1, Grid),
                    UI_CHECK_OBJECT(i, Control),
                    UI_CHECK_OBJECT(i + 1, Control),

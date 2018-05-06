@@ -8,8 +8,8 @@ static int l_uiNewWindow(lua_State *L)
 {
   uiWindow *win = uiNewWindow(
                     luaL_checkstring(L, 1),
-                    luaL_checkint(L, 2),
-                    luaL_checkint(L, 3),
+                    luaL_checkinteger(L, 2),
+                    luaL_checkinteger(L, 3),
                     luaL_checkboolean(L, 4)
                   );
   uiWindowOnClosing(win, onClosing, NULL);
@@ -38,8 +38,8 @@ static int l_uiWindowContentSize(lua_State *L)
     lua_pushinteger(L, height);
     return 2;
   }
-  width = luaL_checkint(L, 2);
-  height = luaL_checkint(L, 3);
+  width = luaL_checkinteger(L, 2);
+  height = luaL_checkinteger(L, 3);
   uiWindowSetContentSize(UI_CHECK_OBJECT(1, Window), width, height);
   UI_RETURN_SELF;
 }

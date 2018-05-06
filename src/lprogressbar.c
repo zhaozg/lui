@@ -10,7 +10,7 @@ static int l_uiProgressBarValue(lua_State *L)
   {
     lua_pushinteger(L, uiProgressBarValue(UI_CHECK_OBJECT(1, ProgressBar)));
   }
-  uiProgressBarSetValue(UI_CHECK_OBJECT(1, ProgressBar), luaL_checkint(L, 2));
+  uiProgressBarSetValue(UI_CHECK_OBJECT(1, ProgressBar), luaL_checkinteger(L, 2));
   UI_RETURN_SELF;
 }
 

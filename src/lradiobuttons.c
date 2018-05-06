@@ -23,7 +23,7 @@ static int l_uiRadioButtonsSelected(lua_State *L)
     lua_pushinteger(L, uiRadioButtonsSelected(UI_CHECK_OBJECT(1, RadioButtons)));
     return 1;
   }
-  uiRadioButtonsSetSelected(UI_CHECK_OBJECT(1, RadioButtons), luaL_checkint(L, 2));;
+  uiRadioButtonsSetSelected(UI_CHECK_OBJECT(1, RadioButtons), luaL_checkinteger(L, 2));;
   UI_RETURN_SELF;
 }
 

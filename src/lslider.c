@@ -1,6 +1,6 @@
 static int l_uiNewSlider(lua_State *L)
 {
-  UI_CREATE_OBJECT(Slider, uiNewSlider(luaL_checkint(L, 1), luaL_checkint(L, 2)));
+  UI_CREATE_OBJECT(Slider, uiNewSlider(luaL_checkinteger(L, 1), luaL_checkinteger(L, 2)));
   return 1;
 }
 
@@ -11,7 +11,7 @@ static int l_uiSliderValue(lua_State *L)
     lua_pushinteger(L, uiSliderValue(UI_CHECK_OBJECT(1, Slider)));
     return 1;
   }
-  uiSliderSetValue(UI_CHECK_OBJECT(1, Slider), luaL_checkint(L, 2));
+  uiSliderSetValue(UI_CHECK_OBJECT(1, Slider), luaL_checkinteger(L, 2));
   UI_RETURN_SELF;
 }
 

@@ -21,7 +21,7 @@ static int l_uiFormAppend(lua_State *L)
 
 static int l_uiFormDelete(lua_State *L)
 {
-  uiFormDelete(UI_CHECK_OBJECT(1, Form), luaL_checkint(L, 2));
+  uiFormDelete(UI_CHECK_OBJECT(1, Form), luaL_checkinteger(L, 2));
   UI_RETURN_SELF;
 }
 

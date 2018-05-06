@@ -20,10 +20,52 @@ static int l_uiAreaDrawParams_2_table(lua_State *L, uiAreaDrawParams *params)
   return 1;
 }
 
+
+//from: https://source.winehq.org/source/dlls/ntdll/string.c
+ char *  WINE_i64toa(
+     long long value, /* [I] Value to be converted */
+     char *str,      /* [O] Destination for the converted value */
+     int radix)      /* [I] Number base for conversion */
+ {
+     unsigned long long val;
+     int negative;
+     char buffer[65];
+     char *pos;
+     int digit;
+ 
+     if (value < 0 && radix == 10) {
+        negative = 1;
+        val = -value;
+     } else {
+        negative = 0;
+        val = value;
+     } /* if */
+ 
+     pos = &buffer[64];
+     *pos = '\0';
+ 
+     do {
+       digit = val % radix;
+       val = val / radix;
+       if (digit < 10) {
+           *--pos = '0' + digit;
+       } else {
+           *--pos = 'a' + digit - 10;
+       } /* if */
+     } while (val != 0L);
+ 
+     if (negative) {
+        *--pos = '-';
+     } /* if */
+ 
+     memcpy(str, pos, &buffer[64] - pos + 1);
+     return str;
+ }
+
 #define lua_pushINT64(L,n)                           \
   if(n > 9007199254740992 || n < -9007199254740992){ \
     char buf[24];                                    \
-    lua_pushstring(L, _i64toa(n, buf, 10));          \
+    lua_pushstring(L, WINE_i64toa(n, buf, 10));          \
   }else{                                             \
     lua_pushnumber(L, (lua_Number)n);                \
   }
@@ -260,7 +302,7 @@ static int l_HandlerKeyEvent_cb(uiAreaHandler *handler, uiArea *area, uiAreaKeyE
     if (lua_isboolean(L, -1))
       ret = lua_toboolean(L, -1);
     else
-      ret = luaL_checkint(L, -1);
+      ret = luaL_checkinteger(L, -1);
     lua_pop(L, 1);
   }
   /* Remove table with callback data in registry */
@@ -339,7 +381,7 @@ static struct luaL_Reg meta_AreaHandler[] =
 /** Path **/
 static int l_uiDrawNewPath(lua_State *L)
 {
-  uiDrawPath *dp = uiDrawNewPath(luaL_checkint(L, 1));
+  uiDrawPath *dp = uiDrawNewPath(luaL_checkinteger(L, 1));
   CREATE_USER_OBJECT(DrawPath, dp);
   return 1;
 }
@@ -572,7 +614,7 @@ static int lui_uiDrawBrushType(lua_State *L)
     lua_pushinteger(L, brush->Type);
     return 1;
   }
-  brush->Type = luaL_checkint(L, 2);
+  brush->Type = luaL_checkinteger(L, 2);
   UI_RETURN_SELF;
 }
 
@@ -666,7 +708,7 @@ static int l_uiDrawtrokeParamsCap(lua_State *L)
     lua_pushinteger(L, params->Cap);
     return 1;
   }
-  params->Cap = luaL_checkint(L, 2);
+  params->Cap = luaL_checkinteger(L, 2);
   UI_RETURN_SELF;
 }
 
@@ -678,7 +720,7 @@ static int l_uiDrawtrokeParamsJoin(lua_State *L)
     lua_pushinteger(L, params->Join);
     return 1;
   }
-  params->Join = luaL_checkint(L, 2);
+  params->Join = luaL_checkinteger(L, 2);
   UI_RETURN_SELF;
 }
 
