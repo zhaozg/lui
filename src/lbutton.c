@@ -1,10 +1,10 @@
-static int l_uiNewButton(lua_State *L)
+int LUI_EXP l_uiNewButton(lua_State *L)
 {
   UI_CREATE_OBJECT(Button, uiNewButton(luaL_checkstring(L, 1)));
   return 1;
 }
 
-static int l_uiButtonText(lua_State *L)
+int LUI_EXP l_uiButtonText(lua_State *L)
 {
   if (lua_isnone(L, 2))
   {
@@ -16,12 +16,12 @@ static int l_uiButtonText(lua_State *L)
   UI_RETURN_SELF;
 }
 
-static void on_button_clicked(uiButton *b, void *data)
+void LUI_EXP on_button_clicked(uiButton *b, void *data)
 {
   callback(data, b);
 }
 
-static int l_uiButtonOnClicked(lua_State *L)
+int LUI_EXP l_uiButtonOnClicked(lua_State *L)
 {
   uiButtonOnClicked(UI_CHECK_OBJECT(1, Button), on_button_clicked, L);
   create_callback_data(L, 1);

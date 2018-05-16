@@ -1,4 +1,4 @@
-static int l_uiNewArea(lua_State *L)
+int LUI_EXP l_uiNewArea(lua_State *L)
 {
   uiAreaHandler *ah = CHECK_USER_OBJECT(1, AreaHandler);
   uiArea *a = NULL;
@@ -16,19 +16,19 @@ static int l_uiNewArea(lua_State *L)
   return 1;
 }
 
-static int l_uiAreaSetSize(lua_State *L)
+int LUI_EXP l_uiAreaSetSize(lua_State *L)
 {
   uiAreaSetSize(UI_CHECK_OBJECT(1, Area), luaL_checkinteger(L, 2), luaL_checkinteger(L, 3));
   UI_RETURN_SELF;
 }
 
-static int l_uiAreaQueueRedrawAll(lua_State *L)
+int LUI_EXP l_uiAreaQueueRedrawAll(lua_State *L)
 {
   uiAreaQueueRedrawAll(UI_CHECK_OBJECT(1, Area));
   UI_RETURN_SELF;
 }
 
-static int l_uiAreaScrollTo(lua_State *L)
+int LUI_EXP l_uiAreaScrollTo(lua_State *L)
 {
   uiAreaScrollTo(UI_CHECK_OBJECT(1, Area),
                  luaL_checknumber(L, 2),
@@ -38,13 +38,13 @@ static int l_uiAreaScrollTo(lua_State *L)
   UI_RETURN_SELF;
 }
 
-static int l_uiAreaBeginUserWindowMove(lua_State *L)
+int LUI_EXP l_uiAreaBeginUserWindowMove(lua_State *L)
 {
   uiAreaBeginUserWindowMove(UI_CHECK_OBJECT(1, Area));
   UI_RETURN_SELF;
 }
 
-static int l_uiAreaBeginUserWindowResize(lua_State *L)
+int LUI_EXP l_uiAreaBeginUserWindowResize(lua_State *L)
 {
   uiAreaBeginUserWindowResize(UI_CHECK_OBJECT(1, Area), luaL_checkinteger(L, 2));
   UI_RETURN_SELF;

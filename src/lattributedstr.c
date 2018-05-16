@@ -1,4 +1,4 @@
-static int l_uiNewAttributedString(lua_State *L)
+int LUI_EXP l_uiNewAttributedString(lua_State *L)
 {
   const char *initialString = luaL_checkstring(L, 1);
   uiAttributedString *s = uiNewAttributedString(initialString);
@@ -6,14 +6,14 @@ static int l_uiNewAttributedString(lua_State *L)
   return 1;
 }
 
-static int l_uiFreeAttributedString(lua_State *L)
+int LUI_EXP l_uiFreeAttributedString(lua_State *L)
 {
   uiAttributedString *s = CHECK_USER_OBJECT(1, AttributedString);
   uiFreeAttributedString(s);
   return 0;
 }
 
-static int l_uiAttributedStringString(lua_State *L)
+int LUI_EXP l_uiAttributedStringString(lua_State *L)
 {
   uiAttributedString *s = CHECK_USER_OBJECT(1, AttributedString);
   int len = uiAttributedStringLen(s);
@@ -21,35 +21,35 @@ static int l_uiAttributedStringString(lua_State *L)
   return 1;
 }
 
-static int l_uiAttributedStringLen(lua_State *L)
+int LUI_EXP l_uiAttributedStringLen(lua_State *L)
 {
   uiAttributedString *s = CHECK_USER_OBJECT(1, AttributedString);
   lua_pushinteger(L, uiAttributedStringLen(s));
   return 1;
 }
 
-static int l_uiAttributedStringAppendUnattributed(lua_State *L)
+int LUI_EXP l_uiAttributedStringAppendUnattributed(lua_State *L)
 {
   uiAttributedString *s = CHECK_USER_OBJECT(1, AttributedString);
   uiAttributedStringAppendUnattributed(s, luaL_checkstring(L, 2));
   UI_RETURN_SELF;
 }
 
-static int l_uiAttributedStringInsertAtUnattributed(lua_State *L)
+int LUI_EXP l_uiAttributedStringInsertAtUnattributed(lua_State *L)
 {
   uiAttributedString *s = CHECK_USER_OBJECT(1, AttributedString);
   uiAttributedStringInsertAtUnattributed(s, luaL_checkstring(L, 2), luaL_checkinteger(L, 3));
   UI_RETURN_SELF;
 }
 
-static int l_uiAttributedStringDelete(lua_State *L)
+int LUI_EXP l_uiAttributedStringDelete(lua_State *L)
 {
   uiAttributedString *s = CHECK_USER_OBJECT(1, AttributedString);
   uiAttributedStringDelete(s, luaL_checkinteger(L, 2), luaL_checkinteger(L, 3));
   UI_RETURN_SELF;
 }
 
-static int l_uiAttributedStringSetAttribute(lua_State *L)
+int LUI_EXP l_uiAttributedStringSetAttribute(lua_State *L)
 {
   uiAttributedString *s = CHECK_USER_OBJECT(1, AttributedString);
   uiAttribute *a = CHECK_USER_OBJECT(2, Attribute);
@@ -57,7 +57,7 @@ static int l_uiAttributedStringSetAttribute(lua_State *L)
   UI_RETURN_SELF;
 }
 
-static int l_uiAttributedStringNumGraphemes(lua_State *L)
+int LUI_EXP l_uiAttributedStringNumGraphemes(lua_State *L)
 {
   uiAttributedString *s = CHECK_USER_OBJECT(1, AttributedString);
   size_t sz =  uiAttributedStringNumGraphemes(s);
@@ -65,7 +65,7 @@ static int l_uiAttributedStringNumGraphemes(lua_State *L)
   return 1;
 }
 
-static int l_uiAttributedStringByteIndexToGrapheme(lua_State *L)
+int LUI_EXP l_uiAttributedStringByteIndexToGrapheme(lua_State *L)
 {
   uiAttributedString *s = CHECK_USER_OBJECT(1, AttributedString);
   size_t sz = uiAttributedStringByteIndexToGrapheme(s, (size_t)luaL_checkinteger(L, 2));
@@ -73,7 +73,7 @@ static int l_uiAttributedStringByteIndexToGrapheme(lua_State *L)
   return 1;
 }
 
-static int l_uiAttributedStringGraphemeToByteIndex(lua_State *L)
+int LUI_EXP l_uiAttributedStringGraphemeToByteIndex(lua_State *L)
 {
   uiAttributedString *s = CHECK_USER_OBJECT(1, AttributedString);
   size_t sz = uiAttributedStringGraphemeToByteIndex(s, (size_t)luaL_checkinteger(L, 2));
@@ -84,7 +84,7 @@ static int l_uiAttributedStringGraphemeToByteIndex(lua_State *L)
 
 typedef uiForEach(*uiAttributedStringForEachAttributeFunc)(const uiAttributedString *s, const uiAttribute *a, size_t start, size_t end, void *data);
 
-static int l_uiAttributedStringForEachAttribute(lua_State *L)
+int LUI_EXP l_uiAttributedStringForEachAttribute(lua_State *L)
 {
   uiAttributedString *s = CHECK_USER_OBJECT(1, AttributedString);
   //_UI_EXTERN void uiAttributedStringForEachAttribute(const uiAttributedString *s, uiAttributedStringForEachAttributeFunc f, void *data);

@@ -1,10 +1,10 @@
-static int l_uiNewHorizontalSeparator(lua_State *L)
+int LUI_EXP l_uiNewHorizontalSeparator(lua_State *L)
 {
   UI_CREATE_OBJECT(Separator, uiNewHorizontalSeparator());
   return 1;
 }
 
-static int l_uiNewVerticalSeparator(lua_State *L)
+int LUI_EXP l_uiNewVerticalSeparator(lua_State *L)
 {
   UI_CREATE_OBJECT(Separator, uiNewVerticalSeparator());
   return 1;

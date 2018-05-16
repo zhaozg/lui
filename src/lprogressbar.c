@@ -1,10 +1,10 @@
-static int l_uiNewProgressBar(lua_State *L)
+int LUI_EXP l_uiNewProgressBar(lua_State *L)
 {
   UI_CREATE_OBJECT(ProgressBar, uiNewProgressBar());
   return 1;
 }
 
-static int l_uiProgressBarValue(lua_State *L)
+int LUI_EXP l_uiProgressBarValue(lua_State *L)
 {
   if (lua_isnone(L, 2))
   {

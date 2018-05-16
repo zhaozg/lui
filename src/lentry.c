@@ -36,12 +36,12 @@ static l_uiEntryText(lua_State *L)
   UI_RETURN_SELF;
 }
 
-static void on_entry_changed(uiEntry *b, void *data)
+void LUI_EXP on_entry_changed(uiEntry *b, void *data)
 {
   callback(data, b);
 }
 
-static int l_uiEntryOnChanged(lua_State *L)
+int LUI_EXP l_uiEntryOnChanged(lua_State *L)
 {
   uiEntryOnChanged(UI_CHECK_OBJECT(1, Entry), on_entry_changed, L);
   create_callback_data(L, 1);

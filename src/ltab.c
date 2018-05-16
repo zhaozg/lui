@@ -1,10 +1,10 @@
-static int l_uiNewTab(lua_State *L)
+int LUI_EXP l_uiNewTab(lua_State *L)
 {
   UI_CREATE_OBJECT(Tab, uiNewTab());
   return 1;
 }
 
-static int l_uiTabAppend(lua_State *L)
+int LUI_EXP l_uiTabAppend(lua_State *L)
 {
   int n = lua_gettop(L);
   int i;
@@ -18,25 +18,25 @@ static int l_uiTabAppend(lua_State *L)
   UI_RETURN_SELF;
 }
 
-static int l_uiTabInsertAt(lua_State *L)
+int LUI_EXP l_uiTabInsertAt(lua_State *L)
 {
   uiTabInsertAt(UI_CHECK_OBJECT(1, Tab), luaL_checkstring(L, 2), luaL_checkinteger(L, 3), UI_CHECK_OBJECT(4, Control));
   UI_RETURN_SELF;
 }
 
-static int l_uiTabDelete(lua_State *L)
+int LUI_EXP l_uiTabDelete(lua_State *L)
 {
   uiTabDelete(UI_CHECK_OBJECT(1, Tab), luaL_checkinteger(L, 2));
   UI_RETURN_SELF;
 }
 
-static int l_uiTabNumPages(lua_State *L)
+int LUI_EXP l_uiTabNumPages(lua_State *L)
 {
   lua_pushinteger(L, uiTabNumPages(UI_CHECK_OBJECT(1, Tab)));
   return 1;
 }
 
-static int L_uiTabMargined(lua_State *L)
+int LUI_EXP L_uiTabMargined(lua_State *L)
 {
   if (lua_isnone(L, 3))
   {

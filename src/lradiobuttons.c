@@ -1,10 +1,10 @@
-static int l_uiNewRadioButtons(lua_State *L)
+int LUI_EXP l_uiNewRadioButtons(lua_State *L)
 {
   UI_CREATE_OBJECT(RadioButtons, uiNewRadioButtons());
   return 1;
 }
 
-static int l_uiRadioButtonsAppend(lua_State *L)
+int LUI_EXP l_uiRadioButtonsAppend(lua_State *L)
 {
   int n = lua_gettop(L);
   int i;
@@ -16,7 +16,7 @@ static int l_uiRadioButtonsAppend(lua_State *L)
   UI_RETURN_SELF;
 }
 
-static int l_uiRadioButtonsSelected(lua_State *L)
+int LUI_EXP l_uiRadioButtonsSelected(lua_State *L)
 {
   if (lua_isnone(L, 2))
   {
@@ -27,12 +27,12 @@ static int l_uiRadioButtonsSelected(lua_State *L)
   UI_RETURN_SELF;
 }
 
-static void on_radiobutton_selected(uiRadioButtons *b, void *data)
+void LUI_EXP on_radiobutton_selected(uiRadioButtons *b, void *data)
 {
   callback(data, b);
 }
 
-static int l_uiRadioButtonsOnSelected(lua_State *L)
+int LUI_EXP l_uiRadioButtonsOnSelected(lua_State *L)
 {
   uiRadioButtonsOnSelected(UI_CHECK_OBJECT(1, RadioButtons), on_radiobutton_selected, L);
   create_callback_data(L, 1);

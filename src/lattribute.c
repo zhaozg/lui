@@ -5,26 +5,26 @@
 // details.
 typedef uiForEach(*uiOpenTypeFeaturesForEachFunc)(const uiOpenTypeFeatures *otf, char a, char b, char c, char d, uint32_t value, void *data);
 
-static int l_uiNewOpenTypeFeatures(lua_State *L) {
+int LUI_EXP l_uiNewOpenTypeFeatures(lua_State *L) {
   uiOpenTypeFeatures *f = uiNewOpenTypeFeatures();
   CREATE_USER_OBJECT(OpenTypeFeatures, f);
   return 1;
 }
 
-static int l_uiFreeOpenTypeFeatures(lua_State *L) {
+int LUI_EXP l_uiFreeOpenTypeFeatures(lua_State *L) {
   uiOpenTypeFeatures *f = CHECK_USER_OBJECT(1, OpenTypeFeatures);
   uiFreeOpenTypeFeatures(f);
   return 0;
 }
 
-static int l_uiOpenTypeFeaturesClone(lua_State *L) {
+int LUI_EXP l_uiOpenTypeFeaturesClone(lua_State *L) {
   uiOpenTypeFeatures *f = CHECK_USER_OBJECT(1, OpenTypeFeatures);
   uiOpenTypeFeatures *a = uiOpenTypeFeaturesClone(f);
   CREATE_USER_OBJECT(OpenTypeFeatures, a);
   return 1;
 }
 
-static int l_uiOpenTypeFeaturesAdd(lua_State *L) {
+int LUI_EXP l_uiOpenTypeFeaturesAdd(lua_State *L) {
   uiOpenTypeFeatures *f = CHECK_USER_OBJECT(1, OpenTypeFeatures);
   char a = (char)luaL_checkinteger(L, 2);
   char b = (char)luaL_checkinteger(L, 3);
@@ -35,7 +35,7 @@ static int l_uiOpenTypeFeaturesAdd(lua_State *L) {
   UI_RETURN_SELF;
 }
 
-static int l_uiOpenTypeFeaturesRemove(lua_State *L) {
+int LUI_EXP l_uiOpenTypeFeaturesRemove(lua_State *L) {
   uiOpenTypeFeatures *f = CHECK_USER_OBJECT(1, OpenTypeFeatures);
   char a = (char)luaL_checkinteger(L, 2);
   char b = (char)luaL_checkinteger(L, 3);
@@ -45,7 +45,7 @@ static int l_uiOpenTypeFeaturesRemove(lua_State *L) {
   UI_RETURN_SELF;
 }
 
-static int l_uiOpenTypeFeaturesGet(lua_State *L) {
+int LUI_EXP l_uiOpenTypeFeaturesGet(lua_State *L) {
   uiOpenTypeFeatures *f = CHECK_USER_OBJECT(1, OpenTypeFeatures);
   char a = (char)luaL_checkinteger(L, 2);
   char b = (char)luaL_checkinteger(L, 3);
@@ -56,7 +56,7 @@ static int l_uiOpenTypeFeaturesGet(lua_State *L) {
   return 0;
 }
 
-static int l_uiOpenTypeFeaturesForEach(lua_State *L) {
+int LUI_EXP l_uiOpenTypeFeaturesForEach(lua_State *L) {
   //_UI_EXTERN void uiOpenTypeFeaturesForEach(const uiOpenTypeFeatures *otf, uiOpenTypeFeaturesForEachFunc f, void *data);
   return 0;
 }
@@ -75,56 +75,56 @@ static struct luaL_Reg meta_OpenTypeFeatures[] =
   { NULL }
 };
 
-static int l_uiFreeAttribute(lua_State *L)
+int LUI_EXP l_uiFreeAttribute(lua_State *L)
 {
   uiAttribute* attr = CHECK_USER_OBJECT(1, Attribute);
   uiFreeAttribute(attr);
   return 0;
 }
 
-static int l_uiAttributeGetType(lua_State *L)
+int LUI_EXP l_uiAttributeGetType(lua_State *L)
 {
   uiAttribute* attr = CHECK_USER_OBJECT(1, Attribute);
   lua_pushinteger(L, uiAttributeGetType(attr));
   return 1;
 }
 
-static int l_uiAttributeFamily(lua_State *L)
+int LUI_EXP l_uiAttributeFamily(lua_State *L)
 {
   uiAttribute* attr = CHECK_USER_OBJECT(1, Attribute);
   lua_pushstring(L, uiAttributeFamily(attr));
   return 1;
 }
 
-static int l_uiAttributeSize(lua_State *L)
+int LUI_EXP l_uiAttributeSize(lua_State *L)
 {
   uiAttribute* attr = CHECK_USER_OBJECT(1, Attribute);
   lua_pushnumber(L, uiAttributeSize(attr));
   return 1;
 }
 
-static int l_uiAttributeWeight(lua_State *L)
+int LUI_EXP l_uiAttributeWeight(lua_State *L)
 {
   uiAttribute* attr = CHECK_USER_OBJECT(1, Attribute);
   lua_pushinteger(L, uiAttributeWeight(attr));
   return 1;
 }
 
-static int l_uiAttributeItalic(lua_State *L)
+int LUI_EXP l_uiAttributeItalic(lua_State *L)
 {
   uiAttribute* attr = CHECK_USER_OBJECT(1, Attribute);
   lua_pushinteger(L, uiAttributeItalic(attr));
   return 1;
 }
 
-static int l_uiAttributeStretch(lua_State *L)
+int LUI_EXP l_uiAttributeStretch(lua_State *L)
 {
   uiAttribute* attr = CHECK_USER_OBJECT(1, Attribute);
   lua_pushinteger(L, uiAttributeStretch(attr));
   return 1;
 }
 
-static int l_uiAttributeColor(lua_State *L)
+int LUI_EXP l_uiAttributeColor(lua_State *L)
 {
   uiAttribute* attr = CHECK_USER_OBJECT(1, Attribute);
   double r, g, b, a;
@@ -137,7 +137,7 @@ static int l_uiAttributeColor(lua_State *L)
 }
 
 
-static int l_uiAttributeUnderlineColor(lua_State *L)
+int LUI_EXP l_uiAttributeUnderlineColor(lua_State *L)
 {
   uiAttribute* attr = CHECK_USER_OBJECT(1, Attribute);
   uiUnderlineColor u;
@@ -150,14 +150,14 @@ static int l_uiAttributeUnderlineColor(lua_State *L)
   lua_pushnumber(L, a);
   return 5;
 }
-static int l_uiAttributeUnderline(lua_State *L)
+int LUI_EXP l_uiAttributeUnderline(lua_State *L)
 {
   uiAttribute* attr = CHECK_USER_OBJECT(1, Attribute);
   lua_pushinteger(L, uiAttributeUnderline(attr));
   return 1;
 }
 
-static int l_uiAttributeFeatures(lua_State *L)
+int LUI_EXP l_uiAttributeFeatures(lua_State *L)
 {
   uiAttribute* attr = CHECK_USER_OBJECT(1, Attribute);
   const uiOpenTypeFeatures* features = uiAttributeFeatures(attr);
@@ -166,7 +166,7 @@ static int l_uiAttributeFeatures(lua_State *L)
 }
 
 /* uiFontButtonDescriptor */
-static int l_uiAttribute2table(lua_State *L,
+int LUI_EXP l_uiAttribute2table(lua_State *L,
   uiAttribute *atr)
 {
   lua_newtable(L);
@@ -203,7 +203,7 @@ static struct luaL_Reg meta_Attribute[] =
   { NULL }
 };
 
-static int l_uiNewAttribute(lua_State *L)
+int LUI_EXP l_uiNewAttribute(lua_State *L)
 {
   uiAttribute *attr = NULL;
   const char* item = luaL_checkstring(L, 1);

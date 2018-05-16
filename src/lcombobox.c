@@ -1,10 +1,10 @@
-static int l_uiNewCombobox(lua_State *L)
+int LUI_EXP l_uiNewCombobox(lua_State *L)
 {
   UI_CREATE_OBJECT(Combobox, uiNewCombobox());
   return 1;
 }
 
-static int l_uiComboboxAppend(lua_State *L)
+int LUI_EXP l_uiComboboxAppend(lua_State *L)
 {
   int n = lua_gettop(L);
   int i;
@@ -16,7 +16,7 @@ static int l_uiComboboxAppend(lua_State *L)
   UI_RETURN_SELF;
 }
 
-static int l_uiComboboxSelected(lua_State *L)
+int LUI_EXP l_uiComboboxSelected(lua_State *L)
 {
   if (lua_isnone(L, 2))
   {
@@ -27,12 +27,12 @@ static int l_uiComboboxSelected(lua_State *L)
   UI_RETURN_SELF;
 }
 
-static void on_combobox_selected(uiCombobox *c, void *data)
+void LUI_EXP on_combobox_selected(uiCombobox *c, void *data)
 {
   callback(data, c);
 }
 
-static int l_uiComboboxOnSelected(lua_State *L)
+int LUI_EXP l_uiComboboxOnSelected(lua_State *L)
 {
   uiComboboxOnSelected(UI_CHECK_OBJECT(1, Combobox), on_combobox_selected, L);
   create_callback_data(L, 1);
@@ -49,13 +49,13 @@ static struct luaL_Reg meta_Combobox[] =
   { NULL }
 };
 
-static int l_uiNewEditableCombobox(lua_State *L)
+int LUI_EXP l_uiNewEditableCombobox(lua_State *L)
 {
   UI_CREATE_OBJECT(EditableCombobox, uiNewEditableCombobox());
   return 1;
 }
 
-static int l_uiEditableComboboxAppend(lua_State *L)
+int LUI_EXP l_uiEditableComboboxAppend(lua_State *L)
 {
   int n = lua_gettop(L);
   int i;
@@ -67,7 +67,7 @@ static int l_uiEditableComboboxAppend(lua_State *L)
   UI_RETURN_SELF;
 }
 
-static int l_uiEditableComboboxText(lua_State *L)
+int LUI_EXP l_uiEditableComboboxText(lua_State *L)
 {
   if (lua_isnone(L, 2))
   {
@@ -78,12 +78,12 @@ static int l_uiEditableComboboxText(lua_State *L)
   UI_RETURN_SELF;
 }
 
-static void on_EditableCombobox_Changed(uiEditableCombobox *c, void *data)
+void LUI_EXP on_EditableCombobox_Changed(uiEditableCombobox *c, void *data)
 {
   callback(data, c);
 }
 
-static int l_uiEditableComboboxOnChanged(lua_State *L)
+int LUI_EXP l_uiEditableComboboxOnChanged(lua_State *L)
 {
   uiEditableComboboxOnChanged(UI_CHECK_OBJECT(1, EditableCombobox), on_EditableCombobox_Changed, L);
   create_callback_data(L, 1);

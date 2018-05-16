@@ -1,3 +1,8 @@
+#define LUI_EXP __declspec(dllexport) extern
+#define LUA_LIB
+#define LUA_BUILD_AS_DLL
+//#define LUI_MESSAGE_DIALOGS
+
 #include <lua.h>
 #include <lualib.h>
 #include <lauxlib.h>
@@ -7,7 +12,7 @@
 #include <memory.h>
 
 
-#include "ui.h"
+#include <ui.h>
 
 /* make lua version compat */
 
@@ -22,7 +27,7 @@
 # define lua_pushglobaltable(L) lua_pushvalue(L, LUA_GLOBALSINDEX)
 #endif
 
-inline static int luaL_checkboolean(lua_State *L, int n)
+inline int LUI_EXP luaL_checkboolean(lua_State *L, int n)
 {
   luaL_checktype(L, n, LUA_TBOOLEAN);
   return lua_toboolean(L, n);
@@ -72,7 +77,7 @@ struct wrap
 
 /* general libui callback  mechanism to lua */
 
-static void create_callback_data(lua_State *L, int n)
+void LUI_EXP create_callback_data(lua_State *L, int n)
 {
   /* Push registery key: userdata pointer to control */
 
@@ -93,7 +98,7 @@ static void create_callback_data(lua_State *L, int n)
   lua_settable(L, LUA_REGISTRYINDEX);
 }
 
-static int traceback(lua_State *L)
+int LUI_EXP traceback(lua_State *L)
 {
   if (!lua_isstring(L, 1))  /* 'message' not a string? */
     return 1;  /* keep it intact */
@@ -117,7 +122,8 @@ static int traceback(lua_State *L)
   return 1;
 }
 
-static int callback(lua_State *L, void *control)
+
+int LUI_EXP callback(lua_State *L, void *control)
 {
   int ret = 0;
   int err = 0;
@@ -142,7 +148,9 @@ static int callback(lua_State *L, void *control)
   /* Call function */
   if (lua_pcall(L, 2, 1, err))
   {
+#ifdef LUI_MESSAGE_DIALOGS
     uiMsgBoxError(win, "InnerException", lua_tostring(L, -1));
+#endif
     lua_pop(L, 1);
   }
   else
@@ -163,7 +171,7 @@ static int callback(lua_State *L, void *control)
 
 /* all ui Control should not be gc, we need destroy it manually */
 /* garbage collection for libui object */
-static int l_uigc(lua_State *L)
+int LUI_EXP l_uigc(lua_State *L)
 {
   struct wrap *w = lua_touserdata(L, 1);
   lua_pushnil(L);
@@ -229,7 +237,7 @@ static int l_uigc(lua_State *L)
 
 /* Various top level */
 
-static int l_uiInit(lua_State *L)
+int LUI_EXP l_uiInit(lua_State *L)
 {
   int ret = 1;
   uiInitOptions o;
@@ -249,43 +257,43 @@ static int l_uiInit(lua_State *L)
   return ret;
 }
 
-static int l_uiUninit(lua_State *L)
+int LUI_EXP l_uiUninit(lua_State *L)
 {
   uiUninit();
   return 0;
 }
 
-static int l_uiMain(lua_State *L)
+int LUI_EXP l_uiMain(lua_State *L)
 {
   uiMain();
   return 0;
 }
 
-static int l_uiMainStep(lua_State *L)
+int LUI_EXP l_uiMainStep(lua_State *L)
 {
   lua_pushboolean(L, uiMainStep(luaL_checkboolean(L, 1)));
   return 1;
 }
 
-static int l_uiMainSteps(lua_State *L)
+int LUI_EXP l_uiMainSteps(lua_State *L)
 {
   uiMainSteps();;
   return 0;
 }
 
-static int l_uiQuit(lua_State *L)
+int LUI_EXP l_uiQuit(lua_State *L)
 {
   uiQuit();
   return 0;
 }
 
-static int l_uiUserBugCannotSetParentOnToplevel(lua_State *L)
+int LUI_EXP l_uiUserBugCannotSetParentOnToplevel(lua_State *L)
 {
   uiUserBugCannotSetParentOnToplevel(luaL_checkstring(L, 1));
   return 0;
 }
 
-static void l_QueueMain(void *data)
+void LUI_EXP l_QueueMain(void *data)
 {
   int err = 0;
   lua_State *L = data;
@@ -312,7 +320,7 @@ static void l_QueueMain(void *data)
   assert(err - 1 == lua_gettop(L));
 }
 
-static int l_uiQueueMain(lua_State *L)
+int LUI_EXP l_uiQueueMain(lua_State *L)
 {
   luaL_checktype(L, 1, LUA_TFUNCTION);
   lua_pushlightuserdata(L, l_QueueMain);
@@ -326,7 +334,7 @@ static int l_uiQueueMain(lua_State *L)
   return 0;
 }
 
-static int on_ShouldQuit(void *data)
+int LUI_EXP on_ShouldQuit(void *data)
 {
   int ret = 0;
   int err = 0;
@@ -367,7 +375,7 @@ static int on_ShouldQuit(void *data)
   return ret;
 }
 
-static int l_uiOnShouldQuit(lua_State *L)
+int LUI_EXP l_uiOnShouldQuit(lua_State *L)
 {
   uiOnShouldQuit(on_ShouldQuit, L);
 

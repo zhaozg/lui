@@ -1,10 +1,10 @@
-static int l_uiNewColorButton(lua_State *L)
+int LUI_EXP l_uiNewColorButton(lua_State *L)
 {
   UI_CREATE_OBJECT(ColorButton, uiNewColorButton());
   return 1;
 }
 
-static int l_uiColorButtonColor(lua_State *L)
+int LUI_EXP l_uiColorButtonColor(lua_State *L)
 {
   double r, g, b, a;
   if (lua_isnone(L, 2))
@@ -24,12 +24,12 @@ static int l_uiColorButtonColor(lua_State *L)
   UI_RETURN_SELF;
 }
 
-static void on_colorbutton_changed(uiColorButton *b, void *data)
+void LUI_EXP on_colorbutton_changed(uiColorButton *b, void *data)
 {
   callback(data, b);
 }
 
-static int l_uiColorButtonOnChanged(lua_State *L)
+int LUI_EXP l_uiColorButtonOnChanged(lua_State *L)
 {
   uiColorButtonOnChanged(UI_CHECK_OBJECT(1, ColorButton), on_colorbutton_changed, L);
   create_callback_data(L, 1);

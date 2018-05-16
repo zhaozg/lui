@@ -1,10 +1,10 @@
-static int l_uiNewGroup(lua_State *L)
+int LUI_EXP l_uiNewGroup(lua_State *L)
 {
   UI_CREATE_OBJECT(Group, uiNewGroup(luaL_checkstring(L, 1)));
   return 1;
 }
 
-static int l_uiGroupTitle(lua_State *L)
+int LUI_EXP l_uiGroupTitle(lua_State *L)
 {
   if (lua_isnone(L, 2))
   {
@@ -15,7 +15,7 @@ static int l_uiGroupTitle(lua_State *L)
   UI_RETURN_SELF;
 }
 
-static int l_uiGroupSetChild(lua_State *L)
+int LUI_EXP l_uiGroupSetChild(lua_State *L)
 {
   uiGroupSetChild(UI_CHECK_OBJECT(1, Group), UI_CHECK_OBJECT(2, Control));
   lua_getmetatable(L, 1);
@@ -25,7 +25,7 @@ static int l_uiGroupSetChild(lua_State *L)
   UI_RETURN_SELF;
 }
 
-static int l_uiGroupMargined(lua_State *L)
+int LUI_EXP l_uiGroupMargined(lua_State *L)
 {
   if (lua_isnone(L, 2))
   {
