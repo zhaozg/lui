@@ -1,4 +1,4 @@
-static void l_REG_UI_ENUM(lua_State *L, int idx)
+LUI_EXP void l_REG_UI_ENUM(lua_State *L, int idx)
 {
   lua_pushnumber(L, uiDrawDefaultMiterLimit);
   lua_setfield(L, -2, "DrawDefaultMiterLimit");

@@ -1,10 +1,10 @@
-static int l_uiNewSlider(lua_State *L)
+int LUI_EXP l_uiNewSlider(lua_State *L)
 {
   UI_CREATE_OBJECT(Slider, uiNewSlider(luaL_checkinteger(L, 1), luaL_checkinteger(L, 2)));
   return 1;
 }
 
-static int l_uiSliderValue(lua_State *L)
+int LUI_EXP l_uiSliderValue(lua_State *L)
 {
   if (lua_isnone(L, 2))
   {
@@ -15,12 +15,12 @@ static int l_uiSliderValue(lua_State *L)
   UI_RETURN_SELF;
 }
 
-static void on_slider_changed(uiSlider *b, void *data)
+void LUI_EXP on_slider_changed(uiSlider *b, void *data)
 {
   callback(data, b);
 }
 
-static int l_uiSliderOnChanged(lua_State *L)
+int LUI_EXP l_uiSliderOnChanged(lua_State *L)
 {
   uiSliderOnChanged(UI_CHECK_OBJECT(1, Slider), on_slider_changed, L);
   create_callback_data(L, 1);

@@ -1,10 +1,10 @@
-static int l_uiNewGrid(lua_State *L)
+int LUI_EXP l_uiNewGrid(lua_State *L)
 {
   UI_CREATE_OBJECT(Grid, uiNewGrid());
   return 1;
 }
 
-static int l_uiGridAppend(lua_State *L)
+int LUI_EXP l_uiGridAppend(lua_State *L)
 {
   int i;
   int n = lua_gettop(L);
@@ -30,7 +30,7 @@ static int l_uiGridAppend(lua_State *L)
   UI_RETURN_SELF;
 }
 
-static int l_uiGridInsertAt(lua_State *L)
+int LUI_EXP l_uiGridInsertAt(lua_State *L)
 {
   int n = lua_gettop(L);
   int i;
@@ -56,7 +56,7 @@ static int l_uiGridInsertAt(lua_State *L)
   UI_RETURN_SELF;
 }
 
-static int l_uiGridPadded(lua_State *L)
+int LUI_EXP l_uiGridPadded(lua_State *L)
 {
   if (lua_isnone(L, 2))
   {

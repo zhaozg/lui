@@ -1,15 +1,15 @@
-static int l_uiMenuItemEnable(lua_State *L)
+int LUI_EXP l_uiMenuItemEnable(lua_State *L)
 {
   uiMenuItemEnable(UI_CHECK_OBJECT(1, MenuItem));
   UI_RETURN_SELF;
 }
-static int l_uiMenuItemDisable(lua_State *L)
+int LUI_EXP l_uiMenuItemDisable(lua_State *L)
 {
   uiMenuItemDisable(UI_CHECK_OBJECT(1, MenuItem));
   UI_RETURN_SELF;
 }
 
-static int l_uiMenuItemChecked(lua_State *L)
+int LUI_EXP l_uiMenuItemChecked(lua_State *L)
 {
   if (lua_isnone(L, 2))
   {
@@ -20,12 +20,12 @@ static int l_uiMenuItemChecked(lua_State *L)
   UI_RETURN_SELF;
 }
 
-static void on_menuitem_clicked(uiMenuItem *b, uiWindow* w, void *data)
+void LUI_EXP on_menuitem_clicked(uiMenuItem *b, uiWindow* w, void *data)
 {
   callback(data, b);
 }
 
-static int l_uiMenuItemOnClicked(lua_State *L)
+int LUI_EXP l_uiMenuItemOnClicked(lua_State *L)
 {
   //TODO:
   uiMenuItemOnClicked(UI_CHECK_OBJECT(1, MenuItem), on_menuitem_clicked, L);

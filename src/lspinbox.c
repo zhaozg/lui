@@ -1,10 +1,10 @@
-static int l_uiNewSpinbox(lua_State *L)
+int LUI_EXP l_uiNewSpinbox(lua_State *L)
 {
   UI_CREATE_OBJECT(Spinbox, uiNewSpinbox(luaL_checkinteger(L, 1), luaL_checkinteger(L, 2)));
   return 1;
 }
 
-static int l_uiSpinboxValue(lua_State *L)
+int LUI_EXP l_uiSpinboxValue(lua_State *L)
 {
   if (lua_isnone(L, 2))
   {
@@ -15,12 +15,12 @@ static int l_uiSpinboxValue(lua_State *L)
   UI_RETURN_SELF;
 }
 
-static void on_spinbox_changed(uiSpinbox *b, void *data)
+void LUI_EXP on_spinbox_changed(uiSpinbox *b, void *data)
 {
   callback(data, b);
 }
 
-static int l_uiSpinboxOnChanged(lua_State *L)
+int LUI_EXP l_uiSpinboxOnChanged(lua_State *L)
 {
   uiSpinboxOnChanged(UI_CHECK_OBJECT(1, Spinbox), on_spinbox_changed, L);
   create_callback_data(L, 1);

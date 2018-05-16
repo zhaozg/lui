@@ -1,10 +1,10 @@
-static int onClosing(uiWindow *w, void *data)
+int LUI_EXP onClosing(uiWindow *w, void *data)
 {
   uiQuit();
   return 1;
 }
 
-static int l_uiNewWindow(lua_State *L)
+int LUI_EXP l_uiNewWindow(lua_State *L)
 {
   uiWindow *win = uiNewWindow(
                     luaL_checkstring(L, 1),
@@ -17,7 +17,7 @@ static int l_uiNewWindow(lua_State *L)
   return 1;
 }
 
-static int l_uiWindowTitle(lua_State *L)
+int LUI_EXP l_uiWindowTitle(lua_State *L)
 {
   if (lua_isnone(L, 2))
   {
@@ -28,7 +28,7 @@ static int l_uiWindowTitle(lua_State *L)
   UI_RETURN_SELF;
 }
 
-static int l_uiWindowContentSize(lua_State *L)
+int LUI_EXP l_uiWindowContentSize(lua_State *L)
 {
   int width, height;
   if (lua_isnone(L, 2))
@@ -44,7 +44,7 @@ static int l_uiWindowContentSize(lua_State *L)
   UI_RETURN_SELF;
 }
 
-static int l_uiWindowFullscreen(lua_State *L)
+int LUI_EXP l_uiWindowFullscreen(lua_State *L)
 {
   if (lua_isnone(L, 2))
   {
@@ -55,31 +55,31 @@ static int l_uiWindowFullscreen(lua_State *L)
   UI_RETURN_SELF;
 }
 
-static void Window_On_ContentSizeChanged(uiWindow *b, void *data)
+void LUI_EXP Window_On_ContentSizeChanged(uiWindow *b, void *data)
 {
   callback(data, b);
 }
 
-static int l_uiWindowOnContentSizeChanged(lua_State *L)
+int LUI_EXP l_uiWindowOnContentSizeChanged(lua_State *L)
 {
   uiWindowOnContentSizeChanged(UI_CHECK_OBJECT(1, Window), Window_On_ContentSizeChanged, L);
   create_callback_data(L, 1);
   UI_RETURN_SELF;
 }
 
-static int Window_On_Closing(uiWindow *b, void *data)
+int LUI_EXP Window_On_Closing(uiWindow *b, void *data)
 {
   return callback(data, b);
 }
 
-static int l_uiWindowOnClosing(lua_State *L)
+int LUI_EXP l_uiWindowOnClosing(lua_State *L)
 {
   uiWindowOnClosing(UI_CHECK_OBJECT(1, Window), Window_On_Closing, L);
   create_callback_data(L, 1);
   UI_RETURN_SELF;
 }
 
-static int l_uiWindowBorderless(lua_State *L)
+int LUI_EXP l_uiWindowBorderless(lua_State *L)
 {
   if (lua_isnone(L, 2))
   {
@@ -90,7 +90,7 @@ static int l_uiWindowBorderless(lua_State *L)
   UI_RETURN_SELF;
 }
 
-static int l_uiWindowSetChild(lua_State *L)
+int LUI_EXP l_uiWindowSetChild(lua_State *L)
 {
   uiWindowSetChild(UI_CHECK_OBJECT(1, Window), UI_CHECK_OBJECT(2, Control));
   lua_getmetatable(L, 1);
@@ -100,7 +100,7 @@ static int l_uiWindowSetChild(lua_State *L)
   UI_RETURN_SELF;
 }
 
-static int l_uiWindowMargined(lua_State *L)
+int LUI_EXP l_uiWindowMargined(lua_State *L)
 {
   if (lua_isnone(L, 2))
   {
@@ -111,8 +111,9 @@ static int l_uiWindowMargined(lua_State *L)
   UI_RETURN_SELF;
 }
 
-static int l_uiOpenFile(lua_State* L)
+int LUI_EXP l_uiOpenFile(lua_State* L)
 {
+#ifdef LUI_MESSAGE_DIALOGS
   char* f = uiOpenFile(UI_CHECK_OBJECT(1, Window));
   if (f)
   {
@@ -123,11 +124,13 @@ static int l_uiOpenFile(lua_State* L)
   {
     lua_pushnil(L);
   }
+#endif
   return 1;
 }
 
-static int l_uiSaveFile(lua_State* L)
+int LUI_EXP l_uiSaveFile(lua_State* L)
 {
+#ifdef LUI_MESSAGE_DIALOGS
   char* f = uiSaveFile(UI_CHECK_OBJECT(1, Window));
   if (f)
   {
@@ -139,17 +142,22 @@ static int l_uiSaveFile(lua_State* L)
     lua_pushnil(L);
   }
   return 1;
+#endif
 }
 
-static int l_uiMsgBox(lua_State* L)
+int LUI_EXP l_uiMsgBox(lua_State* L)
 {
+#ifdef LUI_MESSAGE_DIALOGS
   uiMsgBox(UI_CHECK_OBJECT(1, Window), luaL_checkstring(L, 2), luaL_checkstring(L, 3));
+#endif
   return 0;
 }
 
-static int l_uiMsgBoxError(lua_State* L)
+int LUI_EXP l_uiMsgBoxError(lua_State* L)
 {
+#ifdef LUI_MESSAGE_DIALOGS
   uiMsgBoxError(UI_CHECK_OBJECT(1, Window), luaL_checkstring(L, 2), luaL_checkstring(L, 3));
+#endif
   return 0;
 }
 

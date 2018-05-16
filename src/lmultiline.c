@@ -33,12 +33,12 @@ static l_uiMultilineEntryAppend(lua_State *L)
   UI_RETURN_SELF;
 }
 
-static void on_multilineentry_changed(uiMultilineEntry *b, void *data)
+void LUI_EXP on_multilineentry_changed(uiMultilineEntry *b, void *data)
 {
   callback(data, b);
 }
 
-static int l_uiMultilineEntryOnChanged(lua_State *L)
+int LUI_EXP l_uiMultilineEntryOnChanged(lua_State *L)
 {
   uiMultilineEntryOnChanged(UI_CHECK_OBJECT(1, MultilineEntry), on_multilineentry_changed, L);
   create_callback_data(L, 1);

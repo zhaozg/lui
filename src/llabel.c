@@ -1,10 +1,10 @@
-static int l_uiNewLabel(lua_State *L)
+int LUI_EXP l_uiNewLabel(lua_State *L)
 {
   UI_CREATE_OBJECT(Label, uiNewLabel(luaL_checkstring(L, 1)));
   return 1;
 }
 
-static int l_uiLabelText(lua_State *L)
+int LUI_EXP l_uiLabelText(lua_State *L)
 {
   if (lua_isnone(L, 2))
   {
