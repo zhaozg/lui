@@ -766,7 +766,7 @@ static struct luaL_Reg meta_DrawStrokeParams[] =
   { "Join",        l_uiDrawtrokeParamsJoin },
   { "Thickness",   l_uiDrawtrokeParamsThickness },
   { "MiterLimit",  l_uiDrawtrokeParamsMiterLimit },
-  { "Dashes",      l_uiDrawtrokeParamsDashPhase },
+  { "Dashes",      l_uiDrawtrokeParamsDashes },
   { "DashPhase",   l_uiDrawtrokeParamsDashPhase },
 
   { NULL }
@@ -835,7 +835,7 @@ static struct luaL_Reg meta_DrawContext[] =
 /* uiFontButton */
 static int lui_getoptfield(lua_State*L, int idx, const char*name, int def) {
   lua_getfield(L, idx, name);
-  def = luaL_optint(L, -1, def);
+  def = luaL_optnumber(L, -1, def);
   lua_pop(L, 1);
   return def;
 }

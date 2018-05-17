@@ -166,23 +166,36 @@ static int l_uiAttributeFeatures(lua_State *L)
 }
 
 /* uiFontButtonDescriptor */
-static int l_uiAttribute2table(lua_State *L,
-  uiAttribute *atr)
+static int l_uiAttribute2table(lua_State *L, const uiAttribute *atr)
 {
   lua_newtable(L);
   lua_pushinteger(L, uiAttributeGetType(atr));
   lua_setfield(L, -2, "type");
-
-  lua_pushinteger(L, uiAttributeWeight(atr));
-  lua_setfield(L, -2, "Weight");
-  lua_pushinteger(L, uiAttributeStretch(atr));
-  lua_setfield(L, -2, "stretch");
-  lua_pushinteger(L, uiAttributeItalic(atr));
-  lua_setfield(L, -2, "italic");
   lua_pushstring(L, uiAttributeFamily(atr));
   lua_setfield(L, -2, "family");
+  lua_pushnumber(L, uiAttributeSize(atr));
+  lua_setfield(L, -2, "size");
+  lua_pushinteger(L, uiAttributeWeight(atr));
+  lua_setfield(L, -2, "weight");
+  lua_pushinteger(L, uiAttributeItalic(atr));
+  lua_setfield(L, -2, "italic");
+  lua_pushinteger(L, uiAttributeStretch(atr));
+  lua_setfield(L, -2, "stretch");
+  lua_pushinteger(L, uiAttributeUnderline(atr));
+  lua_setfield(L, -2, "underline");
+
+  //color
+  //underlinecolor
   return 1;
 }
+
+static int l_uiAttribute2tableInfo(lua_State *L)
+{
+  uiAttribute* attr = CHECK_USER_OBJECT(1, Attribute);
+  l_uiAttribute2table(L, attr);
+  return 1;
+}
+
 
 static struct luaL_Reg meta_Attribute[] =
 {
@@ -199,7 +212,8 @@ static struct luaL_Reg meta_Attribute[] =
                   l_uiAttributeUnderlineColor },
   { "Underline",  l_uiAttributeUnderline },
   { "Features",   l_uiAttributeFeatures },
-  
+ 
+  { "info",       l_uiAttribute2tableInfo},
   { NULL }
 };
 

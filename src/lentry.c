@@ -1,4 +1,4 @@
-static l_uiNewEntry(lua_State *L)
+static int l_uiNewEntry(lua_State *L)
 {
   uiEntry *e = uiNewEntry();
   if (!lua_isnoneornil(L, 1))
@@ -7,7 +7,7 @@ static l_uiNewEntry(lua_State *L)
   return 1;
 }
 
-static l_uiNewPasswordEntry(lua_State *L)
+static int l_uiNewPasswordEntry(lua_State *L)
 {
   uiEntry *e = uiNewPasswordEntry();
   if (!lua_isnoneornil(L, 1))
@@ -16,7 +16,7 @@ static l_uiNewPasswordEntry(lua_State *L)
   return 1;
 }
 
-static l_uiNewSearchEntry(lua_State *L)
+static int l_uiNewSearchEntry(lua_State *L)
 {
   uiEntry *e = uiNewSearchEntry();
   if (!lua_isnoneornil(L, 1))
@@ -25,7 +25,7 @@ static l_uiNewSearchEntry(lua_State *L)
   return 1;
 }
 
-static l_uiEntryText(lua_State *L)
+static int l_uiEntryText(lua_State *L)
 {
   if (lua_isnone(L, 2))
   {
@@ -48,7 +48,7 @@ static int l_uiEntryOnChanged(lua_State *L)
   UI_RETURN_SELF;
 }
 
-static l_uiEntryReadOnly(lua_State *L)
+static int l_uiEntryReadOnly(lua_State *L)
 {
   if (lua_isnone(L, 2))
   {

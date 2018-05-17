@@ -395,6 +395,8 @@ static struct luaL_Reg lui_table[] =
   { "Quit",                   l_uiQuit },
   { "QueueMain",              l_uiQueueMain },
   { "OnShouldQuit",           l_uiOnShouldQuit },
+  { "UserBugCannotSetParentOnTopLevel",
+                              l_uiUserBugCannotSetParentOnToplevel },
 
   { "OpenFile",               l_uiOpenFile },
   { "SaveFile",               l_uiSaveFile },
@@ -435,6 +437,8 @@ static struct luaL_Reg lui_table[] =
   { "NewVerticalBox",         l_uiNewVerticalBox },
   { "NewVerticalSeparator",   l_uiNewVerticalSeparator },
   { "NewWindow",              l_uiNewWindow },
+
+  { "NewFontDescriptor",      l_uiNewFontDescriptor},
 
   /* draw, not finished */
   { "DrawNewAreaHandler",     l_uiDrawNewAreaHandler },

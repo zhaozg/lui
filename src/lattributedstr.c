@@ -86,7 +86,7 @@ typedef uiForEach(*uiAttributedStringForEachAttributeFunc)(const uiAttributedStr
 
 static int l_uiAttributedStringForEachAttribute(lua_State *L)
 {
-  uiAttributedString *s = CHECK_USER_OBJECT(1, AttributedString);
+  //uiAttributedString *s = CHECK_USER_OBJECT(1, AttributedString);
   //_UI_EXTERN void uiAttributedStringForEachAttribute(const uiAttributedString *s, uiAttributedStringForEachAttributeFunc f, void *data);
   //uiAttributedStringForEachAttribute(s, (size_t)luaL_checkinteger(L, 2));
   //lua_pushinteger(L, sz);

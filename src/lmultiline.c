@@ -1,4 +1,4 @@
-static l_uiNewMultilineEntry(lua_State *L)
+static int l_uiNewMultilineEntry(lua_State *L)
 {
   uiMultilineEntry *ml = uiNewMultilineEntry();
   if (!lua_isnoneornil(L, 1))
@@ -7,7 +7,7 @@ static l_uiNewMultilineEntry(lua_State *L)
   return 1;
 }
 
-static l_uiNewNonWrappingMultilineEntry(lua_State *L)
+static int l_uiNewNonWrappingMultilineEntry(lua_State *L)
 {
   uiMultilineEntry *ml = uiNewNonWrappingMultilineEntry();
   if (!lua_isnoneornil(L, 1))
@@ -16,7 +16,7 @@ static l_uiNewNonWrappingMultilineEntry(lua_State *L)
   return 1;
 }
 
-static l_uiMultilineEntryText(lua_State *L)
+static int l_uiMultilineEntryText(lua_State *L)
 {
   if (lua_isnone(L, 2))
   {
@@ -27,7 +27,7 @@ static l_uiMultilineEntryText(lua_State *L)
   UI_RETURN_SELF;
 }
 
-static l_uiMultilineEntryAppend(lua_State *L)
+static int l_uiMultilineEntryAppend(lua_State *L)
 {
   uiMultilineEntryAppend(UI_CHECK_OBJECT(1, MultilineEntry), luaL_checkstring(L, 2));
   UI_RETURN_SELF;
@@ -45,7 +45,7 @@ static int l_uiMultilineEntryOnChanged(lua_State *L)
   UI_RETURN_SELF;
 }
 
-static l_uiMultilineEntryReadOnly(lua_State *L)
+static int l_uiMultilineEntryReadOnly(lua_State *L)
 {
   if (lua_isnone(L, 2))
   {
