@@ -4,6 +4,12 @@ local ui = require "lui"
 local steps = true
 ui.Init()
 
+i=0
+ui.Timer(1000, function(i) 
+  print(i, os.date())
+  return 1
+end, i)
+
 local spinbox, slider, progressbar
 
 local function update(control)

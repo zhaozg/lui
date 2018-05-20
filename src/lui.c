@@ -384,6 +384,53 @@ static int l_uiOnShouldQuit(lua_State *L)
   return 0;
 }
 
+static int l_timer_cb(void *data);
+static int l_uiTimer(lua_State *L);
+
+static int l_timer_cb(void *data)
+{
+  int status = 0;
+  lua_State *L = (lua_State*)data;
+
+  lua_pushlightuserdata(L, l_uiTimer);
+  lua_rawget(L, LUA_REGISTRYINDEX);
+  lua_pushlightuserdata(L, l_timer_cb);
+  lua_rawget(L, LUA_REGISTRYINDEX);
+
+  status = lua_pcall(L, 1, 1, 0);
+  if(status==0)
+  {
+    status = lua_tointeger(L, -1);
+    lua_pop(L, 1);
+  }
+  else
+  {
+    lua_pushfstring(L, "uiTimer callback fail: %s", lua_tostring(L, -1));
+    lua_remove(L, -2);
+    lua_error(L);
+  }
+  return status;
+}
+
+static int l_uiTimer(lua_State *L)
+{
+  int milliseconds = luaL_checkinteger(L, 1);
+  luaL_checktype(L, 2, LUA_TFUNCTION);
+  if(lua_isnone(L, 3))
+    lua_pushnil(L);
+
+  lua_pushlightuserdata(L, l_uiTimer);
+  lua_pushvalue(L, 2);
+  lua_rawset(L, LUA_REGISTRYINDEX);
+
+  lua_pushlightuserdata(L, l_timer_cb);
+  lua_pushvalue(L, 3);
+  lua_rawset(L, LUA_REGISTRYINDEX);
+
+  uiTimer(milliseconds, l_timer_cb, L);
+  return 0;
+}
+
 static struct luaL_Reg lui_table[] =
 {
 
@@ -397,6 +444,8 @@ static struct luaL_Reg lui_table[] =
   { "OnShouldQuit",           l_uiOnShouldQuit },
   { "UserBugCannotSetParentOnTopLevel",
                               l_uiUserBugCannotSetParentOnToplevel },
+
+  { "Timer",                  l_uiTimer },
 
   { "OpenFile",               l_uiOpenFile },
   { "SaveFile",               l_uiSaveFile },
