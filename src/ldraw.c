@@ -872,12 +872,12 @@ static struct luaL_Reg meta_DrawTextLayout[] =
 };
 
 #define CREATE_DRAWMETA                     \
-  UI_CREATE_META(AreaHandler)             \
-  UI_CREATE_META(DrawBrush)               \
-  UI_CREATE_META(DrawPath)                \
-  UI_CREATE_META(DrawStrokeParams)        \
-  UI_CREATE_META(DrawTextLayout)          \
-  UI_CREATE_META(DrawContext)             \
-  UI_CREATE_META(DrawMatrix)              \
-  UI_CREATE_META(DrawBrush)               \
-  UI_CREATE_META(DrawStrokeParams)
+  CREATE_USER_META(AreaHandler)             \
+  CREATE_USER_META(DrawBrush)               \
+  CREATE_USER_META(DrawPath)                \
+  CREATE_USER_META(DrawStrokeParams)        \
+  CREATE_USER_META(DrawTextLayout)          \
+  CREATE_USER_META(DrawContext)             \
+  CREATE_USER_META(DrawMatrix)              \
+  CREATE_USER_META(DrawBrush)               \
+  CREATE_USER_META(DrawStrokeParams)

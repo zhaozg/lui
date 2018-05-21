@@ -35,13 +35,15 @@ struct wrap
   uiControl *control;
 };
 
-#define UI_CHECK_OBJECT(n, type) ui ## type(((struct wrap *)lua_touserdata(L, n))->control)
 
 #define UI_RETURN_SELF lua_pushvalue(L, 1); return 1;
 
 #define UI_CREATE_META(n)                 \
   luaL_newmetatable(L, "libui." #n);      \
   luaL_setfuncs(L, meta_ ## n, 0);
+
+#define UI_CHECK_OBJECT(n, type) \
+  ui ## type(((struct wrap *)lua_touserdata(L, n))->control)
 
 #define UI_CREATE_OBJECT(t, c)                              \
   struct wrap *w = lua_newuserdata(L, sizeof(struct wrap)); \
@@ -61,14 +63,19 @@ struct wrap
   lua_setfield(L, -2, "__index");                           \
   lua_setmetatable(L, -2);
 
+#define CREATE_USER_META(n)               \
+  luaL_newmetatable(L, "libui.user." #n); \
+  luaL_setfuncs(L, meta_ ## n, 0);
+
 #define CREATE_USER_OBJECT(t, c)                              \
   *(ui ## t**)lua_newuserdata(L, sizeof(ui ## t*)) = c;       \
   lua_newtable(L);                                            \
-  luaL_getmetatable(L, "libui.draw." #t);                     \
+  luaL_getmetatable(L, "libui.user." #t);                     \
   lua_setfield(L, -2, "__index");                             \
   lua_setmetatable(L, -2);
 
-#define CHECK_USER_OBJECT(n, type) *((ui ## type**)lua_touserdata(L, n))
+#define CHECK_USER_OBJECT(n, type) \
+  *((ui ## type**)lua_touserdata(L, n ))
 
 /* general libui callback  mechanism to lua */
 
