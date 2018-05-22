@@ -34,5 +34,5 @@ static struct luaL_Reg meta_Button[] =
   { "OnClicked",            l_uiButtonOnClicked },
 
   CONTROL_COMMON_METAFIELD
-  { NULL }
+  { NULL, NULL }
 };

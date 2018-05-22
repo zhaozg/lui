@@ -59,5 +59,5 @@ static struct luaL_Reg meta_Area[] =
   { "BeginUserWindowResize",  l_uiAreaBeginUserWindowResize },
 
   CONTROL_COMMON_METAFIELD
-  { NULL }
+  { NULL, NULL}
 };

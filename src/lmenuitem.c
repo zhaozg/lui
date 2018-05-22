@@ -43,5 +43,5 @@ static struct luaL_Reg meta_MenuItem[] =
   { "Enable",               l_uiMenuItemEnable },
   { "Disable",              l_uiMenuItemDisable },
 
-  { NULL }
+  { NULL, NULL }
 };

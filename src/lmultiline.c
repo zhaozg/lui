@@ -64,5 +64,5 @@ static struct luaL_Reg meta_MulitlineEntry[] =
   { "ReadOnly",             l_uiMultilineEntryReadOnly },
 
   CONTROL_COMMON_METAFIELD
-  { NULL }
+  { NULL, NULL }
 };

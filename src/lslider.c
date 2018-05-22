@@ -33,5 +33,5 @@ static struct luaL_Reg meta_Slider[] =
   { "OnChanged",            l_uiSliderOnChanged },
 
   CONTROL_COMMON_METAFIELD
-  { NULL }
+  { NULL, NULL }
 };

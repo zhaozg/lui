@@ -62,5 +62,5 @@ static struct luaL_Reg meta_Box[] =
   { "Padded",               l_uiBoxPadded },
 
   CONTROL_COMMON_METAFIELD
-  { NULL }
+  { NULL, NULL }
 };

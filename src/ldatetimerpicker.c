@@ -19,6 +19,6 @@ static int l_uiNewTimePicker(lua_State *L)
 static struct luaL_Reg meta_DateTimePicker[] =
 {
   CONTROL_COMMON_METAFIELD
-  { NULL }
+  { NULL, NULL }
 };
 

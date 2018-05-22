@@ -56,5 +56,5 @@ static struct luaL_Reg meta_Tab[] =
   { "Margined",             L_uiTabMargined },
 
   CONTROL_COMMON_METAFIELD
-  { NULL }
+  { NULL, NULL }
 };

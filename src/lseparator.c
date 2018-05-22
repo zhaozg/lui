@@ -14,5 +14,5 @@ static struct luaL_Reg meta_Separator[] =
 {
   CONTROL_COMMON_METAFIELD
 
-  { NULL }
+  { NULL, NULL }
 };

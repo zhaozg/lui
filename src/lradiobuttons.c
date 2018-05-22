@@ -46,6 +46,6 @@ static struct luaL_Reg meta_RadioButtons[] =
   { "OnSelected",           l_uiRadioButtonsOnSelected },
 
   CONTROL_COMMON_METAFIELD
-  { NULL }
+  { NULL, NULL }
 };
 

@@ -81,12 +81,12 @@ struct wrap
 
 static void create_callback_data(lua_State *L, int n)
 {
-  /* Push registery key: userdata pointer to control */
+  (void)n;
 
+  /* Push registery key: userdata pointer to control */
   lua_pushlightuserdata(L, UI_CHECK_OBJECT(1, Control));
 
   /* Create table with callback data */
-
   lua_newtable(L);
   lua_pushvalue(L, 1);
   lua_setfield(L, -2, "udata");
@@ -96,7 +96,6 @@ static void create_callback_data(lua_State *L, int n)
   lua_setfield(L, -2, "data");
 
   /* Store in registry */
-
   lua_settable(L, LUA_REGISTRYINDEX);
 }
 
@@ -503,7 +502,7 @@ static struct luaL_Reg lui_table[] =
   { "DrawNewMatrix",          l_uiDrawNewMatrix },
   { "DrawNewStrokeParams",    l_uiDrawNewStrokeParams },
   
-  { NULL }
+  { NULL, NULL }
 };
 
 LUA_API int luaopen_lui(lua_State *L)

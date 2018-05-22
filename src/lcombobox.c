@@ -46,7 +46,7 @@ static struct luaL_Reg meta_Combobox[] =
   { "OnSelected",           l_uiComboboxOnSelected },
 
   CONTROL_COMMON_METAFIELD
-  { NULL }
+  { NULL, NULL }
 };
 
 static int l_uiNewEditableCombobox(lua_State *L)
@@ -97,5 +97,5 @@ static struct luaL_Reg meta_EditableCombobox[] =
   { "OnChanged",            l_uiEditableComboboxOnChanged },
 
   CONTROL_COMMON_METAFIELD
-  { NULL }
+  { NULL, NULL }
 };

@@ -58,7 +58,7 @@ static struct luaL_Reg meta_FontButtonFont[] =
   { "Italic",         l_uiFontDescriptorItalic },
   { "Stretch",        l_uiFontDescriptorStretch },
 
-  { NULL }
+  { NULL, NULL }
 };
 
 static int l_uiNewFontButton(lua_State *L)
@@ -93,5 +93,5 @@ static struct luaL_Reg meta_FontButton[] =
   { "OnChanged",            l_uiFontButtonOnChanged },
 
   CONTROL_COMMON_METAFIELD
-  { NULL }
+  { NULL, NULL }
 };

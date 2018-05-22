@@ -21,5 +21,5 @@ static struct luaL_Reg meta_Label[] =
   { "Text",                 l_uiLabelText },
 
   CONTROL_COMMON_METAFIELD
-  { NULL }
+  { NULL, NULL }
 };

@@ -19,5 +19,5 @@ static struct luaL_Reg meta_ProgressBar[] =
   { "Value",             l_uiProgressBarValue },
 
   CONTROL_COMMON_METAFIELD
-  { NULL }
+  { NULL, NULL }
 };

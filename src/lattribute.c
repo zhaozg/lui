@@ -57,6 +57,7 @@ static int l_uiOpenTypeFeaturesGet(lua_State *L) {
 }
 
 static int l_uiOpenTypeFeaturesForEach(lua_State *L) {
+  (void)L;
   //_UI_EXTERN void uiOpenTypeFeaturesForEach(const uiOpenTypeFeatures *otf, uiOpenTypeFeaturesForEachFunc f, void *data);
   return 0;
 }
@@ -72,7 +73,7 @@ static struct luaL_Reg meta_OpenTypeFeatures[] =
   { "Get",        l_uiOpenTypeFeaturesGet },
   { "ForEach",    l_uiOpenTypeFeaturesForEach },
 
-  { NULL }
+  { NULL, NULL }
 };
 
 static int l_uiFreeAttribute(lua_State *L)
@@ -214,7 +215,7 @@ static struct luaL_Reg meta_Attribute[] =
   { "Features",   l_uiAttributeFeatures },
  
   { "info",       l_uiAttribute2tableInfo},
-  { NULL }
+  { NULL, NULL }
 };
 
 static int l_uiNewAttribute(lua_State *L)

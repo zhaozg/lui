@@ -66,5 +66,5 @@ static struct luaL_Reg meta_Entry[] =
   { "ReadOnly",             l_uiEntryReadOnly },
 
   CONTROL_COMMON_METAFIELD
-  { NULL }
+  { NULL, NULL }
 };

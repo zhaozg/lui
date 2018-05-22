@@ -42,5 +42,5 @@ static struct luaL_Reg meta_Group[] =
   { "Margined",             l_uiGroupMargined },
   { "SetChild",             l_uiGroupSetChild },
   CONTROL_COMMON_METAFIELD
-  { NULL }
+  { NULL, NULL }
 };

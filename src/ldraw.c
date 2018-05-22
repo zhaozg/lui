@@ -375,7 +375,7 @@ static struct luaL_Reg meta_AreaHandler[] =
   { "Free",           l_uiDrawFreeAreaHandler },
   { "__gc",           l_uiDrawFreeAreaHandler },
 
-  { NULL }
+  { NULL, NULL }
 };
 
 /** Path **/
@@ -481,7 +481,7 @@ static struct luaL_Reg meta_DrawPath[] =
   { "Free",             l_uiDrawFreePath },
   { "__gc",             l_uiDrawFreePath },
 
-  { NULL }
+  { NULL, NULL }
 };
 
 /** Matrix **/
@@ -594,7 +594,7 @@ static struct luaL_Reg meta_DrawMatrix[] =
   { "Free",           l_uiDrawFreeMatrix },
   { "__gc",           l_uiDrawFreeMatrix },
 
-  { NULL }
+  { NULL, NULL }
 };
 
 /* brush */
@@ -663,7 +663,7 @@ static struct luaL_Reg meta_DrawBrush[] =
   { "Solid",        lui_uiDrawBrushSolid },
   { "Gradient",     lui_uiDrawBrushGradient },
 
-  { NULL }
+  { NULL, NULL }
 };
 
 /*
@@ -769,7 +769,7 @@ static struct luaL_Reg meta_DrawStrokeParams[] =
   { "Dashes",      l_uiDrawtrokeParamsDashes },
   { "DashPhase",   l_uiDrawtrokeParamsDashPhase },
 
-  { NULL }
+  { NULL, NULL }
 };
 
 static int l_uiDrawTransform(lua_State *L)
@@ -829,7 +829,7 @@ static struct luaL_Reg meta_DrawContext[] =
   { "Stroke",       l_uiDrawStroke },
   { "Fill",         l_uiDrawFill },
 
-  { NULL }
+  { NULL, NULL }
 };
 
 /* uiFontButton */
@@ -868,7 +868,7 @@ static struct luaL_Reg meta_DrawTextLayout[] =
   {  "Free",      l_uiDrawFreeTextLayout },
   { "__gc",       l_uiDrawFreeTextLayout },
 
-  { NULL }
+  { NULL, NULL }
 };
 
 #define CREATE_DRAWMETA                     \

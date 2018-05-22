@@ -42,5 +42,5 @@ static struct luaL_Reg meta_ColorButton[] =
   { "OnChanged",            l_uiColorButtonOnChanged },
 
   CONTROL_COMMON_METAFIELD
-  { NULL }
+  { NULL, NULL }
 };

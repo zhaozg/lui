@@ -74,5 +74,5 @@ static struct luaL_Reg meta_Grid[] =
   { "Padded",               l_uiGridPadded },
 
   CONTROL_COMMON_METAFIELD
-  { NULL }
+  { NULL, NULL }
 };

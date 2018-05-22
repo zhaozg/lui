@@ -111,6 +111,6 @@ static struct luaL_Reg meta_AttributedString[] =
   { "GraphemeToByteIndex",  l_uiAttributedStringGraphemeToByteIndex},
   { "ForEach",              l_uiAttributedStringForEachAttribute},
 
-  { NULL }
+  { NULL, NULL }
 };
 

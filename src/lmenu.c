@@ -50,5 +50,5 @@ static struct luaL_Reg meta_Menu[] =
   { "AppendSeparator",         l_uiMenuAppendSeparator },
 
   CONTROL_COMMON_METAFIELD
-  { NULL }
+  { NULL, NULL }
 };

@@ -45,5 +45,5 @@ static struct luaL_Reg meta_Checkbox[] =
   { "Checked",              l_uiCheckboxChecked },
 
   CONTROL_COMMON_METAFIELD
-  { NULL }
+  { NULL, NULL }
 };

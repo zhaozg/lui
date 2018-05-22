@@ -33,5 +33,5 @@ static struct luaL_Reg meta_Spinbox[] =
   { "OnChanged",            l_uiSpinboxOnChanged },
 
   CONTROL_COMMON_METAFIELD
-  { NULL }
+  { NULL, NULL }
 };

@@ -55,6 +55,6 @@ static luaL_Reg meta_image[] =
   { "Destory",  l_uiImageDestroy },
 
   CONTROL_COMMON_METAFIELD
-  { NULL }
+  { NULL, NULL }
 };
 #endif
