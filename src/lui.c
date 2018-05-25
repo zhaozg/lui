@@ -6,21 +6,13 @@
 #include <string.h>
 #include <memory.h>
 
-
 #include "ui.h"
 
 /* make lua version compat */
-
-#if LUA_VERSION_NUM < 502
-# define lua_rawlen lua_objlen
-/* lua_...uservalue: Something very different, but it should get the job done */
-# define lua_getuservalue lua_getfenv
-# define lua_setuservalue lua_setfenv
-# define luaL_newlib(L,l) (lua_newtable(L), luaL_register(L,NULL,l))
-# define luaL_setfuncs(L,l,n) (assert(n==0), luaL_register(L,NULL,l))
-# define lua_resume(L,F,n) lua_resume(L,n)
-# define lua_pushglobaltable(L) lua_pushvalue(L, LUA_GLOBALSINDEX)
+#if LUA_VERSION_NUM < 503
+# include "c-api/compat-5.3.h"
 #endif
+#include "auxiliar.h"
 
 inline static int luaL_checkboolean(lua_State *L, int n)
 {
@@ -29,53 +21,61 @@ inline static int luaL_checkboolean(lua_State *L, int n)
 }
 
 /* make libui object felixble */
-
 struct wrap
 {
   uiControl *control;
+  int ref;
 };
 
 
 #define UI_RETURN_SELF lua_pushvalue(L, 1); return 1;
 
-#define UI_CREATE_META(n)                 \
-  luaL_newmetatable(L, "libui." #n);      \
-  luaL_setfuncs(L, meta_ ## n, 0);
+#define UI_CREATE_META(t)                                   \
+  luaL_newmetatable(L, "libui." #t);                        \
+  lua_pushstring(L, "__index");                             \
+  lua_newtable(L);                                          \
+  luaL_setfuncs(L, meta_ ## t, 0);                          \
+  lua_rawset(L, -3);                                        \
+  lua_pushstring(L, "__gc");                                \
+  lua_pushcfunction(L, l_uigc);                             \
+  lua_rawset(L, -3);                                        \
+  lua_pop(L, 1);
 
-#define UI_CHECK_OBJECT(n, type) \
-  ui ## type(((struct wrap *)lua_touserdata(L, n))->control)
+#define UI_CHECK_OBJECT(n, t)                               \
+  ui ## t(((struct wrap *)lua_touserdata(L, n))->control)
+//ui ## t(((struct wrap *)luaL_checkudata(L, n, "libui." #t))->control)
 
 #define UI_CREATE_OBJECT(t, c)                              \
   struct wrap *w = lua_newuserdata(L, sizeof(struct wrap)); \
   w->control = uiControl(c);                                \
-  lua_newtable(L);                                          \
-  luaL_getmetatable(L, "libui." #t);                        \
-  lua_setfield(L, -2, "__index");                           \
-  lua_pushcfunction(L, l_uigc);                             \
-  lua_setfield(L, -2, "__gc");                              \
-  lua_setmetatable(L, -2);
+  w->ref = 0;                                               \
+  luaL_setmetatable(L, "libui." #t);
 
 #define UI_CREATE_OBJECT_REF(t, c)                          \
   struct wrap *w = lua_newuserdata(L, sizeof(struct wrap)); \
   w->control = uiControl(c);                                \
+  w->ref = 1;                                               \
+  luaL_setmetatable(L, "libui." #t);
+
+#define UI_SET_GROUP(cls, grp)                              \
+  auxiliar_add2group(L, "libui." #cls, "libui." #grp);
+
+#define UI_CHECK_GROUP(n, t)                                \
+  auxiliar_checkgroup(L, "libui." #t, n)
+
+#define CREATE_USER_META(t)                                 \
+  luaL_newmetatable(L, "libui.user." #t);                   \
+  lua_pushstring(L, "__index");                             \
   lua_newtable(L);                                          \
-  luaL_getmetatable(L, "libui." #t);                        \
-  lua_setfield(L, -2, "__index");                           \
-  lua_setmetatable(L, -2);
+  luaL_setfuncs(L, meta_ ## t, 0);                          \
+  lua_rawset(L, -3);
 
-#define CREATE_USER_META(n)               \
-  luaL_newmetatable(L, "libui.user." #n); \
-  luaL_setfuncs(L, meta_ ## n, 0);
+#define CREATE_USER_OBJECT(t, c)                            \
+  *(ui ## t**)lua_newuserdata(L, sizeof(ui ## t*)) = c;     \
+  luaL_setmetatable(L, "libui.user." #t);
 
-#define CREATE_USER_OBJECT(t, c)                              \
-  *(ui ## t**)lua_newuserdata(L, sizeof(ui ## t*)) = c;       \
-  lua_newtable(L);                                            \
-  luaL_getmetatable(L, "libui.user." #t);                     \
-  lua_setfield(L, -2, "__index");                             \
-  lua_setmetatable(L, -2);
-
-#define CHECK_USER_OBJECT(n, type) \
-  *((ui ## type**)lua_touserdata(L, n ))
+#define CHECK_USER_OBJECT(n, t) \
+  *((ui ## t**)luaL_checkudata(L, n, "libui.user." #t ))
 
 /* general libui callback  mechanism to lua */
 
@@ -172,31 +172,31 @@ static int callback(lua_State *L, void *control)
 static int l_uigc(lua_State *L)
 {
   struct wrap *w = lua_touserdata(L, 1);
-  lua_pushnil(L);
-  lua_pushlightuserdata(L, w->control);
-  lua_settable(L, LUA_REGISTRYINDEX);
-  return 0;
+  uiControl *control = NULL, *parent = NULL;
 
-
-  uint32_t s = w->control->TypeSignature;
-  printf("gc %p %c%c%c%c\n", w->control, s >> 24, s >> 16, s >> 8, s >> 0);
-
-  uiControl *control = UI_CHECK_OBJECT(1, Control);
-  uiControl *parent = uiControlParent(control);
-
-  if (parent)
+  if(control && w->ref==0 )
   {
-    if (parent->TypeSignature == 0x57696E64)
-    {
-      //uiWindowSetChild(uiWindow(parent), NULL);
-    }
-    if (parent->TypeSignature == 0x47727062)
-    {
-      //uiGroupSetChild(uiWindow(parent), NULL);
-    }
-  }
-  //uiControlDestroy(control);
+    uint32_t s = w->control->TypeSignature;
+    printf("gc %p %c%c%c%c\n", w->control, s >> 24, s >> 16, s >> 8, s >> 0);
 
+    control = w->control;
+    parent = uiControlParent(control);
+
+    if (parent)
+    {
+      if (parent->TypeSignature == 0x57696E64)
+      {
+        uiWindowSetChild(uiWindow(parent), NULL);
+      }
+      if (parent->TypeSignature == 0x47727062)
+      {
+        uiGroupSetChild((uiGroup*)uiWindow(parent), NULL);
+      }
+    }
+  
+    uiControlDestroy(control);
+    w->control = NULL;
+  }
   return 0;
 }
 
@@ -507,33 +507,62 @@ static struct luaL_Reg lui_table[] =
 
 LUA_API int luaopen_lui(lua_State *L)
 {
+  UI_CREATE_META(Control)
+
   UI_CREATE_META(Area)
+  UI_SET_GROUP(Area, Control);
   UI_CREATE_META(Attribute)
+  UI_SET_GROUP(Attribute, Control);
   UI_CREATE_META(AttributedString)
+  UI_SET_GROUP(AttributedString, Control);
   UI_CREATE_META(Box)
+  UI_SET_GROUP(Box, Control);
   UI_CREATE_META(Button)
+  UI_SET_GROUP(Button, Control);
   UI_CREATE_META(Checkbox)
+  UI_SET_GROUP(Checkbox, Control);
   UI_CREATE_META(Combobox)
+  UI_SET_GROUP(Combobox, Control);
   UI_CREATE_META(ColorButton)
+  UI_SET_GROUP(ColorButton, Control);
   UI_CREATE_META(DateTimePicker)
+  UI_SET_GROUP(DateTimePicker, Control);
   UI_CREATE_META(EditableCombobox)
+  UI_SET_GROUP(EditableCombobox, Control);
   UI_CREATE_META(Entry)
+  UI_SET_GROUP(Entry, Control);
   UI_CREATE_META(FontButton)
+  UI_SET_GROUP(FontButton, Control);
   UI_CREATE_META(Form)
+  UI_SET_GROUP(Form, Control);
   UI_CREATE_META(Grid)
+  UI_SET_GROUP(Grid, Control);
   UI_CREATE_META(Group)
+  UI_SET_GROUP(Group, Control);
   UI_CREATE_META(Label)
+  UI_SET_GROUP(Label, Control);
   UI_CREATE_META(MenuItem)
+  UI_SET_GROUP(MenuItem, Control);
   UI_CREATE_META(Menu)
-  UI_CREATE_META(MulitlineEntry)
+  UI_SET_GROUP(Menu, Control);
+  UI_CREATE_META(MultilineEntry)
+  UI_SET_GROUP(MultilineEntry, Control);
   UI_CREATE_META(OpenTypeFeatures)
+  UI_SET_GROUP(OpenTypeFeatures, Control);
   UI_CREATE_META(ProgressBar)
+  UI_SET_GROUP(ProgressBar, Control);
   UI_CREATE_META(RadioButtons)
+  UI_SET_GROUP(RadioButtons, Control);
   UI_CREATE_META(Separator)
+  UI_SET_GROUP(Separator, Control);
   UI_CREATE_META(Slider)
+  UI_SET_GROUP(Slider, Control);
   UI_CREATE_META(Spinbox)
+  UI_SET_GROUP(Spinbox, Control);
   UI_CREATE_META(Tab)
+  UI_SET_GROUP(Tab, Control);
   UI_CREATE_META(Window)
+  UI_SET_GROUP(Window, Control);
 
   /* draw, not finished */
   CREATE_DRAWMETA

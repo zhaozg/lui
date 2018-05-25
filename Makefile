@@ -70,20 +70,20 @@ include .config
 endif
 
 LIBNAME= $T.so.$V
-
+LUA_CFLAGS      += -Ideps/lua-compat-5.3
 CFLAGS		+= $(LIBUI_CFLAGS) $(LUA_CFLAGS) $(TARGET_FLAGS)
 LDFLAGS		+= -shared $(LIBUI_LIBS) $(LUA_LIBS)
 # Compilation directives
 WARN_MIN	 = -Wall -Wno-unused-value
 WARN		 = -Wall
 WARN_MOST	 = $(WARN) -W -Waggregate-return -Wcast-align -Wmissing-prototypes -Wnested-externs -Wshadow -Wwrite-strings -pedantic
-CFLAGS		+= -g $(WARN_MIN) -DPTHREADS -Ideps -Ideps/lua-compat 
+CFLAGS		+= -g $(WARN_MIN) -DPTHREADS -Ideps -Ideps/compat -Ideps/auxiliar 
 
 all: $T.so
 	@echo "Target system: "$(SYS)
 
-$T.so: src/*.c
-	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ src/lui.c
+$T.so: src/*.c deps/auxiliar/auxiliar.c
+	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ src/lui.c deps/auxiliar/auxiliar.c
 
 install: all
 	mkdir -p $(LUA_LIBDIR)

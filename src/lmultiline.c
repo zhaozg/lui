@@ -56,7 +56,7 @@ static int l_uiMultilineEntryReadOnly(lua_State *L)
   UI_RETURN_SELF;
 }
 
-static struct luaL_Reg meta_MulitlineEntry[] =
+static struct luaL_Reg meta_MultilineEntry[] =
 {
   { "Text",                 l_uiMultilineEntryText },
   { "Append",               l_uiMultilineEntryAppend },
