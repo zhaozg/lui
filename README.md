@@ -1,5 +1,4 @@
-lui
-===
+# lui, libui bare bindings for lua
 
 [libui](https://github.com/andlabs/libui) bare bindings for
 [luajit](http://luajit.org/) and [lua](http://www.lua.org/)
@@ -9,31 +8,38 @@ lui
 
 This binding makes libui available to lua scripts. libui is easy binding and should usable from nearly any lua project.
 
-Notice
-======
+## Notice
 
   - Because lua is missing native threads support, so threads feature maybe lost.
-  
   - Because libui/lui is not mature enough, you maybe encounter strange bugs.
 
-Examples
-========
+## Examples
 
 Examples can be found in the [examples](examples) folders, those are translate from [examples](https://github.com/andlabs/libui/tree/master/examples).
 
-Buliding
-========
+## Buliding
 
-Now, I not make any build scripts or Makefile, so you need to write it yourself.
-
-On linux, assume cwd is luv folder.
+### Checkout source 
 
 ```shell
-  gcc -shared -Isrc src/lui.c -I{LUAINCDIR} -I{LIBUVINCDIR} -lui -llua-5.1 -o luv.so
+  git checkout  https://github.com/zhaozg/lui.git
+  cd lui
+  git submodule init
+  git submodule update
 ```
 
-APIs
-====
+### Building on linux or macOS
+
+```shell
+  cd lui
+  make install
+```
+
+### Building on Windows
+
+  TODO
+
+### APIs
 
 - All top level functions are in the table returned by `require`
 ```lua
@@ -46,6 +52,7 @@ APIs
   - `Main`
   - `MainStep`
   - `MainSteps`
+  - `timer`
   - `Quit`
   - `QueueMain`
   - `OnShouldQuit`
@@ -123,9 +130,8 @@ APIs
 
 You need read [examples](examples) to be familiar with them.
 
-Thanks
-======
+## Thanks
 
-  - [Ico Doornekamp](https://github.com/zevv) [lui](https://github.com/zhaozg/lui) basicly forked of [libuilua](https://github.com/zevv/libuilua) but updated.
+  - [Ico Doornekamp](https://github.com/zevv) lui basicly forked of [libuilua](https://github.com/zevv/libuilua) but updated.
   
   - [Pietro Gagliardi](https://github.com/andlabs) author of [libui](https://github.com/andlabs/libui).
