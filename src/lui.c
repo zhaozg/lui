@@ -406,7 +406,10 @@ static int l_timer_cb(void *data)
   status = lua_pcall(L, 1, 1, 0);
   if(status==0)
   {
-    status = lua_tointeger(L, -1);
+    if (lua_isnumber(L, -1))
+      status = lua_tointeger(L, -1);
+    else
+      status = lua_toboolean(L, -1);
     lua_pop(L, 1);
   }
   else
