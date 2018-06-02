@@ -498,13 +498,14 @@ static struct luaL_Reg lui_table[] =
 
   { "NewFontDescriptor",      l_uiNewFontDescriptor},
 
-  /* draw, not finished */
   { "DrawNewAreaHandler",     l_uiDrawNewAreaHandler },
   { "DrawNewBrush",           l_uiDrawNewBrush },
   { "DrawNewPath",            l_uiDrawNewPath },
   { "DrawNewMatrix",          l_uiDrawNewMatrix },
   { "DrawNewStrokeParams",    l_uiDrawNewStrokeParams },
-  
+  { "DrawNewTextLayout",      l_uiDrawNewTextLayout },
+  { "DrawNewTextLayoutParams",l_uiDrawNewTextLayoutParams },
+   
   { NULL, NULL }
 };
 
@@ -514,10 +515,6 @@ LUA_API int luaopen_lui(lua_State *L)
 
   UI_CREATE_META(Area)
   UI_SET_GROUP(Area, Control);
-  UI_CREATE_META(Attribute)
-  UI_SET_GROUP(Attribute, Control);
-  UI_CREATE_META(AttributedString)
-  UI_SET_GROUP(AttributedString, Control);
   UI_CREATE_META(Box)
   UI_SET_GROUP(Box, Control);
   UI_CREATE_META(Button)
@@ -550,8 +547,6 @@ LUA_API int luaopen_lui(lua_State *L)
   UI_SET_GROUP(Menu, Control);
   UI_CREATE_META(MultilineEntry)
   UI_SET_GROUP(MultilineEntry, Control);
-  UI_CREATE_META(OpenTypeFeatures)
-  UI_SET_GROUP(OpenTypeFeatures, Control);
   UI_CREATE_META(ProgressBar)
   UI_SET_GROUP(ProgressBar, Control);
   UI_CREATE_META(RadioButtons)
@@ -566,6 +561,11 @@ LUA_API int luaopen_lui(lua_State *L)
   UI_SET_GROUP(Tab, Control);
   UI_CREATE_META(Window)
   UI_SET_GROUP(Window, Control);
+
+  CREATE_USER_META(Attribute)
+  CREATE_USER_META(AttributedString)
+  CREATE_USER_META(OpenTypeFeatures)
+  CREATE_USER_META(FontDescriptor)
 
   /* draw, not finished */
   CREATE_DRAWMETA

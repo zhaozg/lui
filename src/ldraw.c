@@ -861,7 +861,6 @@ static int l_uiDrawTextLayoutExtents(lua_State *L)
   return 0;
 }
 
-
 static struct luaL_Reg meta_DrawTextLayout[] =
 {
   {  "Extents",   l_uiDrawTextLayoutExtents },
@@ -871,12 +870,38 @@ static struct luaL_Reg meta_DrawTextLayout[] =
   { NULL, NULL }
 };
 
+static int l_uiDrawNewTextLayoutParams(lua_State *L)
+{
+  uiDrawTextLayoutParams *params = lua_newuserdata(L, sizeof(uiDrawTextLayoutParams));
+  params->String = CHECK_USER_OBJECT(1, AttributedString);
+  params->DefaultFont = CHECK_USER_OBJECT(2, FontDescriptor);
+  params->Width = luaL_checknumber(L, 3);
+  params->Align = luaL_checkinteger(L, 4);
+
+  CREATE_USER_OBJECT(DrawTextLayoutParams, params);
+  return 1;
+}
+
+static struct luaL_Reg meta_DrawTextLayoutParams[] =
+{
+  { NULL, NULL }
+};
+
+static int l_uiDrawNewTextLayout(lua_State *L)
+{
+  uiDrawTextLayoutParams *params = CHECK_USER_OBJECT(1, DrawTextLayoutParams);
+  uiDrawTextLayout *layout = uiDrawNewTextLayout(params);
+  CREATE_USER_OBJECT(DrawTextLayout, layout);
+  return 1;
+}
+
 #define CREATE_DRAWMETA                     \
   CREATE_USER_META(AreaHandler)             \
   CREATE_USER_META(DrawBrush)               \
   CREATE_USER_META(DrawPath)                \
   CREATE_USER_META(DrawStrokeParams)        \
   CREATE_USER_META(DrawTextLayout)          \
+  CREATE_USER_META(DrawTextLayoutParams)    \
   CREATE_USER_META(DrawContext)             \
   CREATE_USER_META(DrawMatrix)              \
   CREATE_USER_META(DrawBrush)               \

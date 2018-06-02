@@ -253,7 +253,7 @@ static int l_uiNewAttribute(lua_State *L)
   } else if (strcmp(item, "features") == 0) {
     const uiOpenTypeFeatures *features = CHECK_USER_OBJECT(2, OpenTypeFeatures);
     attr = uiNewFeaturesAttribute(features);
-  }
+  } else
     luaL_argerror(L, 1, "not support");
 
   CREATE_USER_OBJECT(Attribute, attr);

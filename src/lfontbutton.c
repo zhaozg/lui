@@ -1,6 +1,6 @@
 static int l_uiNewFontDescriptor(lua_State *L)
 {
-  uiFontDescriptor *desc = malloc(sizeof(uiFontDescriptor));
+  uiFontDescriptor *desc = lua_newuserdata(L, sizeof(uiFontDescriptor));
   CREATE_USER_OBJECT(FontDescriptor, desc);
   return 1;
 }
@@ -47,7 +47,7 @@ static int l_uiFreeFontButtonFont(lua_State *L)
   return 0;
 }
 
-static struct luaL_Reg meta_FontButtonFont[] =
+static struct luaL_Reg meta_FontDescriptor[] =
 {
   { "__gc",           l_uiFreeFontButtonFont },
 
@@ -70,9 +70,11 @@ static int l_uiNewFontButton(lua_State *L)
 static int l_uiFontButtonFont(lua_State *L)
 {
   uiFontButton *font = UI_CHECK_OBJECT(1, FontButton);
-  uiFontDescriptor *desc = CHECK_USER_OBJECT(2, FontDescriptor);
+  uiFontDescriptor *desc = lua_newuserdata(L, sizeof(uiFontDescriptor));
+  memset(desc, 0, sizeof(uiFontDescriptor));
   uiFontButtonFont(font, desc);
-  return 0;
+  CREATE_USER_OBJECT(FontDescriptor, desc);
+  return 1;
 }
 
 static void on_fontbutton_changed(uiFontButton *b, void *data)
