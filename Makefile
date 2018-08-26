@@ -19,7 +19,7 @@ ifeq ($(LUA_VERSION),)
 ############ use lua
 LUAV		?= $(shell lua -e "_,_,v=string.find(_VERSION,'Lua (.+)');print(v)")
 LUA_CFLAGS	?= -I$(PREFIX)/include/lua$(LUAV)
-LUA_LIBS	?= -L$(PREFIX)/lib 
+LUA_LIBS	?= -L$(PREFIX)/lib
 LUA_LIBDIR	?= $(PREFIX)/lib/lua/$(LUAV)
 else
 ############ use luajit
@@ -40,7 +40,7 @@ LIBUI_LIBS	?= -L$(LIBUI_PREFIX)/lib -lui
 
 ifneq (, $(findstring linux, $(SYS)))
 # Do linux things
-CFLAGS		 = -fpic 
+CFLAGS		 = -fpic
 LDFLAGS		 = -Wl,--no-undefined -fpic -lrt -ldl -lm
 endif
 ifneq (, $(findstring apple, $(SYS)))
@@ -56,11 +56,11 @@ CFLAGS		= -DLUA_LIB -DLUA_BUILD_AS_DLL -DWIN32_LEAN_AND_MEAN
 endif
 ifneq (, $(findstring cygwin, $(SYS)))
 # Do cygwin things
-CFLAGS		 = -fPIC 
+CFLAGS		 = -fPIC
 endif
 ifneq (, $(findstring iOS, $(SYS)))
 # Do iOS things
-CFLAGS           = -fPIC 
+CFLAGS           = -fPIC
 LDFLAGS		 = -fPIC -ldl
 endif
 
@@ -77,7 +77,7 @@ LDFLAGS		+= -shared $(LIBUI_LIBS) $(LUA_LIBS)
 WARN_MIN	 = -Wall -Wno-unused-value
 WARN		 = -Wall
 WARN_MOST	 = $(WARN) -W -Waggregate-return -Wcast-align -Wmissing-prototypes -Wnested-externs -Wshadow -Wwrite-strings -pedantic
-CFLAGS		+= -g $(WARN_MIN) -DPTHREADS -Ideps -Ideps/compat -Ideps/auxiliar 
+CFLAGS		+=  $(WARN_MIN) -DPTHREADS -Ideps -Ideps/compat -Ideps/auxiliar
 
 all: $T.so
 	@echo "Target system: "$(SYS)

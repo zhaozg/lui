@@ -126,7 +126,9 @@ static void l_uiDateTimePickerCallback(uiDateTimePicker *picker, void* arg)
   lua_rawgetp(L, LUA_REGISTRYINDEX, l_uiDateTimePickerCallback);
   UI_CREATE_OBJECT_REF(DateTimePicker, picker);
   lua_rawgetp(L, LUA_REGISTRYINDEX, picker);
-  ret = lua_pcall(L, 1, 2, 0);
+  luaL_checktype(L, -3, LUA_TFUNCTION);
+  luaL_checkudata(L, -2, "libui.DateTimePicker");
+  ret = lua_pcall(L, 2, 0, 0);
   if(ret!=0)
   {
     lua_pushfstring(L, "Callback function for uiDateTimePickerOnChanged fail: %s", lua_tostring(L, -1));

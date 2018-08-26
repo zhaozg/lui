@@ -1,7 +1,8 @@
 local ui = require'lui'
 
-local dtboth, dtdte, dttime
+local dtboth, dtdate, dttime
 local function timeFormat(d)
+  local fmt
 	if (d == dtboth) then
 		fmt = "%c"
 	elseif (d == dtdate) then
@@ -9,15 +10,16 @@ local function timeFormat(d)
 	elseif (d == dttime) then
 		fmt = "%X"
 	else
-		fmt = ""
+		fmt = "%c"
   end
 	return fmt
 end
 
-local function onChanged(d, data)
+local function onChanged(d, l)
   local tm = d:Time()
-  local s = os.date(timeFormat(d), tm)
-  data:SetText(s)
+  local s = os.time(tm)
+  s = os.date(timeFormat(d), s)
+  l:Text(s)
 end
 
 local function onClicked(b, data)
@@ -44,11 +46,12 @@ function main()
 
 	g = ui:NewGrid():Padded(true)
 	w:SetChild(g)
+
 	dtboth = ui.NewDateTimePicker()
 	dtdate = ui.NewDatePicker()
 	dttime = ui.NewTimePicker()
 
-  g:Append(dtboth,
+	g:Append(dtboth,
     0, 0, 2, 0,
 		true, ui.AlignFill, false, ui.AlignFill)
   g:Append(dtdate,
@@ -62,13 +65,14 @@ function main()
   g:Append(l,
     0, 2, 2, 1,
 		true, ui.AlignFill, false, ui.AlignFill)
-
   dtboth:OnChanged(onChanged, l)
+
 	l = ui.NewLabel("")
   g:Append(l,
     0, 3, 1, 1,
 		true, ui.AlignCenter, false, ui.AlignFill)
   dtdate:OnChanged(onChanged, l)
+
 	l = ui.NewLabel("")
   g:Append(l,
 		1, 3, 1, 1,
