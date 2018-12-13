@@ -1,18 +1,4 @@
-#include <lua.h>
-#include <lualib.h>
-#include <lauxlib.h>
-#include <assert.h>
-#include <stdlib.h>
-#include <string.h>
-#include <memory.h>
-
-#include "ui.h"
-
-/* make lua version compat */
-#if LUA_VERSION_NUM < 503
-# include "c-api/compat-5.3.h"
-#endif
-#include "auxiliar.h"
+#include "lui.h"
 
 inline static int luaL_checkboolean(lua_State *L, int n)
 {
@@ -193,7 +179,7 @@ static int l_uigc(lua_State *L)
         uiGroupSetChild((uiGroup*)uiWindow(parent), NULL);
       }
     }
-  
+
     uiControlDestroy(control);
     w->control = NULL;
   }
@@ -231,6 +217,7 @@ static int l_uigc(lua_State *L)
 #include "lslider.c"
 #include "lspinbox.c"
 #include "ltab.c"
+#include "ltable.c"
 #include "lwindow.c"
 
 /* Various top level */
@@ -451,8 +438,10 @@ static struct luaL_Reg lui_table[] =
   { "Quit",                   l_uiQuit },
   { "QueueMain",              l_uiQueueMain },
   { "OnShouldQuit",           l_uiOnShouldQuit },
-  { "UserBugCannotSetParentOnTopLevel",
-                              l_uiUserBugCannotSetParentOnToplevel },
+  {
+    "UserBugCannotSetParentOnTopLevel",
+    l_uiUserBugCannotSetParentOnToplevel
+  },
 
   { "Timer",                  l_uiTimer },
 
@@ -481,8 +470,10 @@ static struct luaL_Reg lui_table[] =
   { "NewLabel",               l_uiNewLabel },
   { "NewMenu",                l_uiNewMenu },
   { "NewMultilineEntry",      l_uiNewMultilineEntry },
-  { "NewNonWrappingMultilineEntry",
-                              l_uiNewNonWrappingMultilineEntry },
+  {
+    "NewNonWrappingMultilineEntry",
+    l_uiNewNonWrappingMultilineEntry
+  },
   { "NewOpenTypeFeatures",    l_uiNewOpenTypeFeatures },
   { "NewPasswordEntry",       l_uiNewPasswordEntry },
   { "NewProgressBar",         l_uiNewProgressBar },
@@ -492,6 +483,13 @@ static struct luaL_Reg lui_table[] =
   { "NewSpinbox",             l_uiNewSpinbox },
   { "NewTimePicker",          l_uiNewTimePicker },
   { "NewTab",                 l_uiNewTab },
+  { "NewTable",               l_uiNewTable },
+  { "NewTableValue",          l_uiTableValueNew },
+  { "NewTableModelHandler",   l_uiNewTableModelHandler },
+  {
+    "NewTableTextColumnOptionalParams",
+    l_uiNewTableTextColumnOptionalParams
+  },
   { "NewVerticalBox",         l_uiNewVerticalBox },
   { "NewVerticalSeparator",   l_uiNewVerticalSeparator },
   { "NewWindow",              l_uiNewWindow },
@@ -505,7 +503,7 @@ static struct luaL_Reg lui_table[] =
   { "DrawNewStrokeParams",    l_uiDrawNewStrokeParams },
   { "DrawNewTextLayout",      l_uiDrawNewTextLayout },
   { "DrawNewTextLayoutParams",l_uiDrawNewTextLayoutParams },
-   
+
   { NULL, NULL }
 };
 
@@ -559,6 +557,8 @@ LUA_API int luaopen_lui(lua_State *L)
   UI_SET_GROUP(Spinbox, Control);
   UI_CREATE_META(Tab)
   UI_SET_GROUP(Tab, Control);
+  UI_CREATE_META(Table)
+  UI_SET_GROUP(Tabble, Control);
   UI_CREATE_META(Window)
   UI_SET_GROUP(Window, Control);
 

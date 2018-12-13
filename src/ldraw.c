@@ -22,45 +22,54 @@ static int l_uiAreaDrawParams_2_table(lua_State *L, uiAreaDrawParams *params)
 
 
 //from: https://source.winehq.org/source/dlls/ntdll/string.c
- char *  WINE_i64toa(
-     long long value, /* [I] Value to be converted */
-     char *str,      /* [O] Destination for the converted value */
-     int radix)      /* [I] Number base for conversion */
- {
-     unsigned long long val;
-     int negative;
-     char buffer[65];
-     char *pos;
-     int digit;
- 
-     if (value < 0 && radix == 10) {
-        negative = 1;
-        val = -value;
-     } else {
-        negative = 0;
-        val = value;
-     } /* if */
- 
-     pos = &buffer[64];
-     *pos = '\0';
- 
-     do {
-       digit = val % radix;
-       val = val / radix;
-       if (digit < 10) {
-           *--pos = '0' + digit;
-       } else {
-           *--pos = 'a' + digit - 10;
-       } /* if */
-     } while (val != 0L);
- 
-     if (negative) {
-        *--pos = '-';
-     } /* if */
- 
-     memcpy(str, pos, &buffer[64] - pos + 1);
-     return str;
- }
+char *  WINE_i64toa(
+  long long value, /* [I] Value to be converted */
+  char *str,      /* [O] Destination for the converted value */
+  int radix)      /* [I] Number base for conversion */
+{
+  unsigned long long val;
+  int negative;
+  char buffer[65];
+  char *pos;
+  int digit;
+
+  if (value < 0 && radix == 10)
+  {
+    negative = 1;
+    val = -value;
+  }
+  else
+  {
+    negative = 0;
+    val = value;
+  } /* if */
+
+  pos = &buffer[64];
+  *pos = '\0';
+
+  do
+  {
+    digit = val % radix;
+    val = val / radix;
+    if (digit < 10)
+    {
+      *--pos = '0' + digit;
+    }
+    else
+    {
+      *--pos = 'a' + digit - 10;
+    } /* if */
+  }
+  while (val != 0L);
+
+  if (negative)
+  {
+    *--pos = '-';
+  } /* if */
+
+  memcpy(str, pos, &buffer[64] - pos + 1);
+  return str;
+}
 
 #define lua_pushINT64(L,n)                           \
   if(n > 9007199254740992 || n < -9007199254740992){ \
@@ -803,7 +812,7 @@ static int l_uiDrawText(lua_State *L)
     CHECK_USER_OBJECT(2, DrawTextLayout),
     luaL_checknumber(L, 3),
     luaL_checknumber(L, 4)
-    );
+  );
   UI_RETURN_SELF;
 }
 
@@ -831,14 +840,6 @@ static struct luaL_Reg meta_DrawContext[] =
 
   { NULL, NULL }
 };
-
-/* uiFontButton */
-static int lui_getoptfield(lua_State*L, int idx, const char*name, int def) {
-  lua_getfield(L, idx, name);
-  def = luaL_optnumber(L, -1, def);
-  lua_pop(L, 1);
-  return def;
-}
 
 static int l_uiDrawFreeTextLayout(lua_State *L)
 {

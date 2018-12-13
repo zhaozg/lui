@@ -143,4 +143,13 @@ static void l_REG_UI_ENUM(lua_State *L, int idx)
   REG_UI_ENUM(AtTop);
   REG_UI_ENUM(AtTrailing);
   REG_UI_ENUM(AtBottom);
+
+  REG_UI_ENUM(TableValueTypeString);
+  REG_UI_ENUM(TableValueTypeImage);
+  REG_UI_ENUM(TableValueTypeInt);
+  REG_UI_ENUM(TableValueTypeColor);
+
+  REG_UI_ENUM(TableModelColumnNeverEditable);
+  REG_UI_ENUM(TableModelColumnAlwaysEditable);
+
 }
