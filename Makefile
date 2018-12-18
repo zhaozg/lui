@@ -40,28 +40,28 @@ LIBUI_LIBS	?= -L$(LIBUI_PREFIX)/lib -lui
 
 ifneq (, $(findstring linux, $(SYS)))
 # Do linux things
-CFLAGS		 = -fpic
-LDFLAGS		 = -Wl,--no-undefined -fpic -lrt -ldl -lm
+CFLAGS		+= -fpic
+LDFLAGS		+= -Wl,--no-undefined -fpic -lrt -ldl -lm
 endif
 ifneq (, $(findstring apple, $(SYS)))
 # Do darwin things
-CFLAGS		 = -fPIC
-LDFLAGS		 = -fPIC -undefined dynamic_lookup -ldl
+CFLAGS		+= -fPIC
+LDFLAGS		+= -fPIC -undefined dynamic_lookup -ldl
 MACOSX_DEPLOYMENT_TARGET="10.8"
 CC := MACOSX_DEPLOYMENT_TARGET=${MACOSX_DEPLOYMENT_TARGET} $(CC)
 endif
 ifneq (, $(findstring mingw, $(SYS)))
 # Do mingw things
-CFLAGS		= -DLUA_LIB -DLUA_BUILD_AS_DLL -DWIN32_LEAN_AND_MEAN
+CFLAGS		+= -DLUA_LIB -DLUA_BUILD_AS_DLL -DWIN32_LEAN_AND_MEAN
 endif
 ifneq (, $(findstring cygwin, $(SYS)))
 # Do cygwin things
-CFLAGS		 = -fPIC
+CFLAGS		+= -fPIC
 endif
 ifneq (, $(findstring iOS, $(SYS)))
 # Do iOS things
-CFLAGS           = -fPIC
-LDFLAGS		 = -fPIC -ldl
+CFLAGS          += -fPIC
+LDFLAGS		+= -fPIC -ldl
 endif
 
 #custom config
