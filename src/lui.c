@@ -558,7 +558,7 @@ LUA_API int luaopen_lui(lua_State *L)
   UI_CREATE_META(Tab)
   UI_SET_GROUP(Tab, Control);
   UI_CREATE_META(Table)
-  UI_SET_GROUP(Tabble, Control);
+  UI_SET_GROUP(Table, Control);
   UI_CREATE_META(Window)
   UI_SET_GROUP(Window, Control);
 
