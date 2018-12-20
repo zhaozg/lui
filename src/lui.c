@@ -13,6 +13,16 @@ struct wrap
   int ref;
 };
 
+inline static void* check_object(lua_State *L, int n, const char* cls)
+{
+  void *p = luaL_testudata(L, n, cls);
+  if (p==NULL)
+  {
+    p = auxiliar_checkgroup(L, cls, n);
+  }
+
+  return (((struct wrap*)p)->control);
+}
 
 #define UI_RETURN_SELF lua_pushvalue(L, 1); return 1;
 
@@ -28,8 +38,7 @@ struct wrap
   lua_pop(L, 1);
 
 #define UI_CHECK_OBJECT(n, t)                               \
-  ui ## t(((struct wrap *)lua_touserdata(L, n))->control)
-//ui ## t(((struct wrap *)luaL_checkudata(L, n, "libui." #t))->control)
+  check_object(L, n, "libui." #t)
 
 #define UI_CREATE_OBJECT(t, c)                              \
   struct wrap *w = lua_newuserdata(L, sizeof(struct wrap)); \
