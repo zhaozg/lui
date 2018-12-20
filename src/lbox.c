@@ -26,14 +26,11 @@ static int l_uiBoxAppend(lua_State *L)
 
   for (i = 2; i <= n; i++)
   {
-    if (lua_isuserdata(L, i))
-    {
-      child = UI_CHECK_OBJECT(i, Control);
-      uiBoxAppend(box, child, stretchy);
-      lua_getmetatable(L, 1);
-      lua_pushvalue(L, i);
-      luaL_ref(L, -2);
-    }
+    child = UI_CHECK_OBJECT(i, Control);
+    uiBoxAppend(box, child, stretchy);
+    lua_getmetatable(L, 1);
+    lua_pushvalue(L, i);
+    luaL_ref(L, -2);
   }
   UI_RETURN_SELF;
 }
