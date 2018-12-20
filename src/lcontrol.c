@@ -26,7 +26,7 @@ static uiControl* l_checkControl(lua_State *L, int i)
     w = (struct wrap*)lua_touserdata(L, i);
   else
     w = (struct wrap*)auxiliar_checkgroup(L, "libui.Control", i);
-  
+
   return w->control;
 }
 
