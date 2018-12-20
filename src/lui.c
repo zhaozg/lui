@@ -113,7 +113,6 @@ static int callback(lua_State *L, void *control)
 {
   int ret = 0;
   int err = 0;
-  uiWindow *win = NULL;
 
   /* Get the traceback function in case of error */
   lua_pushcfunction(L, traceback);
@@ -127,14 +126,13 @@ static int callback(lua_State *L, void *control)
   lua_getfield(L, -1, "fn");
   luaL_checktype(L, -1, LUA_TFUNCTION);
   lua_getfield(L, -2, "udata");
-  win = UI_CHECK_OBJECT(-1, Window);
   luaL_checktype(L, -1, LUA_TUSERDATA);
   lua_getfield(L, -3, "data");
 
   /* Call function */
   if (lua_pcall(L, 2, 1, err))
   {
-    uiMsgBoxError(win, "InnerException", lua_tostring(L, -1));
+    luaL_error(L, "InnerException: %s", lua_tostring(L, -1));
     lua_pop(L, 1);
   }
   else
