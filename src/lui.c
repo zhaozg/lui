@@ -474,6 +474,7 @@ static struct luaL_Reg lui_table[] =
   { "NewGroup",               l_uiNewGroup },
   { "NewHorizontalBox",       l_uiNewHorizontalBox },
   { "NewHorizontalSeparator", l_uiNewHorizontalSeparator },
+  { "NewImage",               l_uiNewImage },
   { "NewLabel",               l_uiNewLabel },
   { "NewMenu",                l_uiNewMenu },
   { "NewMultilineEntry",      l_uiNewMultilineEntry },
@@ -544,6 +545,8 @@ LUA_API int luaopen_lui(lua_State *L)
   UI_SET_GROUP(Grid, Control);
   UI_CREATE_META(Group)
   UI_SET_GROUP(Group, Control);
+  UI_CREATE_META(Image)
+  UI_SET_GROUP(Image, Control);
   UI_CREATE_META(Label)
   UI_SET_GROUP(Label, Control);
   UI_CREATE_META(MenuItem)
