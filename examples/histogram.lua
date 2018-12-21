@@ -70,7 +70,7 @@ end
 
 local function graphSize(clientWidth, clientHeight)
   return clientWidth - xoffLeft - xoffRight,
-	 clientHeight - yoffTop - yoffBottom
+   clientHeight - yoffTop - yoffBottom
 end
 
 local function handlerDraw(a, area, p)
@@ -198,9 +198,8 @@ local function onColorChanged(b)
 end
 
 local function onClosing(w)
-  mainwin:Destroy()
   ui.Quit()
-  return 0
+  return 1
 end
 
 local function shouldQuit()
@@ -218,11 +217,11 @@ local function uiMain()
   local hbox,vbox,brush;
 
   handler = ui.DrawNewAreaHandler(
-	handlerDraw,
-	handlerMouseEvent,
-	handlerMouseCrossed,
-	handlerDragBroken,
-	handlerKeyEvent)
+    handlerDraw,
+    handlerMouseEvent,
+    handlerMouseCrossed,
+    handlerDragBroken,
+    handlerKeyEvent)
 
   ui.OnShouldQuit(shouldQuit);
 
@@ -234,7 +233,7 @@ local function uiMain()
   mainwin:SetChild(hbox)
 
   vbox = ui.NewVerticalBox():Padded(true)
-  hbox:Append(vbox, 0)
+  hbox:Append(vbox,false)
 
   math.randomseed(os.time())
   for i=1,10 do
@@ -254,9 +253,9 @@ local function uiMain()
   histogram = ui.NewArea(handler)
   hbox:Append(histogram, true);
   mainwin:Show()
-  ui.Main();
+  ui.Main()
+  ui.Uninit()
 
-  ui.Uninit();
   return 0
 end
 

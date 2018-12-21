@@ -204,7 +204,9 @@ local function uiMain()
   tab:Append("Data Choosers", makeDataChoosersPage()):Margined(2, true)
 
   mainwin:Show()
-  ui.Main();
+  ui.Main()
+  ui.Uninit()
+
   return 0;
 end
 

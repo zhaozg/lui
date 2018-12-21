@@ -38,6 +38,7 @@ function uiMain(void)
   w:OnClosing(onClosing):Show()
   ui.Timer(1000, sayTime)
   ui.Main()
+  ui.Uninit()
 end
 
 uiMain()
