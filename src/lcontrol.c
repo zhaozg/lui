@@ -3,7 +3,7 @@ static int l_uiControlDestroy(lua_State *L)
   struct wrap *w = NULL;
   uiControl *c = NULL;
 
-  if(auxiliar_isclass(L, "libui.Control", 1))
+  if(auxiliar_getclassudata(L, "libui.Control", 1))
     w = (struct wrap*)lua_touserdata(L, 1);
   else
     w = (struct wrap*)auxiliar_checkgroup(L, "libui.Control", 1);
@@ -22,7 +22,7 @@ static uiControl* l_checkControl(lua_State *L, int i)
 {
   struct wrap *w = NULL;
 
-  if(auxiliar_isclass(L, "libui.Control", i))
+  if(auxiliar_getclassudata(L, "libui.Control", i))
     w = (struct wrap*)lua_touserdata(L, i);
   else
     w = (struct wrap*)auxiliar_checkgroup(L, "libui.Control", i);
