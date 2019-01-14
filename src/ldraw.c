@@ -72,7 +72,7 @@ char *  WINE_i64toa(
 }
 
 #define lua_pushINT64(L,n)                           \
-  if(n > 9007199254740992 || n < -9007199254740992){ \
+  if(n > 9007199254740992 || n < -9007199254740992) { \
     char buf[24];                                    \
     lua_pushstring(L, WINE_i64toa(n, buf, 10));          \
   }else{                                             \
@@ -279,7 +279,7 @@ static void l_HandlerDragBroken_cb(uiAreaHandler *handler, uiArea *area)
 
 static int l_HandlerKeyEvent_cb(uiAreaHandler *handler, uiArea *area, uiAreaKeyEvent *evt)
 {
-  int err, ret;
+  int err, ret = 0;
   luiAreaHandler *lh = (luiAreaHandler*)handler;
   lua_State *L = lh->L;
 
@@ -301,7 +301,7 @@ static int l_HandlerKeyEvent_cb(uiAreaHandler *handler, uiArea *area, uiAreaKeyE
   l_uiAreaKeyEvent_2_table(L, evt);
 
   /* Call function */
-  if (lua_pcall(L, 3, 1, err))
+  if (lua_pcall(L, 3, 1, err) != LUA_OK)
   {
     luaL_error(L, lua_tostring(L, -1));
     lua_pop(L, 1);

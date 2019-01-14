@@ -169,8 +169,9 @@ static int l_uigc(lua_State *L)
 
   if(control && w->ref==0 )
   {
-    uint32_t s = w->control->TypeSignature;
-    printf("gc %p %c%c%c%c\n", w->control, s >> 24, s >> 16, s >> 8, s >> 0);
+    /*
+     * uint32_t s = w->control->TypeSignature;
+     */
 
     control = w->control;
     parent = uiControlParent(control);
@@ -293,7 +294,7 @@ static void l_QueueMain(void *data)
   lua_pushcfunction(L, traceback);
   err = lua_gettop(L);
 
-  lua_pushlightuserdata(L, l_QueueMain);
+  lua_pushlightuserdata(L, (void*)l_QueueMain);
   lua_gettable(L, LUA_REGISTRYINDEX);
   luaL_checktype(L, -1, LUA_TTABLE);
   lua_getfield(L, -1, "fn");
@@ -315,7 +316,7 @@ static void l_QueueMain(void *data)
 static int l_uiQueueMain(lua_State *L)
 {
   luaL_checktype(L, 1, LUA_TFUNCTION);
-  lua_pushlightuserdata(L, l_QueueMain);
+  lua_pushlightuserdata(L, (void*)l_QueueMain);
   lua_newtable(L);
   lua_pushvalue(L, 1);
   lua_setfield(L, -2, "fn");
@@ -336,7 +337,7 @@ static int on_ShouldQuit(void *data)
   lua_pushcfunction(L, traceback);
   err = lua_gettop(L);
   /* Find table with callback data in registry */
-  lua_pushlightuserdata(L, on_ShouldQuit);
+  lua_pushlightuserdata(L, (void*)on_ShouldQuit);
   lua_gettable(L, LUA_REGISTRYINDEX);
 
   /* Get function, control userdata and callback data */
@@ -372,7 +373,7 @@ static int l_uiOnShouldQuit(lua_State *L)
   uiOnShouldQuit(on_ShouldQuit, L);
 
   /* Push registery key: userdata pointer to control */
-  lua_pushlightuserdata(L, on_ShouldQuit);
+  lua_pushlightuserdata(L, (void*)on_ShouldQuit);
   lua_newtable(L);
   lua_pushvalue(L, 1);
   lua_setfield(L, -2, "fn");
@@ -392,9 +393,9 @@ static int l_timer_cb(void *data)
   int status = 0;
   lua_State *L = (lua_State*)data;
 
-  lua_pushlightuserdata(L, l_uiTimer);
+  lua_pushlightuserdata(L, (void*)l_uiTimer);
   lua_rawget(L, LUA_REGISTRYINDEX);
-  lua_pushlightuserdata(L, l_timer_cb);
+  lua_pushlightuserdata(L, (void*)l_timer_cb);
   lua_rawget(L, LUA_REGISTRYINDEX);
 
   status = lua_pcall(L, 1, 1, 0);
@@ -422,11 +423,11 @@ static int l_uiTimer(lua_State *L)
   if(lua_isnone(L, 3))
     lua_pushnil(L);
 
-  lua_pushlightuserdata(L, l_uiTimer);
+  lua_pushlightuserdata(L, (void*)l_uiTimer);
   lua_pushvalue(L, 2);
   lua_rawset(L, LUA_REGISTRYINDEX);
 
-  lua_pushlightuserdata(L, l_timer_cb);
+  lua_pushlightuserdata(L, (void*)l_timer_cb);
   lua_pushvalue(L, 3);
   lua_rawset(L, LUA_REGISTRYINDEX);
 

@@ -16,7 +16,7 @@ static int l_uiImageAppend(lua_State* L)
   int pixelHeight = (int)luaL_checkinteger(L, 4);
   int byteStride = (int)luaL_checkinteger(L, 5);
 
-  luaL_argcheck(L, size>=pixelHeight * byteStride, 2,
+  luaL_argcheck(L, size>=(size_t)(pixelHeight * byteStride), 2,
                 "pixels need more data");
   uiImageAppend(i, pixels, pixelWidth, pixelHeight, byteStride);
   UI_RETURN_SELF

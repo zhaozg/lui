@@ -25,12 +25,14 @@ static int l_uiNewTimePicker(lua_State *L)
 ** =======================================================
 */
 
-static void setfield (lua_State *L, const char *key, int value) {
+static void setfield (lua_State *L, const char *key, int value)
+{
   lua_pushinteger(L, value);
   lua_setfield(L, -2, key);
 }
 
-static void setboolfield (lua_State *L, const char *key, int value) {
+static void setboolfield (lua_State *L, const char *key, int value)
+{
   if (value < 0)  /* undefined? */
     return;  /* does not set field */
   lua_pushboolean(L, value);
@@ -41,7 +43,8 @@ static void setboolfield (lua_State *L, const char *key, int value) {
 /*
 ** Set all fields from structure 'tm' in the table on top of the stack
 */
-static void setallfields (lua_State *L, struct tm *stm) {
+static void setallfields (lua_State *L, struct tm *stm)
+{
   setfield(L, "sec", stm->tm_sec);
   setfield(L, "min", stm->tm_min);
   setfield(L, "hour", stm->tm_hour);
@@ -55,7 +58,8 @@ static void setallfields (lua_State *L, struct tm *stm) {
 }
 
 
-static int getboolfield (lua_State *L, const char *key) {
+static int getboolfield (lua_State *L, const char *key)
+{
   int res;
   res = (lua_getfield(L, -1, key) == LUA_TNIL) ? -1 : lua_toboolean(L, -1);
   lua_pop(L, 1);
@@ -68,18 +72,21 @@ static int getboolfield (lua_State *L, const char *key) {
 #define L_MAXDATEFIELD	(INT_MAX / 2)
 #endif
 
-static int getfield (lua_State *L, const char *key, int d, int delta) {
+static int getfield (lua_State *L, const char *key, int d, int delta)
+{
   int isnum;
   int t = lua_getfield(L, -1, key);  /* get field and its type */
   lua_Integer res = lua_tointegerx(L, -1, &isnum);
-  if (!isnum) {  /* field is not an integer? */
+  if (!isnum)    /* field is not an integer? */
+  {
     if (t != LUA_TNIL)  /* some other value? */
       return luaL_error(L, "field '%s' is not an integer", key);
     else if (d < 0)  /* absent field; no default? */
       return luaL_error(L, "field '%s' missing in date table", key);
     res = d;
   }
-  else {
+  else
+  {
     if (!(-L_MAXDATEFIELD <= res && res <= L_MAXDATEFIELD))
       return luaL_error(L, "field '%s' is out-of-bound", key);
     res -= delta;
@@ -123,7 +130,7 @@ static void l_uiDateTimePickerCallback(uiDateTimePicker *picker, void* arg)
   lua_State *L = (lua_State *)arg;
   int ret = 0;
 
-  lua_rawgetp(L, LUA_REGISTRYINDEX, l_uiDateTimePickerCallback);
+  lua_rawgetp(L, LUA_REGISTRYINDEX, (const void*)l_uiDateTimePickerCallback);
   UI_CREATE_OBJECT_REF(DateTimePicker, picker);
   lua_rawgetp(L, LUA_REGISTRYINDEX, picker);
   luaL_checktype(L, -3, LUA_TFUNCTION);
@@ -143,10 +150,10 @@ static int l_uiDateTimePickerOnChanged(lua_State *L)
   luaL_checktype(L, 2, LUA_TFUNCTION);
   lua_settop(L, 3);
   lua_pushvalue(L, 2);
-  lua_rawsetp(L, LUA_REGISTRYINDEX, l_uiDateTimePickerCallback);
+  lua_rawsetp(L, LUA_REGISTRYINDEX, (const void*)l_uiDateTimePickerCallback);
   lua_pushvalue(L, 3);
   lua_rawsetp(L, LUA_REGISTRYINDEX, picker);
- 
+
   uiDateTimePickerOnChanged(picker, l_uiDateTimePickerCallback, L);
   UI_RETURN_SELF;
 }
@@ -160,4 +167,3 @@ static struct luaL_Reg meta_DateTimePicker[] =
   CONTROL_COMMON_METAFIELD
   { NULL, NULL }
 };
-
