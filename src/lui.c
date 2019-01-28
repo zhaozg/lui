@@ -575,8 +575,12 @@ LUA_API int luaopen_lui(lua_State *L)
 
   CREATE_USER_META(Attribute)
   CREATE_USER_META(AttributedString)
-  CREATE_USER_META(OpenTypeFeatures)
   CREATE_USER_META(FontDescriptor)
+  CREATE_USER_META(OpenTypeFeatures)
+  CREATE_USER_META(TableModel)
+  CREATE_USER_META(TableModelHandler)
+  CREATE_USER_META(TableValue)
+  CREATE_USER_META(TableParams)
 
   /* draw, not finished */
   CREATE_DRAWMETA

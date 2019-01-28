@@ -6,7 +6,6 @@
 // uiTableValues are immutable and the uiTableModel and uiTable
 // take ownership of the uiTableValue object once returned, copying
 // its contents as necessary.
-typedef struct uiTableValue uiTableValue;
 
 static int l_uiTableValueNew(lua_State *L)
 {

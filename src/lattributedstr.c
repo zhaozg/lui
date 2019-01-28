@@ -81,9 +81,6 @@ static int l_uiAttributedStringGraphemeToByteIndex(lua_State *L)
   return 1;
 }
 
-
-typedef uiForEach(*uiAttributedStringForEachAttributeFunc)(const uiAttributedString *s, const uiAttribute *a, size_t start, size_t end, void *data);
-
 static int l_uiAttributedStringForEachAttribute(lua_State *L)
 {
   //uiAttributedString *s = CHECK_USER_OBJECT(1, AttributedString);
@@ -113,4 +110,3 @@ static struct luaL_Reg meta_AttributedString[] =
 
   { NULL, NULL }
 };
-
