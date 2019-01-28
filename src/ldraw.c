@@ -71,12 +71,12 @@ char *  WINE_i64toa(
   return str;
 }
 
-#define lua_pushINT64(L,n)                           \
-  if(n > 9007199254740992 || n < -9007199254740992) { \
-    char buf[24];                                    \
-    lua_pushstring(L, WINE_i64toa(n, buf, 10));          \
-  }else{                                             \
-    lua_pushnumber(L, (lua_Number)n);                \
+#define lua_pushINT64(L,n)                                         \
+  if(n > 9007199254740992LL || (int64_t)n < -9007199254740992LL) { \
+    char buf[24];                                                  \
+    lua_pushstring(L, WINE_i64toa(n, buf, 10));                    \
+  }else{                                                           \
+    lua_pushnumber(L, (lua_Number)n);                              \
   }
 
 static int l_uiAreaMouseEvent_2_table(lua_State *L, uiAreaMouseEvent *evt)
