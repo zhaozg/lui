@@ -30,10 +30,16 @@ inline static void* check_object(lua_State *L, int n, const char* cls)
   luaL_newmetatable(L, "libui." #t);                        \
   lua_pushstring(L, "__index");                             \
   lua_newtable(L);                                          \
+  lua_pushstring(L, "class");                               \
+  lua_pushstring(L, "libui." #t);                           \
+  lua_rawset(L, -3);                                        \
   luaL_setfuncs(L, meta_ ## t, 0);                          \
   lua_rawset(L, -3);                                        \
   lua_pushstring(L, "__gc");                                \
   lua_pushcfunction(L, l_uigc);                             \
+  lua_rawset(L, -3);                                        \
+  lua_pushstring(L, "__tostring");                          \
+  lua_pushcfunction(L, auxiliar_tostring);                  \
   lua_rawset(L, -3);                                        \
   lua_pop(L, 1);
 
@@ -62,8 +68,15 @@ inline static void* check_object(lua_State *L, int n, const char* cls)
   luaL_newmetatable(L, "libui.user." #t);                   \
   lua_pushstring(L, "__index");                             \
   lua_newtable(L);                                          \
+  lua_pushstring(L, "class");                               \
+  lua_pushstring(L, "libui.user." #t);                      \
+  lua_rawset(L, -3);                                        \
   luaL_setfuncs(L, meta_ ## t, 0);                          \
-  lua_rawset(L, -3);
+  lua_rawset(L, -3);                                        \
+  lua_pushstring(L, "__tostring");                          \
+  lua_pushcfunction(L, auxiliar_tostring);                  \
+  lua_rawset(L, -3);                                        \
+  lua_pop(L, 1);
 
 #define CREATE_USER_OBJECT(t, c)                            \
   *(ui ## t**)lua_newuserdata(L, sizeof(ui ## t*)) = c;     \
@@ -73,17 +86,14 @@ inline static void* check_object(lua_State *L, int n, const char* cls)
   *((ui ## t**)luaL_checkudata(L, n, "libui.user." #t ))
 
 /* general libui callback  mechanism to lua */
-
 static void create_callback_data(lua_State *L, int n)
 {
-  (void)n;
-
   /* Push registery key: userdata pointer to control */
   lua_pushlightuserdata(L, UI_CHECK_OBJECT(1, Control));
 
   /* Create table with callback data */
   lua_newtable(L);
-  lua_pushvalue(L, 1);
+  lua_pushvalue(L, n);
   lua_setfield(L, -2, "udata");
   lua_pushvalue(L, 2);
   lua_setfield(L, -2, "fn");
