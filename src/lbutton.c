@@ -18,13 +18,13 @@ static int l_uiButtonText(lua_State *L)
 
 static void on_button_clicked(uiButton *b, void *data)
 {
-  callback(data, b);
+  callback(data, b, "clicked");
 }
 
 static int l_uiButtonOnClicked(lua_State *L)
 {
   uiButtonOnClicked(UI_CHECK_OBJECT(1, Button), on_button_clicked, L);
-  create_callback_data(L, 1);
+  create_callback_data(L, 1, "clicked");
   UI_RETURN_SELF;
 }
 

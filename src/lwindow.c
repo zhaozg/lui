@@ -57,25 +57,25 @@ static int l_uiWindowFullscreen(lua_State *L)
 
 static void Window_On_ContentSizeChanged(uiWindow *b, void *data)
 {
-  callback(data, b);
+  callback(data, b, "contentsizechanged");
 }
 
 static int l_uiWindowOnContentSizeChanged(lua_State *L)
 {
   uiWindowOnContentSizeChanged(UI_CHECK_OBJECT(1, Window), Window_On_ContentSizeChanged, L);
-  create_callback_data(L, 1);
+  create_callback_data(L, 1, "contentsizechanged");
   UI_RETURN_SELF;
 }
 
 static int Window_On_Closing(uiWindow *b, void *data)
 {
-  return callback(data, b);
+  return callback(data, b, "closing");
 }
 
 static int l_uiWindowOnClosing(lua_State *L)
 {
   uiWindowOnClosing(UI_CHECK_OBJECT(1, Window), Window_On_Closing, L);
-  create_callback_data(L, 1);
+  create_callback_data(L, 1, "closing");
   UI_RETURN_SELF;
 }
 

@@ -17,13 +17,13 @@ static int l_uiSpinboxValue(lua_State *L)
 
 static void on_spinbox_changed(uiSpinbox *b, void *data)
 {
-  callback(data, b);
+  callback(data, b, "changed");
 }
 
 static int l_uiSpinboxOnChanged(lua_State *L)
 {
   uiSpinboxOnChanged(UI_CHECK_OBJECT(1, Spinbox), on_spinbox_changed, L);
-  create_callback_data(L, 1);
+  create_callback_data(L, 1, "changed");
   UI_RETURN_SELF;
 }
 

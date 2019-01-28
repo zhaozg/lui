@@ -60,7 +60,7 @@ function main()
   g:Append(dttime,
     1, 1, 1, 1,
     true, ui.AlignFill, false, ui.AlignFill)
-
+  --[[
   l = ui.NewLabel("")
   g:Append(l,
     0, 2, 2, 1,
@@ -89,7 +89,8 @@ function main()
   g:Append(b,
     1, 4, 1, 1,
     true, ui.AlignFill, true, ui.AlignEnd)
-  w:OnClosing(w, onClosing):Show()
+--]]
+  w:OnClosing(onClosing):Show()
   ui.Main()
   ui.Uninit()
   return 0

@@ -17,13 +17,13 @@ static int l_uiCheckboxText(lua_State *L)
 
 static void on_checkbox_toggled(uiCheckbox *c, void *data)
 {
-  callback(data, c);
+  callback(data, c, "toggled");
 }
 
 static int l_uiCheckboxOnToggled(lua_State *L)
 {
   uiCheckboxOnToggled(UI_CHECK_OBJECT(1, Checkbox), on_checkbox_toggled, L);
-  create_callback_data(L, 1);
+  create_callback_data(L, 1, "toggled");
   UI_RETURN_SELF;
 }
 

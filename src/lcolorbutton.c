@@ -26,13 +26,13 @@ static int l_uiColorButtonColor(lua_State *L)
 
 static void on_colorbutton_changed(uiColorButton *b, void *data)
 {
-  callback(data, b);
+  callback(data, b, "changed");
 }
 
 static int l_uiColorButtonOnChanged(lua_State *L)
 {
   uiColorButtonOnChanged(UI_CHECK_OBJECT(1, ColorButton), on_colorbutton_changed, L);
-  create_callback_data(L, 1);
+  create_callback_data(L, 1, "changed");
   UI_RETURN_SELF;
 }
 

@@ -22,14 +22,14 @@ static int l_uiMenuItemChecked(lua_State *L)
 
 static void on_menuitem_clicked(uiMenuItem *b, uiWindow* w, void *data)
 {
-  callback(data, b);
+  callback(data, b, "clicked");
 }
 
 static int l_uiMenuItemOnClicked(lua_State *L)
 {
   //TODO:
   uiMenuItemOnClicked(UI_CHECK_OBJECT(1, MenuItem), on_menuitem_clicked, L);
-  create_callback_data(L, 1);
+  create_callback_data(L, 1, "clicked");
   UI_RETURN_SELF;
 }
 

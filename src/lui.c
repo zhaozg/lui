@@ -86,13 +86,26 @@ inline static void* check_object(lua_State *L, int n, const char* cls)
   *((ui ## t**)luaL_checkudata(L, n, "libui.user." #t ))
 
 /* general libui callback  mechanism to lua */
-static void create_callback_data(lua_State *L, int n)
+static void create_callback_data(lua_State *L, int n, const char *event)
 {
   /* Push registery key: userdata pointer to control */
-  lua_pushlightuserdata(L, UI_CHECK_OBJECT(1, Control));
+  void *control = UI_CHECK_OBJECT(1, Control);
+  lua_pushlightuserdata(L, control);
+  lua_rawget(L, LUA_REGISTRYINDEX);
+  if (lua_isnil(L, -1))
+  {
+    lua_pop(L, 1);
+    lua_pushlightuserdata(L, control);
+    lua_newtable(L);
+    lua_rawset(L, LUA_REGISTRYINDEX);
+    lua_pushlightuserdata(L, control);
+    lua_rawget(L, LUA_REGISTRYINDEX);
+  }
+  /* Create table with event/callback data */
 
-  /* Create table with callback data */
+  lua_pushstring(L, event);
   lua_newtable(L);
+
   lua_pushvalue(L, n);
   lua_setfield(L, -2, "udata");
   lua_pushvalue(L, 2);
@@ -100,8 +113,9 @@ static void create_callback_data(lua_State *L, int n)
   lua_pushvalue(L, 3);
   lua_setfield(L, -2, "data");
 
+  lua_rawset(L, -3);
   /* Store in registry */
-  lua_settable(L, LUA_REGISTRYINDEX);
+  lua_pop(L, 1);
 }
 
 static int traceback(lua_State *L)
@@ -128,20 +142,25 @@ static int traceback(lua_State *L)
   return 1;
 }
 
-static int callback(lua_State *L, void *control)
+static int callback(lua_State *L, void *control, const char *event)
 {
   int ret = 0;
   int err = 0;
 
-  /* Get the traceback function in case of error */
+  /* Get the traceback function in case of error ,+1 */
   lua_pushcfunction(L, traceback);
   err = lua_gettop(L);
-  /* Find table with callback data in registry */
+  /* Find table with callback data in registry , +1 */
   lua_pushlightuserdata(L, control);
-  lua_gettable(L, LUA_REGISTRYINDEX);
-
-  /* Get function, control userdata and callback data */
+  lua_rawget(L, LUA_REGISTRYINDEX);
   luaL_checktype(L, -1, LUA_TTABLE);
+
+  /* Find table with event, +1 */
+  lua_pushstring(L, event);
+  lua_rawget(L, -2);
+  luaL_checktype(L, -1, LUA_TTABLE);
+
+  /* Get function, control userdata and callback data, +3 */
   lua_getfield(L, -1, "fn");
   luaL_checktype(L, -1, LUA_TFUNCTION);
   lua_getfield(L, -2, "udata");
@@ -163,10 +182,10 @@ static int callback(lua_State *L, void *control)
     lua_pop(L, 1);
   }
 
+  /* Remove table with given event */
   /* Remove table with callback data in registry */
-  lua_pop(L, 1);
   /* Remove the traceback function */
-  lua_pop(L, 1);
+  lua_pop(L, 3);
   return ret;
 }
 

@@ -79,13 +79,13 @@ static int l_uiFontButtonFont(lua_State *L)
 
 static void on_fontbutton_changed(uiFontButton *b, void *data)
 {
-  callback(data, b);
+  callback(data, b, "changed");
 }
 
 static int l_uiFontButtonOnChanged(lua_State *L)
 {
   uiFontButtonOnChanged(UI_CHECK_OBJECT(1, FontButton), on_fontbutton_changed, L);
-  create_callback_data(L, 1);
+  create_callback_data(L, 1, "changed");
   UI_RETURN_SELF;
 }
 

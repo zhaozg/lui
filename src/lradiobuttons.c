@@ -29,13 +29,13 @@ static int l_uiRadioButtonsSelected(lua_State *L)
 
 static void on_radiobutton_selected(uiRadioButtons *b, void *data)
 {
-  callback(data, b);
+  callback(data, b, "selected");
 }
 
 static int l_uiRadioButtonsOnSelected(lua_State *L)
 {
   uiRadioButtonsOnSelected(UI_CHECK_OBJECT(1, RadioButtons), on_radiobutton_selected, L);
-  create_callback_data(L, 1);
+  create_callback_data(L, 1, "selected");
   UI_RETURN_SELF;
 }
 

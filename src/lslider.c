@@ -17,13 +17,13 @@ static int l_uiSliderValue(lua_State *L)
 
 static void on_slider_changed(uiSlider *b, void *data)
 {
-  callback(data, b);
+  callback(data, b, "changed");
 }
 
 static int l_uiSliderOnChanged(lua_State *L)
 {
   uiSliderOnChanged(UI_CHECK_OBJECT(1, Slider), on_slider_changed, L);
-  create_callback_data(L, 1);
+  create_callback_data(L, 1, "changed");
   UI_RETURN_SELF;
 }
 

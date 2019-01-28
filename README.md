@@ -10,8 +10,8 @@ This binding makes libui available to lua scripts. libui is easy binding and sho
 
 ## Notice
 
-  - Because lua is missing native threads support, so threads feature maybe lost.
-  - Because libui/lui is not mature enough, you maybe encounter strange bugs.
+- Because lua is missing native threads support, so threads feature maybe lost.
+- Because libui/lui is not mature enough, you maybe encounter strange bugs.
 
 ## Examples
 
@@ -19,7 +19,7 @@ Examples can be found in the [examples](examples) folders, those are translate f
 
 ## Buliding
 
-### Checkout source 
+### Checkout source
 
 ```shell
   git checkout  https://github.com/zhaozg/lui.git
@@ -37,16 +37,17 @@ Examples can be found in the [examples](examples) folders, those are translate f
 
 ### Building on Windows
 
-  TODO
+TODO
 
 ### APIs
 
 - All top level functions are in the table returned by `require`
+
 ```lua
   ui = require'lui'  -- type(ui) is 'table'
 ```
 
-- All module level uiXXXX() functions are accessible as ui.XXXX(), they are include 
+- All module level uiXXXX() functions are accessible as ui.XXXX(), they are include
   - `Init`
   - `Uninit`
   - `Main`
@@ -105,24 +106,27 @@ Examples can be found in the [examples](examples) folders, those are translate f
   - `DrawNewStrokeParams`
   - `DrawNewTextLayout`
   - `DrawListFontFamilies` (Special)
-  - `DrawLoadClosestFont`  (Special)
+  - `DrawLoadClosestFont` (Special)
 
 ```lua
   wnd = ui.NewWindow(...) -- type(wnd) is userdata with metatable 'libui.Window'
 ```
 
 - All object perperties like uiTypeValue() and uiTypeSetValue() are accessible as obj:Value()
+
 ```lua
   entry:Padded(true)  -- just call uiEntrySetPadded(entry,1) and return object itself
   entry:Padded()      -- just call uiEntryPadded(entry) and return boolean type padded value
 ```
 
 - Object Append() methods take a variable number of arguments, allowing things
+
 ```lua
   `ui.NewRadioButtons():Append("One", "Two", "Three")
 ```
 
 - All object functions like uiTypeMethod() are accessible as obj:Method() calls
+
 ```lua
   wnd:Show()
   wnd:OnClosing(onclosing_cb)
@@ -132,6 +136,5 @@ You need read [examples](examples) to be familiar with them.
 
 ## Thanks
 
-  - [Ico Doornekamp](https://github.com/zevv) lui basicly forked of [libuilua](https://github.com/zevv/libuilua) but updated.
-  
-  - [Pietro Gagliardi](https://github.com/andlabs) author of [libui](https://github.com/andlabs/libui).
+- [Ico Doornekamp](https://github.com/zevv) lui basicly forked of [libuilua](https://github.com/zevv/libuilua) but updated.
+- [Pietro Gagliardi](https://github.com/andlabs) author of [libui](https://github.com/andlabs/libui).

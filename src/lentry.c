@@ -38,13 +38,13 @@ static int l_uiEntryText(lua_State *L)
 
 static void on_entry_changed(uiEntry *b, void *data)
 {
-  callback(data, b);
+  callback(data, b, "changed");
 }
 
 static int l_uiEntryOnChanged(lua_State *L)
 {
   uiEntryOnChanged(UI_CHECK_OBJECT(1, Entry), on_entry_changed, L);
-  create_callback_data(L, 1);
+  create_callback_data(L, 1, "changed");
   UI_RETURN_SELF;
 }
 

@@ -29,13 +29,13 @@ static int l_uiComboboxSelected(lua_State *L)
 
 static void on_combobox_selected(uiCombobox *c, void *data)
 {
-  callback(data, c);
+  callback(data, c, "selected");
 }
 
 static int l_uiComboboxOnSelected(lua_State *L)
 {
   uiComboboxOnSelected(UI_CHECK_OBJECT(1, Combobox), on_combobox_selected, L);
-  create_callback_data(L, 1);
+  create_callback_data(L, 1, "selected");
   UI_RETURN_SELF;
 }
 
@@ -80,13 +80,13 @@ static int l_uiEditableComboboxText(lua_State *L)
 
 static void on_EditableCombobox_Changed(uiEditableCombobox *c, void *data)
 {
-  callback(data, c);
+  callback(data, c, "changed");
 }
 
 static int l_uiEditableComboboxOnChanged(lua_State *L)
 {
   uiEditableComboboxOnChanged(UI_CHECK_OBJECT(1, EditableCombobox), on_EditableCombobox_Changed, L);
-  create_callback_data(L, 1);
+  create_callback_data(L, 1, "changed");
   UI_RETURN_SELF;
 }
 
