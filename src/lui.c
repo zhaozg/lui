@@ -317,20 +317,27 @@ static int l_uiUserBugCannotSetParentOnToplevel(lua_State *L)
 
 static void l_QueueMain(void *data)
 {
-  int err = 0;
+  int i,n;
+  int top = 0;
   lua_State *L = data;
 
+  top = lua_gettop(L);
   lua_pushcfunction(L, traceback);
-  err = lua_gettop(L);
 
   lua_pushlightuserdata(L, (void*)l_QueueMain);
   lua_gettable(L, LUA_REGISTRYINDEX);
-  luaL_checktype(L, -1, LUA_TTABLE);
   lua_getfield(L, -1, "fn");
-  luaL_checktype(L, -1, LUA_TFUNCTION);
-  lua_getfield(L, -2, "data");
+  lua_getfield(L, -2, "n");
+  n = lua_tointeger(L, -1);
+  lua_pop(L, 1);
 
-  if (lua_pcall(L, 1, 0, err))
+  for(i=1; i<=n; i++)
+  {
+    lua_rawgeti(L, top+2, i);
+  }
+
+
+  if (lua_pcall(L, n, 0, top+1))
   {
     luaL_error(L, lua_tostring(L, -1));
     lua_pop(L, 1);
@@ -339,18 +346,25 @@ static void l_QueueMain(void *data)
   lua_pop(L, 1);
   /* remove traceback function*/
   lua_pop(L, 1);
-  assert(err - 1 == lua_gettop(L));
+  luaL_argcheck(L, top  == lua_gettop(L), 1, "stack not balance");
 }
 
 static int l_uiQueueMain(lua_State *L)
 {
+  int i;
+  int top = lua_gettop(L);
   luaL_checktype(L, 1, LUA_TFUNCTION);
   lua_pushlightuserdata(L, (void*)l_QueueMain);
   lua_newtable(L);
   lua_pushvalue(L, 1);
   lua_setfield(L, -2, "fn");
-  lua_pushvalue(L, 2);
-  lua_setfield(L, -2, "data");
+  for(i=2; i<=top; i++)
+  {
+    lua_pushvalue(L, i);
+    lua_rawseti(L, -2, i-1);
+  }
+  lua_pushinteger(L, top-1);
+  lua_setfield(L, -2, "n");
   lua_settable(L, LUA_REGISTRYINDEX);
   uiQueueMain(l_QueueMain, L);
   return 0;

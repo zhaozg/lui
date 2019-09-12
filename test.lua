@@ -97,6 +97,14 @@ local win = ui.NewWindow("Hello", 320, 200, false)
 
 win:Show()
 
+ui.QueueMain(function(a, b, c, d, e)
+  assert(a==1)
+  assert(b==nil)
+  assert(c=='a')
+  assert(d==true)
+  assert(e==nil)
+  print('QueueMain OK')
+end,1, nil, 'a', true)
 
 if (not steps) then
   ui.Main()
