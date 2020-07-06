@@ -23,9 +23,7 @@ local function onChanged(d, l)
 end
 
 local function onClicked(b, data)
-  if (data) then
-    data = os.time()
-  end
+  if (data) then data = os.time() end
   local tm = os.date(data)
 
   dtdate:SetTime(tm)
@@ -41,26 +39,20 @@ function main()
   local err, w, g, l, b
   ui.Init()
 
-  w = ui.NewWindow("Date / Time", 320, 240, false)
-    :Margined(true)
+  w = ui.NewWindow("Date / Time", 320, 240, false):Margined(true)
 
   g = ui:NewGrid():Padded(true)
   w:SetChild(g)
-
+  --[[
   dtboth = ui.NewDateTimePicker()
   dtdate = ui.NewDatePicker()
   dttime = ui.NewTimePicker()
 
-  g:Append(dtboth,
-    0, 0, 2, 0,
-    true, ui.AlignFill, false, ui.AlignFill)
-  g:Append(dtdate,
-    0, 1, 1, 1,
-    true, ui.AlignFill, false, ui.AlignFill)
-  g:Append(dttime,
-    1, 1, 1, 1,
-    true, ui.AlignFill, false, ui.AlignFill)
-  --[[
+  g:Append(dtboth, 0, 0, 2, 0, true, ui.AlignFill, false, ui.AlignFill)
+
+  g:Append(dtdate, 0, 1, 1, 1, true, ui.AlignFill, false, ui.AlignFill)
+  g:Append(dttime, 1, 1, 1, 1, true, ui.AlignFill, false, ui.AlignFill)
+
   l = ui.NewLabel("")
   g:Append(l,
     0, 2, 2, 1,

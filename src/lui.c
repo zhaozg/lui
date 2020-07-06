@@ -1,5 +1,7 @@
 #include "lui.h"
 
+static lua_State* _main_L= NULL;
+
 inline static int luaL_checkboolean(lua_State *L, int n)
 {
   luaL_checktype(L, n, LUA_TBOOLEAN);
@@ -315,35 +317,107 @@ static int l_uiUserBugCannotSetParentOnToplevel(lua_State *L)
   return 0;
 }
 
+static int l_QueueDumpWriter(lua_State* L, const void* p, size_t sz, void* B)
+{
+  (void)L;
+  luaL_addlstring((luaL_Buffer*) B, (const char*) p, sz);
+  return 0;
+}
+
+static const char* l_QueueThreadDump(lua_State* L, int idx, size_t* l)
+{
+  if (lua_isstring(L, idx))
+  {
+    return lua_tolstring(L, idx, l);
+  }
+  else
+  {
+    const char* buff = NULL;
+    int top = lua_gettop(L);
+    luaL_Buffer b;
+    int test_lua_dump;
+    luaL_checktype(L, idx, LUA_TFUNCTION);
+    lua_pushvalue(L, idx);
+    luaL_buffinit(L, &b);
+    test_lua_dump = (lua_dump(L, l_QueueDumpWriter, &b, 1) == 0);
+    if (test_lua_dump)
+    {
+      luaL_pushresult(&b);
+      buff = lua_tolstring(L, -1, l);
+    }
+    else
+      luaL_error(L, "Error: unable to dump given function");
+    lua_settop(L, top);
+
+    return buff;
+  }
+}
+
+typedef struct value_s
+{
+  int type;
+  union
+  {
+    double n;
+    int i;
+    struct
+    {
+      int   l;
+      char* p;
+    } s;
+    void* p;
+  } v;
+} Value;
+
+#define MAX_ARGS_NUM 9
+typedef struct QueueArg_s
+{
+  size_t sz;
+  char *entry;
+  lua_State *L;
+
+  size_t argc;
+  Value argv[MAX_ARGS_NUM];
+} QueueArg;
+
+// This must in main thread
 static void l_QueueMain(void *data)
 {
-  int i,n;
+  int i;
   int top = 0;
-  lua_State *L = data;
+  QueueArg *arg = (QueueArg*)data;
+  lua_State *L = arg->L;
 
   top = lua_gettop(L);
   lua_pushcfunction(L, traceback);
+  luaL_loadbuffer(L, arg->entry, arg->sz, "=queue");
+  luaL_checktype(L, -1, LUA_TFUNCTION);
 
-  lua_pushlightuserdata(L, (void*)l_QueueMain);
-  lua_gettable(L, LUA_REGISTRYINDEX);
-  lua_getfield(L, -1, "fn");
-  lua_getfield(L, -2, "n");
-  n = lua_tointeger(L, -1);
-  lua_pop(L, 1);
-
-  for(i=1; i<=n; i++)
+  for(i=0; i<arg->argc; i++)
   {
-    lua_rawgeti(L, top+2, i);
+    Value *val = arg->argv+i;
+    switch(val->type)
+    {
+    case LUA_TBOOLEAN:
+      lua_pushboolean(L, val->v.i);
+      break;
+    case LUA_TNUMBER:
+      lua_pushnumber(L, val->v.n);
+      break;
+    case LUA_TSTRING:
+      lua_pushlstring(L, val->v.s.p, val->v.s.l);
+      break;
+    case LUA_TNIL:
+      lua_pushnil(L);
+      break;
+    }
   }
 
-
-  if (lua_pcall(L, n, 0, top+1))
+  if (lua_pcall(L, arg->argc, 0, top+1))
   {
     luaL_error(L, lua_tostring(L, -1));
     lua_pop(L, 1);
   }
-  /* remove ref table*/
-  lua_pop(L, 1);
   /* remove traceback function*/
   lua_pop(L, 1);
   luaL_argcheck(L, top  == lua_gettop(L), 1, "stack not balance");
@@ -351,22 +425,63 @@ static void l_QueueMain(void *data)
 
 static int l_uiQueueMain(lua_State *L)
 {
-  int i;
-  int top = lua_gettop(L);
-  luaL_checktype(L, 1, LUA_TFUNCTION);
-  lua_pushlightuserdata(L, (void*)l_QueueMain);
-  lua_newtable(L);
-  lua_pushvalue(L, 1);
-  lua_setfield(L, -2, "fn");
-  for(i=2; i<=top; i++)
+  int i, top;
+  QueueArg *arg = NULL;
+  size_t sz;
+  const char* p;
+
+  // check main thread exist
+  if (_main_L==NULL)
   {
-    lua_pushvalue(L, i);
-    lua_rawseti(L, -2, i-1);
+    luaL_error(L, "Can't access main thread");
+    return 0;
   }
-  lua_pushinteger(L, top-1);
-  lua_setfield(L, -2, "n");
-  lua_settable(L, LUA_REGISTRYINDEX);
-  uiQueueMain(l_QueueMain, L);
+
+  top = lua_gettop(L);
+  luaL_checktype(L, 1, LUA_TFUNCTION);
+  arg = malloc(sizeof(QueueArg));
+  memset(arg, 0, sizeof(QueueArg));
+
+  p = l_QueueThreadDump(L, 1, &sz);
+  arg->entry = malloc(sz+1);
+  memcpy(arg->entry, p, sz);
+  arg->entry[sz] = '\0';
+  arg->sz = sz;
+  arg->L = _main_L;
+
+  arg->argc = (top-1 > MAX_ARGS_NUM) ? MAX_ARGS_NUM : top - 1;
+  for(i=0; i < arg->argc; i++)
+  {
+    int type = lua_type(L, i+2);
+    Value *val = arg->argv+i;
+    val->type = type;
+
+    luaL_argcheck(L, type==LUA_TBOOLEAN || type==LUA_TNUMBER ||
+                  type==LUA_TSTRING || type==LUA_TNIL,
+                  i+2,
+                  "only accpet nil, boolean, number or string value");
+
+    if (val->type==LUA_TBOOLEAN)
+    {
+      val->v.i = lua_toboolean(L, i+2);
+    }
+    else if(val->type==LUA_TNUMBER)
+    {
+      val->v.n = lua_tonumber(L, i+2);
+      val->type = LUA_TNUMBER;
+    }
+    else if(val->type==LUA_TSTRING)
+    {
+      p = lua_tolstring(L,i+2, &sz);
+      val->v.s.l = sz;
+      val->v.s.p = malloc(sz);
+      memcpy(val->v.s.p, p, sz);
+    }
+    else
+      val->type = LUA_TNIL;
+  }
+
+  uiQueueMain(l_QueueMain, arg);
   return 0;
 }
 
@@ -630,6 +745,10 @@ LUA_API int luaopen_lui(lua_State *L)
 
   luaL_newlib(L, lui_table);
   l_REG_UI_ENUM(L, lua_gettop(L));
+
+  // store as a global variable, to support multi-thread
+  if (_main_L==NULL)
+    _main_L = L;
 
   return 1;
 }
